@@ -8,6 +8,7 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.network.serverpackets.MagicSkillUse;
 import l2server.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2server.gameserver.network.serverpackets.StatusUpdate;
+import lombok.Getter;
 
 /**
  * @author Pere
@@ -21,11 +22,11 @@ public class ChessEvent
 
 	private static ChessEventSide[] sides = new ChessEventSide[2];
 
-	private static L2ChessPieceInstance[][] board = new L2ChessPieceInstance[8][8];
+	@Getter private static L2ChessPieceInstance[][] board = new L2ChessPieceInstance[8][8];
 
 	private static ChessState state = ChessState.PARTICIPATING;
 
-	private static L2PcInstance[][] waitingPlayers = new L2PcInstance[8][2];
+	@Getter private static L2PcInstance[][] waitingPlayers = new L2PcInstance[8][2];
 
 	private static int[] waitingPlayerSideIds = new int[8];
 
@@ -191,8 +192,7 @@ public class ChessEvent
 		while (i < 8 && !trobat)
 		{
 			if (waitingPlayers[i][0] != null && waitingPlayers[i][0].getObjectId() == playerInstance.getObjectId() ||
-					waitingPlayers[i][1] != null &&
-							waitingPlayers[i][1].getObjectId() == playerInstance.getObjectId())
+					waitingPlayers[i][1] != null && waitingPlayers[i][1].getObjectId() == playerInstance.getObjectId())
 			{
 				waitingPlayers[i][0] = null;
 				waitingPlayers[i][1] = null;
@@ -245,8 +245,7 @@ public class ChessEvent
 			{
 				target = waitingPlayers[i][1];
 			}
-			else if (waitingPlayers[i][1] != null &&
-					waitingPlayers[i][1].getObjectId() == playerInstance.getObjectId())
+			else if (waitingPlayers[i][1] != null && waitingPlayers[i][1].getObjectId() == playerInstance.getObjectId())
 			{
 				target = waitingPlayers[i][0];
 				side = 1;
@@ -284,8 +283,7 @@ public class ChessEvent
 				target = waitingPlayers[i][1];
 				waitingPlayers[i][1] = null;
 			}
-			else if (waitingPlayers[i][1] != null &&
-					waitingPlayers[i][1].getObjectId() == playerInstance.getObjectId())
+			else if (waitingPlayers[i][1] != null && waitingPlayers[i][1].getObjectId() == playerInstance.getObjectId())
 			{
 				target = waitingPlayers[i][0];
 				waitingPlayers[i][0] = null;
@@ -345,7 +343,6 @@ public class ChessEvent
 
 		if (command.startsWith("wait") && getParticipantSideId(playerInstance.getObjectId()) == -1)
 		{
-
 			int sideId = Integer.valueOf(command.substring(4));
 
 			NpcHtmlMessage npcHtmlMessage = new NpcHtmlMessage(0);
@@ -455,8 +452,7 @@ public class ChessEvent
 
 	public static byte getParticipantSideId(int playerObjectId)
 	{
-		return (byte) (sides[0].containsPlayer(playerObjectId) ? 0 :
-				sides[1].containsPlayer(playerObjectId) ? 1 : -1);
+		return (byte) (sides[0].containsPlayer(playerObjectId) ? 0 : sides[1].containsPlayer(playerObjectId) ? 1 : -1);
 	}
 
 	public static boolean isPlayerParticipant(int playerObjectId)
@@ -507,19 +503,9 @@ public class ChessEvent
 		return false;
 	}
 
-	public static L2PcInstance[][] getWaitingPlayers()
-	{
-		return waitingPlayers;
-	}
-
 	public static ChessEventSide getSide(int id)
 	{
 		return sides[id];
-	}
-
-	public static L2ChessPieceInstance[][] getBoard()
-	{
-		return board;
 	}
 
 	public static L2ChessPieceInstance[][] getBoard(int side)

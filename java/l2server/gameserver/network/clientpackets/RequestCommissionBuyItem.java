@@ -22,17 +22,14 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public final class RequestCommissionBuyItem extends L2GameClientPacket
 {
-
-	@SuppressWarnings("unused")
-	private long auctionID;
-	@SuppressWarnings("unused")
-	private int category;
+	@SuppressWarnings("unused") private long auctionID;
+	@SuppressWarnings("unused") private int category;
 
 	@Override
 	protected void readImpl()
 	{
-		this.auctionID = readQ();
-		this.category = readD();
+		auctionID = readQ();
+		category = readD();
 	}
 
 	@Override

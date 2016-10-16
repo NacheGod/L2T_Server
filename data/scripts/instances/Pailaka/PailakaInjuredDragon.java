@@ -1,11 +1,5 @@
 package instances.Pailaka;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import l2server.gameserver.ai.CtrlEvent;
 import l2server.gameserver.ai.CtrlIntention;
 import l2server.gameserver.datatables.SkillTable;
@@ -28,6 +22,8 @@ import l2server.gameserver.network.serverpackets.SpecialCamera;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.gameserver.util.Util;
 import l2server.util.Rnd;
+
+import java.util.*;
 
 public class PailakaInjuredDragon extends Quest
 {
@@ -411,7 +407,7 @@ public class PailakaInjuredDragon extends Quest
 		}
 		else if (event.equalsIgnoreCase("latana_animation"))
 		{
-			this.hasDoneAnimation = true;
+			hasDoneAnimation = true;
 
 			npc.abortAttack();
 			npc.abortCast();
@@ -847,7 +843,7 @@ public class PailakaInjuredDragon extends Quest
 		{
 			case LATANA:
 				// Start Latana's Animation
-				if (!this.hasDoneAnimation)
+				if (!hasDoneAnimation)
 				{
 					startQuestTimer("latana_animation", 500, npc, player);
 					return null;
@@ -870,7 +866,7 @@ public class PailakaInjuredDragon extends Quest
 		{
 			case LATANA:
 				// Start Latana's Animation
-				if (!this.hasDoneAnimation)
+				if (!hasDoneAnimation)
 				{
 					final QuestState st = attacker.getQuestState(qn);
 					if (st == null || st.getState() != State.STARTED)
@@ -894,7 +890,7 @@ public class PailakaInjuredDragon extends Quest
 		{
 			for (int mobId : WALL_MONSTERS)
 			{
-                /* Every monster on pailaka should be Aggresive and Active, with the same clan, also
+				/* Every monster on pailaka should be Aggresive and Active, with the same clan, also
 				 * wall mobs cannot move, they all use magic from far, and if you get in combat range
 				 * they hit
 				 */
@@ -965,7 +961,7 @@ public class PailakaInjuredDragon extends Quest
 
 		public Teleport(L2Character c, int id)
 		{
-			this.cha = c;
+			cha = c;
 			instanceId = id;
 		}
 
@@ -974,7 +970,7 @@ public class PailakaInjuredDragon extends Quest
 		{
 			try
 			{
-				teleportPlayer((L2PcInstance) this.cha, TELEPORT, instanceId);
+				teleportPlayer((L2PcInstance) cha, TELEPORT, instanceId);
 			}
 			catch (Exception e)
 			{
@@ -996,12 +992,12 @@ public class PailakaInjuredDragon extends Quest
 
 		public int getItemID()
 		{
-			return this.itemId;
+			return itemId;
 		}
 
 		public int getChance()
 		{
-			return this.chance;
+			return chance;
 		}
 	}
 

@@ -17,13 +17,14 @@ package l2server.gameserver.model.itemauction;
 
 import l2server.gameserver.model.L2World;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
+import lombok.Getter;
 
 /**
  * @author Forsaiken
  */
 public final class ItemAuctionBid
 {
-	private final int playerObjId;
+	@Getter private final int playerObjId;
 	private long lastBid;
 
 	public ItemAuctionBid(final int playerObjId, final long lastBid)
@@ -32,14 +33,9 @@ public final class ItemAuctionBid
 		this.lastBid = lastBid;
 	}
 
-	public final int getPlayerObjId()
-	{
-		return this.playerObjId;
-	}
-
 	public final long getLastBid()
 	{
-		return this.lastBid;
+		return lastBid;
 	}
 
 	final void setLastBid(final long lastBid)
@@ -49,16 +45,16 @@ public final class ItemAuctionBid
 
 	final void cancelBid()
 	{
-		this.lastBid = -1;
+		lastBid = -1;
 	}
 
 	final boolean isCanceled()
 	{
-		return this.lastBid <= 0;
+		return lastBid <= 0;
 	}
 
 	final L2PcInstance getPlayer()
 	{
-		return L2World.getInstance().getPlayer(this.playerObjId);
+		return L2World.getInstance().getPlayer(playerObjId);
 	}
 }

@@ -26,7 +26,6 @@ import l2server.log.Log;
  */
 public class VoicedCommandHandler
 {
-
 	private TIntObjectHashMap<IVoicedCommandHandler> datatable;
 
 	public static VoicedCommandHandler getInstance()
@@ -36,7 +35,7 @@ public class VoicedCommandHandler
 
 	private VoicedCommandHandler()
 	{
-		this.datatable = new TIntObjectHashMap<>();
+		datatable = new TIntObjectHashMap<>();
 	}
 
 	public void registerVoicedCommandHandler(IVoicedCommandHandler handler)
@@ -48,7 +47,7 @@ public class VoicedCommandHandler
 			{
 				Log.fine("Adding handler for command " + id);
 			}
-			this.datatable.put(id.hashCode(), handler);
+			datatable.put(id.hashCode(), handler);
 		}
 	}
 
@@ -61,9 +60,9 @@ public class VoicedCommandHandler
 		}
 		if (Config.DEBUG)
 		{
-			Log.fine("getting handler for command: " + command + " -> " + (this.datatable.get(command.hashCode()) != null));
+			Log.fine("getting handler for command: " + command + " -> " + (datatable.get(command.hashCode()) != null));
 		}
-		return this.datatable.get(command.hashCode());
+		return datatable.get(command.hashCode());
 	}
 
 	/**
@@ -71,7 +70,7 @@ public class VoicedCommandHandler
 	 */
 	public int size()
 	{
-		return this.datatable.size();
+		return datatable.size();
 	}
 
 	@SuppressWarnings("synthetic-access")

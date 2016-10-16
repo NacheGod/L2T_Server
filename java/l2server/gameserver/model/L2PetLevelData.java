@@ -15,6 +15,8 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * Stats definition for each pet level
  *
@@ -22,170 +24,109 @@ package l2server.gameserver.model;
  */
 public class L2PetLevelData
 {
-	private int ownerExpTaken;
-	private long petMaxExp;
-	private int petMaxHP;
-	private int petMaxMP;
-	private int petPAtk;
-	private int petPDef;
-	private int petMAtk;
-	private int petMDef;
-	private int petMaxFeed;
-	private int petFeedBattle;
-	private int petFeedNormal;
-	private int petRegenHP;
-	private int petRegenMP;
-	private short petSoulShot;
-	private short petSpiritShot;
+	@Getter private int ownerExpTaken;
+	@Getter private long petMaxExp;
+	@Getter private int petMaxHP;
+	@Getter private int petMaxMP;
+	@Getter private int petPAtk;
+	@Getter private int petPDef;
+	@Getter private int petMAtk;
+	@Getter private int petMDef;
+	@Getter private int petMaxFeed;
+	@Getter private int petFeedBattle;
+	@Getter private int petFeedNormal;
+	@Getter private int petRegenHP;
+	@Getter private int petRegenMP;
+	@Getter private short petSoulShot;
+	@Getter private short petSpiritShot;
 
 	//  Max Exp
-	public long getPetMaxExp()
-	{
-		return this.petMaxExp;
-	}
 
 	public void setPetMaxExp(long pPetMaxExp)
 	{
-		this.petMaxExp = pPetMaxExp;
-	}
-
-	public int getOwnerExpTaken()
-	{
-		return this.ownerExpTaken;
+		petMaxExp = pPetMaxExp;
 	}
 
 	public void setOwnerExpTaken(int pOwnerExpTaken)
 	{
-		this.ownerExpTaken = pOwnerExpTaken;
+		ownerExpTaken = pOwnerExpTaken;
 	}
 
 	//  Max HP
-	public int getPetMaxHP()
-	{
-		return this.petMaxHP;
-	}
 
 	public void setPetMaxHP(int pPetMaxHP)
 	{
-		this.petMaxHP = pPetMaxHP;
+		petMaxHP = pPetMaxHP;
 	}
 
 	//  Max Mp
-	public int getPetMaxMP()
-	{
-		return this.petMaxMP;
-	}
 
 	public void setPetMaxMP(int pPetMaxMP)
 	{
-		this.petMaxMP = pPetMaxMP;
+		petMaxMP = pPetMaxMP;
 	}
 
 	//  PAtk
-	public int getPetPAtk()
-	{
-		return this.petPAtk;
-	}
 
 	public void setPetPAtk(int pPetPAtk)
 	{
-		this.petPAtk = pPetPAtk;
+		petPAtk = pPetPAtk;
 	}
 
 	//  PDef
-	public int getPetPDef()
-	{
-		return this.petPDef;
-	}
 
 	public void setPetPDef(int pPetPDef)
 	{
-		this.petPDef = pPetPDef;
+		petPDef = pPetPDef;
 	}
 
 	//  MAtk
-	public int getPetMAtk()
-	{
-		return this.petMAtk;
-	}
 
 	public void setPetMAtk(int pPetMAtk)
 	{
-		this.petMAtk = pPetMAtk;
+		petMAtk = pPetMAtk;
 	}
 
 	//  MDef
-	public int getPetMDef()
-	{
-		return this.petMDef;
-	}
 
 	public void setPetMDef(int pPetMDef)
 	{
-		this.petMDef = pPetMDef;
+		petMDef = pPetMDef;
 	}
 
 	//  MaxFeed
-	public int getPetMaxFeed()
-	{
-		return this.petMaxFeed;
-	}
 
 	public void setPetMaxFeed(int pPetMaxFeed)
 	{
-		this.petMaxFeed = pPetMaxFeed;
+		petMaxFeed = pPetMaxFeed;
 	}
 
 	//  Normal Feed
-	public int getPetFeedNormal()
-	{
-		return this.petFeedNormal;
-	}
 
 	public void setPetFeedNormal(int pPetFeedNormal)
 	{
-		this.petFeedNormal = pPetFeedNormal;
+		petFeedNormal = pPetFeedNormal;
 	}
 
 	//  Battle Feed
-	public int getPetFeedBattle()
-	{
-		return this.petFeedBattle;
-	}
 
 	public void setPetFeedBattle(int pPetFeedBattle)
 	{
-		this.petFeedBattle = pPetFeedBattle;
+		petFeedBattle = pPetFeedBattle;
 	}
 
 	//  Regen HP
-	public int getPetRegenHP()
-	{
-		return this.petRegenHP;
-	}
 
 	public void setPetRegenHP(int pPetRegenHP)
 	{
-		this.petRegenHP = pPetRegenHP;
+		petRegenHP = pPetRegenHP;
 	}
 
 	//  Regen MP
-	public int getPetRegenMP()
-	{
-		return this.petRegenMP;
-	}
 
 	public void setPetRegenMP(int pPetRegenMP)
 	{
-		this.petRegenMP = pPetRegenMP;
-	}
-
-	/**
-	 * @return the _petSoulShot
-	 */
-	public short getPetSoulShot()
-	{
-		return this.petSoulShot;
+		petRegenMP = pPetRegenMP;
 	}
 
 	/**
@@ -193,15 +134,7 @@ public class L2PetLevelData
 	 */
 	public void setPetSoulShot(short soulShot)
 	{
-		this.petSoulShot = soulShot;
-	}
-
-	/**
-	 * @return the _petSpiritShot
-	 */
-	public short getPetSpiritShot()
-	{
-		return this.petSpiritShot;
+		petSoulShot = soulShot;
 	}
 
 	/**
@@ -209,6 +142,6 @@ public class L2PetLevelData
 	 */
 	public void setPetSpiritShot(short spiritShot)
 	{
-		this.petSpiritShot = spiritShot;
+		petSpiritShot = spiritShot;
 	}
 }

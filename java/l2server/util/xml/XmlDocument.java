@@ -16,6 +16,7 @@
 package l2server.util.xml;
 
 import l2server.log.Log;
+import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -37,7 +38,7 @@ public class XmlDocument
 		factory.setIgnoringComments(true);
 	}
 
-	private List<XmlNode> children = new ArrayList<>();
+	@Getter private List<XmlNode> children = new ArrayList<>();
 
 	public XmlDocument(File file)
 	{
@@ -51,7 +52,7 @@ public class XmlDocument
 		Document doc = null;
 		try
 		{
-			doc = this.factory.newDocumentBuilder().parse(file);
+			doc = factory.newDocumentBuilder().parse(file);
 		}
 		catch (Exception e)
 		{
@@ -62,23 +63,18 @@ public class XmlDocument
 		{
 			if (baseNode.getNodeType() == Node.ELEMENT_NODE)
 			{
-				this.children.add(new XmlNode(baseNode));
+				children.add(new XmlNode(baseNode));
 			}
 		}
 	}
 
 	public XmlNode getFirstChild()
 	{
-		if (this.children.isEmpty())
+		if (children.isEmpty())
 		{
 			return null;
 		}
 
-		return this.children.get(0);
-	}
-
-	public List<XmlNode> getChildren()
-	{
-		return this.children;
+		return children.get(0);
 	}
 }

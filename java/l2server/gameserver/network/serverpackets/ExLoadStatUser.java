@@ -22,7 +22,6 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public class ExLoadStatUser extends L2GameServerPacket
 {
-
 	L2PcInstance player;
 
 	public ExLoadStatUser(L2PcInstance player)
@@ -36,7 +35,7 @@ public class ExLoadStatUser extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		if (this.player == null)
+		if (player == null)
 		{
 		}
 

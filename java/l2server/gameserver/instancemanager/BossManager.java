@@ -16,6 +16,7 @@
 package l2server.gameserver.instancemanager;
 
 import l2server.gameserver.model.actor.instance.L2RaidBossInstance;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Map;
  */
 public class BossManager
 {
-	private static Map<Integer, L2RaidBossInstance> bosses = new HashMap<>();
+	@Getter private static Map<Integer, L2RaidBossInstance> bosses = new HashMap<>();
 
 	public static BossManager getInstance()
 	{
@@ -34,22 +35,17 @@ public class BossManager
 
 	public void registerBoss(L2RaidBossInstance boss)
 	{
-		this.bosses.put(boss.getNpcId(), boss);
-	}
-
-	public Map<Integer, L2RaidBossInstance> getBosses()
-	{
-		return this.bosses;
+		bosses.put(boss.getNpcId(), boss);
 	}
 
 	public L2RaidBossInstance getBoss(int id)
 	{
-		return this.bosses.get(id);
+		return bosses.get(id);
 	}
 
 	public boolean isAlive(int id)
 	{
-		L2RaidBossInstance boss = this.bosses.get(id);
+		L2RaidBossInstance boss = bosses.get(id);
 		return boss != null && !boss.isDead();
 	}
 

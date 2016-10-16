@@ -15,6 +15,13 @@
 
 package custom.VoteNpc;
 
+import l2server.Config;
+import l2server.gameserver.cache.HtmCache;
+import l2server.gameserver.model.actor.L2Npc;
+import l2server.gameserver.model.actor.instance.L2PcInstance;
+import l2server.gameserver.model.quest.Quest;
+import l2server.gameserver.util.Util;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,13 +29,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
-
-import l2server.Config;
-import l2server.gameserver.cache.HtmCache;
-import l2server.gameserver.model.actor.L2Npc;
-import l2server.gameserver.model.actor.instance.L2PcInstance;
-import l2server.gameserver.model.quest.Quest;
-import l2server.gameserver.util.Util;
 
 /**
  * @author LasTravel
@@ -38,8 +38,7 @@ public class VoteNpc extends Quest
 	private static final boolean debug = false;
 	private static final String qn = "VoteNpc";
 	private static final int voteNpcId = 40004;
-	@SuppressWarnings("unused")
-	private static final String SELECT_VOTE_IP =
+	@SuppressWarnings("unused") private static final String SELECT_VOTE_IP =
 			"SELECT * from " + Config.WEB_DB_NAME + ".server_voted_ips WHERE ip = ?";
 
 	//private static Map<Integer, Rewards> voteRewards = new HashMap<Integer, Rewards>();
@@ -48,8 +47,8 @@ public class VoteNpc extends Quest
 	{
 		super(questId, name, descr);
 
-		addTalkId(this.voteNpcId);
-		addStartNpc(this.voteNpcId);
+		addTalkId(voteNpcId);
+		addStartNpc(voteNpcId);
 
 		//load();
 	}
@@ -179,7 +178,7 @@ public class VoteNpc extends Quest
 	@Override
 	public String onAdvEvent(String event, L2Npc npc, L2PcInstance player)
 	{
-        /*if (!this.debug && ((player.getHWID() == null) || player.getHWID().equalsIgnoreCase("")))
+		/*if (!this.debug && ((player.getHWID() == null) || player.getHWID().equalsIgnoreCase("")))
 		{
 			player.sendMessage("You can't claim items right now!");
 			return "";
@@ -213,7 +212,7 @@ public class VoteNpc extends Quest
 		{
 			if (canGetReward(player))
 			{
-				if (!this.debug)
+				if (!debug)
 				{
 					String varReuse = Long.toString(System.currentTimeMillis() + 12 * 3600000);
 					saveGlobalQuestVar(player.getAccountName(), varReuse);
@@ -221,7 +220,7 @@ public class VoteNpc extends Quest
 					//saveGlobalQuestVar(player.getHWID().substring(10), varReuse);
 				}
 
-				player.addItem(this.qn, 4356, 70, npc, true);
+				player.addItem(qn, 4356, 70, npc, true);
 
 				Util.logToFile(player.getName() + "(" + player.getExternalIP() + ") received a vote reward",
 						"VoteSystem", true);
@@ -407,7 +406,7 @@ public class VoteNpc extends Quest
 			return true;
 		}
 
-		if (this.debug)
+		if (debug)
 		{
 			return true;
 		}

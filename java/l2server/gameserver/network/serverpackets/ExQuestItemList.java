@@ -33,29 +33,28 @@ import java.util.ArrayList;
  */
 public class ExQuestItemList extends L2ItemListPacket
 {
-
 	private ArrayList<L2ItemInstance> items;
 	private PcInventory inventory;
 
 	public ExQuestItemList(ArrayList<L2ItemInstance> items, PcInventory inv)
 	{
 		this.items = items;
-		this.inventory = inv;
+		inventory = inv;
 	}
 
 	@Override
 	protected final void writeImpl()
 	{
-		writeH(this.items.size());
-		for (L2ItemInstance item : this.items)
+		writeH(items.size());
+		for (L2ItemInstance item : items)
 		{
 			writeItem(item);
 		}
-		if (this.inventory.hasInventoryBlock())
+		if (inventory.hasInventoryBlock())
 		{
-			writeH(this.inventory.getBlockItems().length);
-			writeC(this.inventory.getBlockMode());
-			for (int i : this.inventory.getBlockItems())
+			writeH(inventory.getBlockItems().length);
+			writeC(inventory.getBlockMode());
+			for (int i : inventory.getBlockItems())
 			{
 				writeD(i);
 			}

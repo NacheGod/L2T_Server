@@ -15,116 +15,50 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class FishData
 {
-	private int id;
-	private int level;
-	private String name;
-	private int hp;
-	private int hpRegen;
-	private int type;
-	private int group;
-	private int fishGuts;
-	private int gutsCheckTime;
-	private int waitTime;
-	private int combatTime;
+	@Getter private int id;
+	@Getter private int level;
+	@Getter private String name;
+	@Getter private int hp;
+	@Getter private int hpRegen;
+	@Getter @Setter private int type;
+	@Getter private int group;
+	@Getter private int fishGuts;
+	@Getter private int gutsCheckTime;
+	@Getter private int waitTime;
+	@Getter private int combatTime;
 
 	public FishData(int id, int lvl, String name, int HP, int HpRegen, int type, int group, int fish_guts, int guts_check_time, int wait_time, int combat_time)
 	{
 		this.id = id;
-		this.level = lvl;
+		level = lvl;
 		this.name = name.intern();
-		this.hp = HP;
-		this.hpRegen = HpRegen;
+		hp = HP;
+		hpRegen = HpRegen;
 		this.type = type;
 		this.group = group;
-		this.fishGuts = fish_guts;
-		this.gutsCheckTime = guts_check_time;
-		this.waitTime = wait_time;
-		this.combatTime = combat_time;
+		fishGuts = fish_guts;
+		gutsCheckTime = guts_check_time;
+		waitTime = wait_time;
+		combatTime = combat_time;
 	}
 
 	public FishData(FishData copyOf)
 	{
-		this.id = copyOf.getId();
-		this.level = copyOf.getLevel();
-		this.name = copyOf.getName();
-		this.hp = copyOf.getHP();
-		this.hpRegen = copyOf.getHpRegen();
-		this.type = copyOf.getType();
-		this.group = copyOf.getGroup();
-		this.fishGuts = copyOf.getFishGuts();
-		this.gutsCheckTime = copyOf.getGutsCheckTime();
-		this.waitTime = copyOf.getWaitTime();
-		this.combatTime = copyOf.getCombatTime();
-	}
-
-	/**
-	 * @return Returns the id.
-	 */
-	public int getId()
-	{
-		return this.id;
-	}
-
-	/**
-	 * @return Returns the level.
-	 */
-	public int getLevel()
-	{
-		return this.level;
-	}
-
-	/**
-	 * @return Returns the name.
-	 */
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public int getHP()
-	{
-		return this.hp;
-	}
-
-	public int getHpRegen()
-	{
-		return this.hpRegen;
-	}
-
-	public int getType()
-	{
-		return this.type;
-	}
-
-	public int getGroup()
-	{
-		return this.group;
-	}
-
-	public int getFishGuts()
-	{
-		return this.fishGuts;
-	}
-
-	public int getGutsCheckTime()
-	{
-		return this.gutsCheckTime;
-	}
-
-	public int getWaitTime()
-	{
-		return this.waitTime;
-	}
-
-	public int getCombatTime()
-	{
-		return this.combatTime;
-	}
-
-	public void setType(int type)
-	{
-		this.type = type;
+		id = copyOf.getId();
+		level = copyOf.getLevel();
+		name = copyOf.getName();
+		hp = copyOf.getHp();
+		hpRegen = copyOf.getHpRegen();
+		type = copyOf.getType();
+		group = copyOf.getGroup();
+		fishGuts = copyOf.getFishGuts();
+		gutsCheckTime = copyOf.getGutsCheckTime();
+		waitTime = copyOf.getWaitTime();
+		combatTime = copyOf.getCombatTime();
 	}
 }

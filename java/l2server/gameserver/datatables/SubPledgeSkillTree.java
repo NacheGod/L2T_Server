@@ -22,6 +22,7 @@ import l2server.gameserver.model.L2Skill;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,11 +47,11 @@ public class SubPledgeSkillTree
 
 	public static class SubUnitSkill
 	{
-		private L2Skill skill;
-		private int clanLvl;
-		private int reputation;
-		private int itemId;
-		private int count;
+		@Getter private L2Skill skill;
+		@Getter private int clanLvl;
+		@Getter private int reputation;
+		@Getter private int itemId;
+		@Getter private int count;
 
 		public SubUnitSkill(L2Skill skill, int clanLvl, int reputation, int itemId, int count)
 		{
@@ -61,31 +62,6 @@ public class SubPledgeSkillTree
 			this.itemId = itemId;
 			this.count = count;
 		}
-
-		public L2Skill getSkill()
-		{
-			return skill;
-		}
-
-		public int getClanLvl()
-		{
-			return clanLvl;
-		}
-
-		public int getReputation()
-		{
-			return reputation;
-		}
-
-		public int getItemId()
-		{
-			return itemId;
-		}
-
-		public int getCount()
-		{
-			return count;
-		}
 	}
 
 	public void reload()
@@ -95,7 +71,7 @@ public class SubPledgeSkillTree
 
 	private void load()
 	{
-		this.skilltree.clear();
+		skilltree.clear();
 		File file = new File(Config.DATAPACK_ROOT, Config.DATA_FOLDER + "skilltrees/subpledgeskilltree.xml");
 		if (file.exists())
 		{
@@ -164,25 +140,25 @@ public class SubPledgeSkillTree
 								continue;
 							}
 
-							this.skilltree.put(SkillTable.getSkillHashCode(skill),
+							skilltree.put(SkillTable.getSkillHashCode(skill),
 									new SubUnitSkill(skill, clanLvl, reputation, itemId, count));
 						}
 					}
 				}
 			}
 		}
-		Log.info(getClass().getSimpleName() + ": Loaded " + this.skilltree.size() + " SubUnit Skills");
+		Log.info(getClass().getSimpleName() + ": Loaded " + skilltree.size() + " SubUnit Skills");
 	}
 
 	public SubUnitSkill getSkill(long skillhash)
 	{
-		return this.skilltree.get(skillhash);
+		return skilltree.get(skillhash);
 	}
 
 	public SubUnitSkill[] getAvailableSkills(L2Clan clan)
 	{
 		ArrayList<SubUnitSkill> list = new ArrayList<>();
-		for (Object obj : this.skilltree.getValues())
+		for (Object obj : skilltree.getValues())
 		{
 			SubUnitSkill skill = (SubUnitSkill) obj;
 			if (skill.getClanLvl() <= clan.getLevel())

@@ -25,6 +25,7 @@ import l2server.gameserver.model.entity.FortSiege;
 import l2server.gameserver.network.SystemMessageId;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.log.Log;
+import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +36,6 @@ import java.util.logging.Level;
 
 public class FortSiegeManager
 {
-
 	public static FortSiegeManager getInstance()
 	{
 		return SingletonHolder.instance;
@@ -151,20 +151,20 @@ public class FortSiegeManager
 
 	public final List<FortSiege> getSieges()
 	{
-		if (this.sieges == null)
+		if (sieges == null)
 		{
-			this.sieges = new ArrayList<>();
+			sieges = new ArrayList<>();
 		}
-		return this.sieges;
+		return sieges;
 	}
 
 	public final void addSiege(FortSiege fortSiege)
 	{
-		if (this.sieges == null)
+		if (sieges == null)
 		{
-			this.sieges = new ArrayList<>();
+			sieges = new ArrayList<>();
 		}
-		this.sieges.add(fortSiege);
+		sieges.add(fortSiege);
 	}
 
 	public boolean isCombat(int itemId)
@@ -247,43 +247,23 @@ public class FortSiegeManager
 	public static class SiegeSpawn
 	{
 		Location location;
-		private int npcId;
-		private int heading;
-		private int fortId;
-		private int id;
+		@Getter private int npcId;
+		@Getter private int heading;
+		@Getter private int fortId;
+		@Getter private int id;
 
 		public SiegeSpawn(int fort_id, int x, int y, int z, int heading, int npc_id, int id)
 		{
-			this.fortId = fort_id;
-			this.location = new Location(x, y, z, heading);
+			fortId = fort_id;
+			location = new Location(x, y, z, heading);
 			this.heading = heading;
-			this.npcId = npc_id;
+			npcId = npc_id;
 			this.id = id;
-		}
-
-		public int getFortId()
-		{
-			return this.fortId;
-		}
-
-		public int getNpcId()
-		{
-			return this.npcId;
-		}
-
-		public int getHeading()
-		{
-			return this.heading;
-		}
-
-		public int getId()
-		{
-			return this.id;
 		}
 
 		public Location getLocation()
 		{
-			return this.location;
+			return location;
 		}
 	}
 

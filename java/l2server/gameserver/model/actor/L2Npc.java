@@ -49,6 +49,8 @@ import l2server.gameserver.util.Broadcast;
 import l2server.log.Log;
 import l2server.util.Rnd;
 import l2server.util.StringUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,7 +80,7 @@ public class L2Npc extends L2Character
 	/**
 	 * The L2Spawn object that manage this L2NpcInstance
 	 */
-	private L2Spawn spawn;
+	@Getter @Setter private L2Spawn spawn;
 
 	/**
 	 * The flag to specify if this L2NpcInstance is busy
@@ -138,18 +140,18 @@ public class L2Npc extends L2Character
 	public boolean ssrecharged = true;
 	public boolean spsrecharged = true;
 	protected boolean isHideName = false;
-	private int displayEffect = 0;
+	@Getter private int displayEffect = 0;
 
-	private boolean isInvisible = false;
-	private boolean isLethalInmune = false;
-	private boolean isDebuffInmune = false;
+	@Getter private boolean isInvisible = false;
+	@Getter private boolean isLethalImmune = false;
+	@Getter private boolean isDebuffImmune = false;
 
-	private L2PcInstance owner = null;
+	@Getter @Setter private L2PcInstance owner = null;
 
 	/**
 	 * The Polymorph object that manage this L2NpcInstance's morph to a PcInstance
 	 */
-	private L2PcInstance clonedPlayer;
+	@Getter @Setter private L2PcInstance clonedPlayer;
 
 	//AI Recall
 	public int getSoulShot()
@@ -178,22 +180,22 @@ public class L2Npc extends L2Character
 
 	public boolean useSoulShot()
 	{
-		if (this.soulshotcharged)
+		if (soulshotcharged)
 		{
 			return true;
 		}
-		if (this.ssrecharged)
+		if (ssrecharged)
 		{
-			this.soulshotamount = getSoulShot();
-			this.ssrecharged = false;
+			soulshotamount = getSoulShot();
+			ssrecharged = false;
 		}
-		else if (this.soulshotamount > 0)
+		else if (soulshotamount > 0)
 		{
 			if (Rnd.get(100) <= getSoulShotChance())
 			{
-				this.soulshotamount = this.soulshotamount - 1;
+				soulshotamount = soulshotamount - 1;
 				Broadcast.toSelfAndKnownPlayersInRadius(this, new MagicSkillUse(this, this, 2154, 1, 0, 0, 0), 360000);
-				this.soulshotcharged = true;
+				soulshotcharged = true;
 			}
 		}
 		else
@@ -201,32 +203,31 @@ public class L2Npc extends L2Character
 			return false;
 		}
 
-		return this.soulshotcharged;
+		return soulshotcharged;
 	}
 
 	public boolean useSpiritShot()
 	{
-
-		if (this.spiritshotcharged)
+		if (spiritshotcharged)
 		{
 			return true;
 		}
 		else
 		{
 			//_spiritshotcharged = false;
-			if (this.spsrecharged)
+			if (spsrecharged)
 			{
-				this.spiritshotamount = getSpiritShot();
-				this.spsrecharged = false;
+				spiritshotamount = getSpiritShot();
+				spsrecharged = false;
 			}
-			else if (this.spiritshotamount > 0)
+			else if (spiritshotamount > 0)
 			{
 				if (Rnd.get(100) <= getSpiritShotChance())
 				{
-					this.spiritshotamount = this.spiritshotamount - 1;
+					spiritshotamount = spiritshotamount - 1;
 					Broadcast.toSelfAndKnownPlayersInRadius(this, new MagicSkillUse(this, this, 2061, 1, 0, 0, 0),
 							360000);
-					this.spiritshotcharged = true;
+					spiritshotcharged = true;
 				}
 			}
 			else
@@ -235,7 +236,7 @@ public class L2Npc extends L2Character
 			}
 		}
 
-		return this.spiritshotcharged;
+		return spiritshotcharged;
 	}
 
 	public int getEnemyRange()
@@ -501,7 +502,7 @@ public class L2Npc extends L2Character
 
 				if (!(isDead() || isStunned() || isSleeping() || isParalyzed()))
 				{
-					onRandomAnimation(this.second ? 3 : 2);
+					onRandomAnimation(second ? 3 : 2);
 				}
 
 				startRandomAnimationTimer();
@@ -520,9 +521,9 @@ public class L2Npc extends L2Character
 	{
 		// Send a packet SocialAction to all L2PcInstance in the this.KnownPlayers of the L2NpcInstance
 		long now = System.currentTimeMillis();
-		if (now - this.lastSocialBroadcast > minimalSocialInterval)
+		if (now - lastSocialBroadcast > minimalSocialInterval)
 		{
-			this.lastSocialBroadcast = now;
+			lastSocialBroadcast = now;
 			broadcastPacket(new SocialAction(getObjectId(), animationId));
 		}
 	}
@@ -565,8 +566,8 @@ public class L2Npc extends L2Character
 		int interval = Rnd.get(minWait, maxWait) * 1000;
 
 		// Create a RandomAnimation Task that will be launched after the calculated delay
-		this.rAniTask = new RandomAnimationTask(second);
-		ThreadPoolManager.getInstance().scheduleGeneral(this.rAniTask, interval);
+		rAniTask = new RandomAnimationTask(second);
+		ThreadPoolManager.getInstance().scheduleGeneral(rAniTask, interval);
 	}
 
 	/**
@@ -599,13 +600,13 @@ public class L2Npc extends L2Character
 		initCharStatusUpdateValues();
 
 		// initialize the "current" equipment
-		this.currentLHandId = getTemplate().LHand;
-		this.currentRHandId = getTemplate().RHand;
-		this.currentEnchant = Config.ENABLE_RANDOM_ENCHANT_EFFECT ? Rnd.get(4, 21) : getTemplate().EnchantEffect;
+		currentLHandId = getTemplate().LHand;
+		currentRHandId = getTemplate().RHand;
+		currentEnchant = Config.ENABLE_RANDOM_ENCHANT_EFFECT ? Rnd.get(4, 21) : getTemplate().EnchantEffect;
 		// initialize the "current" collisions
-		this.currentCollisionHeight = getTemplate().fCollisionHeight;
-		this.currentCollisionRadius = getTemplate().fCollisionRadius;
-		this.isRndWalk = getTemplate().RandomWalk;
+		currentCollisionHeight = getTemplate().fCollisionHeight;
+		currentCollisionRadius = getTemplate().fCollisionRadius;
+		isRndWalk = getTemplate().RandomWalk;
 
 		if (template == null)
 		{
@@ -737,7 +738,7 @@ public class L2Npc extends L2Character
 	@Override
 	public void updateAbnormalEffect()
 	{
-		if (getIsInvisible())
+		if (isInvisible())
 		{
 			return;
 		}
@@ -831,17 +832,17 @@ public class L2Npc extends L2Character
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
-		return this.isAutoAttackable;
+		return isAutoAttackable;
 	}
 
 	public boolean isAutoAttackable()
 	{
-		return this.isAutoAttackable;
+		return isAutoAttackable;
 	}
 
 	public void setAutoAttackable(boolean flag)
 	{
-		this.isAutoAttackable = flag;
+		isAutoAttackable = flag;
 	}
 
 	/**
@@ -849,7 +850,7 @@ public class L2Npc extends L2Character
 	 */
 	public int getLeftHandItem()
 	{
-		return this.currentLHandId;
+		return currentLHandId;
 	}
 
 	/**
@@ -857,12 +858,12 @@ public class L2Npc extends L2Character
 	 */
 	public int getRightHandItem()
 	{
-		return this.currentRHandId;
+		return currentRHandId;
 	}
 
 	public int getEnchantEffect()
 	{
-		return this.currentEnchant;
+		return currentEnchant;
 	}
 
 	/**
@@ -870,7 +871,7 @@ public class L2Npc extends L2Character
 	 */
 	public final boolean isBusy()
 	{
-		return this.isBusy;
+		return isBusy;
 	}
 
 	/**
@@ -886,7 +887,7 @@ public class L2Npc extends L2Character
 	 */
 	public final String getBusyMessage()
 	{
-		return this.busyMessage;
+		return busyMessage;
 	}
 
 	/**
@@ -894,7 +895,7 @@ public class L2Npc extends L2Character
 	 */
 	public void setBusyMessage(String message)
 	{
-		this.busyMessage = message;
+		busyMessage = message;
 	}
 
 	/**
@@ -949,7 +950,6 @@ public class L2Npc extends L2Character
 		}
 		return !(player.getInstanceId() != getInstanceId() && getInstanceId() != player.getObjectId() &&
 				player.getInstanceId() != -1);
-
 	}
 
 	public int getInteractionDistance()
@@ -963,31 +963,31 @@ public class L2Npc extends L2Character
 	public final Castle getCastle()
 	{
 		// Get castle this NPC belongs to (excluding L2Attackable)
-		if (this.castleIndex < 0)
+		if (castleIndex < 0)
 		{
 			L2TownZone town = TownManager.getTown(getX(), getY(), getZ());
 
 			if (town != null)
 			{
-				this.castleIndex = CastleManager.getInstance().getCastleIndex(town.getTaxById());
+				castleIndex = CastleManager.getInstance().getCastleIndex(town.getTaxById());
 			}
 
-			if (this.castleIndex < 0)
+			if (castleIndex < 0)
 			{
-				this.castleIndex = CastleManager.getInstance().findNearestCastleIndex(this);
+				castleIndex = CastleManager.getInstance().findNearestCastleIndex(this);
 			}
 			else
 			{
-				this.isInTown = true; // Npc was spawned in town
+				isInTown = true; // Npc was spawned in town
 			}
 		}
 
-		if (this.castleIndex < 0)
+		if (castleIndex < 0)
 		{
 			return null;
 		}
 
-		return CastleManager.getInstance().getCastles().get(this.castleIndex);
+		return CastleManager.getInstance().getCastles().get(castleIndex);
 	}
 
 	/**
@@ -1014,26 +1014,26 @@ public class L2Npc extends L2Character
 	public final Fort getFort()
 	{
 		// Get Fort this NPC belongs to (excluding L2Attackable)
-		if (this.fortIndex < 0)
+		if (fortIndex < 0)
 		{
 			Fort fort = FortManager.getInstance().getFort(getX(), getY(), getZ());
 			if (fort != null)
 			{
-				this.fortIndex = FortManager.getInstance().getFortIndex(fort.getFortId());
+				fortIndex = FortManager.getInstance().getFortIndex(fort.getFortId());
 			}
 
-			if (this.fortIndex < 0)
+			if (fortIndex < 0)
 			{
-				this.fortIndex = FortManager.getInstance().findNearestFortIndex(this);
+				fortIndex = FortManager.getInstance().findNearestFortIndex(this);
 			}
 		}
 
-		if (this.fortIndex < 0)
+		if (fortIndex < 0)
 		{
 			return null;
 		}
 
-		return FortManager.getInstance().getForts().get(this.fortIndex);
+		return FortManager.getInstance().getForts().get(fortIndex);
 	}
 
 	/**
@@ -1056,12 +1056,12 @@ public class L2Npc extends L2Character
 
 	public final boolean getIsInTown()
 	{
-		if (this.castleIndex < 0)
+		if (castleIndex < 0)
 		{
 			getCastle();
 		}
 
-		return this.isInTown;
+		return isInTown;
 	}
 
 	/**
@@ -1642,22 +1642,12 @@ public class L2Npc extends L2Character
 
 		// normally this wouldn't really be needed, but for those few exceptions,
 		// we do need to reset the weapons back to the initial templated weapon.
-		this.currentLHandId = getTemplate().LHand;
-		this.currentRHandId = getTemplate().RHand;
-		this.currentCollisionHeight = getTemplate().fCollisionHeight;
-		this.currentCollisionRadius = getTemplate().fCollisionRadius;
+		currentLHandId = getTemplate().LHand;
+		currentRHandId = getTemplate().RHand;
+		currentCollisionHeight = getTemplate().fCollisionHeight;
+		currentCollisionRadius = getTemplate().fCollisionRadius;
 		DecayTaskManager.getInstance().addDecayTask(this);
 		return true;
-	}
-
-	/**
-	 * Set the spawn of the L2NpcInstance.<BR><BR>
-	 *
-	 * @param spawn The L2Spawn that manage the L2NpcInstance
-	 */
-	public void setSpawn(L2Spawn spawn)
-	{
-		this.spawn = spawn;
 	}
 
 	@Override
@@ -1704,9 +1694,9 @@ public class L2Npc extends L2Character
 		super.onDecay();
 
 		// Decrease its spawn counter
-		if (this.spawn != null)
+		if (spawn != null)
 		{
-			this.spawn.onDecay(this);
+			spawn.onDecay(this);
 		}
 	}
 
@@ -1735,7 +1725,7 @@ public class L2Npc extends L2Character
 		}
 		try
 		{
-			if (this.fusionSkill != null || this.continuousDebuffTargets != null)
+			if (fusionSkill != null || continuousDebuffTargets != null)
 			{
 				abortCast();
 			}
@@ -1773,14 +1763,6 @@ public class L2Npc extends L2Character
 		super.deleteMe();
 	}
 
-	/**
-	 * Return the L2Spawn object that manage this L2NpcInstance.<BR><BR>
-	 */
-	public L2Spawn getSpawn()
-	{
-		return this.spawn;
-	}
-
 	@Override
 	public String toString()
 	{
@@ -1790,12 +1772,12 @@ public class L2Npc extends L2Character
 
 	public boolean isDecayed()
 	{
-		return this.isDecayed;
+		return isDecayed;
 	}
 
 	public void setDecayed(boolean decayed)
 	{
-		this.isDecayed = decayed;
+		isDecayed = decayed;
 	}
 
 	public void endDecayTask()
@@ -1816,73 +1798,73 @@ public class L2Npc extends L2Character
 	// This is only useful for a few NPCs and is most likely going to be called from AI
 	public void setLHandId(int newWeaponId)
 	{
-		this.currentLHandId = newWeaponId;
+		currentLHandId = newWeaponId;
 		updateAbnormalEffect();
 	}
 
 	public void setRHandId(int newWeaponId)
 	{
-		this.currentRHandId = newWeaponId;
+		currentRHandId = newWeaponId;
 		updateAbnormalEffect();
 	}
 
 	public void setLRHandId(int newLWeaponId, int newRWeaponId)
 	{
-		this.currentRHandId = newRWeaponId;
-		this.currentLHandId = newLWeaponId;
+		currentRHandId = newRWeaponId;
+		currentLHandId = newLWeaponId;
 		updateAbnormalEffect();
 	}
 
 	public void setEnchant(int newEnchantValue)
 	{
-		this.currentEnchant = newEnchantValue;
+		currentEnchant = newEnchantValue;
 		updateAbnormalEffect();
 	}
 
 	public void setHideName(boolean val)
 	{
-		this.isHideName = val;
+		isHideName = val;
 	}
 
 	public boolean isHideName()
 	{
-		return !getTemplate().ShowName || this.isHideName;
+		return !getTemplate().ShowName || isHideName;
 	}
 
 	public void setCollisionHeight(double height)
 	{
-		this.currentCollisionHeight = height;
+		currentCollisionHeight = height;
 	}
 
 	public void setCollisionRadius(double radius)
 	{
-		this.currentCollisionRadius = radius;
+		currentCollisionRadius = radius;
 	}
 
 	public double getCollisionHeight()
 	{
-		return this.currentCollisionHeight;
+		return currentCollisionHeight;
 	}
 
 	public double getCollisionRadius()
 	{
-		return this.currentCollisionRadius;
+		return currentCollisionRadius;
 	}
 
 	public boolean isRndWalk()
 	{
-		return this.isRndWalk;
+		return isRndWalk;
 	}
 
 	public void setIsNoRndWalk(boolean isNoRndWalk)
 	{
-		this.isRndWalk = !isNoRndWalk;
+		isRndWalk = !isNoRndWalk;
 	}
 
 	@Override
 	public void sendInfo(L2PcInstance activeChar)
 	{
-		if (getIsInvisible())
+		if (isInvisible())
 		{
 			return;
 		}
@@ -1933,16 +1915,6 @@ public class L2Npc extends L2Character
 			noTeachMsg.replace("%objectId%", String.valueOf(getObjectId()));
 			player.sendPacket(noTeachMsg);
 		}
-	}
-
-	public L2PcInstance getClonedPlayer()
-	{
-		return this.clonedPlayer;
-	}
-
-	public void setClonedPlayer(L2PcInstance clonedPlayer)
-	{
-		this.clonedPlayer = clonedPlayer;
 	}
 
 	public void scheduleDespawn(long delay)
@@ -2002,16 +1974,11 @@ public class L2Npc extends L2Character
 
 	public void setDisplayEffect(int val)
 	{
-		if (val != this.displayEffect)
+		if (val != displayEffect)
 		{
-			this.displayEffect = val;
+			displayEffect = val;
 			broadcastPacket(new ExChangeNpcState(getObjectId(), val));
 		}
-	}
-
-	public int getDisplayEffect()
-	{
-		return this.displayEffect;
 	}
 
 	public int getColorEffect()
@@ -2040,10 +2007,10 @@ public class L2Npc extends L2Character
 
 	public void setIsInvisible(boolean b)
 	{
-		this.isInvisible = b;
+		isInvisible = b;
 
 		L2GameServerPacket toBroadcast;
-		if (this.isInvisible)
+		if (isInvisible)
 		{
 			toBroadcast = new DeleteObject(this);
 		}
@@ -2062,42 +2029,17 @@ public class L2Npc extends L2Character
 			chara.broadcastPacket(toBroadcast);
 		}
 
-		this.broadcastPacket(toBroadcast);
-	}
-
-	public boolean getIsInvisible()
-	{
-		return this.isInvisible;
+		broadcastPacket(toBroadcast);
 	}
 
 	public void setIsLethalImmune(boolean b)
 	{
-		this.isLethalInmune = b;
-	}
-
-	public boolean getIsLethalInmune()
-	{
-		return this.isLethalInmune;
-	}
-
-	public boolean getIsDebuffInmune()
-	{
-		return this.isDebuffInmune;
+		isLethalImmune = b;
 	}
 
 	public void setIsDebuffInmune(boolean b)
 	{
-		this.isDebuffInmune = b;
-	}
-
-	public void setOwner(L2PcInstance owner)
-	{
-		this.owner = owner;
-	}
-
-	public L2PcInstance getOwner()
-	{
-		return this.owner;
+		isDebuffImmune = b;
 	}
 
 	public final void tell(final L2PcInstance player, final String message)

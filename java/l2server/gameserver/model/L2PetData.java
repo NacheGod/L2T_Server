@@ -17,6 +17,8 @@ package l2server.gameserver.model;
 
 import gnu.trove.TIntObjectHashMap;
 import l2server.gameserver.datatables.SkillTable;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,28 +33,23 @@ public class L2PetData
 	private TIntObjectHashMap<L2PetLevelData> levelStats = new TIntObjectHashMap<>();
 	private List<L2PetSkillLearn> skills = new ArrayList<>();
 
-	private int load = 20000;
-	private int _hungry_limit = 1;
+	@Getter private int load = 20000;
+	@Setter private int _hungry_limit = 1;
 	private int minlvl = Byte.MAX_VALUE;
-	private int[] food = {};
+	@Getter private int[] food = {};
 
 	public void addNewStat(L2PetLevelData data, int level)
 	{
-		if (this.minlvl > level)
+		if (minlvl > level)
 		{
-			this.minlvl = level;
+			minlvl = level;
 		}
-		this.levelStats.put(level, data);
+		levelStats.put(level, data);
 	}
 
 	public L2PetLevelData getPetLevelData(int petLevel)
 	{
-		return this.levelStats.get(petLevel);
-	}
-
-	public int getLoad()
-	{
-		return this.load;
+		return levelStats.get(petLevel);
 	}
 
 	public int getHungry_limit()
@@ -62,22 +59,12 @@ public class L2PetData
 
 	public int getMinLevel()
 	{
-		return this.minlvl;
-	}
-
-	public int[] getFood()
-	{
-		return this.food;
+		return minlvl;
 	}
 
 	public void set_load(int load)
 	{
 		this.load = load;
-	}
-
-	public void set_hungry_limit(int _hungry_limit)
-	{
-		this._hungry_limit = _hungry_limit;
 	}
 
 	public void set_food(int[] food)
@@ -89,13 +76,13 @@ public class L2PetData
 
 	public void addNewSkill(int id, int lvl, int petLvl)
 	{
-		this.skills.add(new L2PetSkillLearn(id, lvl, petLvl));
+		skills.add(new L2PetSkillLearn(id, lvl, petLvl));
 	}
 
 	public int getAvailableLevel(int skillId, int petLvl)
 	{
 		int lvl = 0;
-		for (L2PetSkillLearn temp : this.skills)
+		for (L2PetSkillLearn temp : skills)
 		{
 			if (temp.getId() != skillId)
 			{
@@ -137,35 +124,20 @@ public class L2PetData
 
 	public List<L2PetSkillLearn> getAvailableSkills()
 	{
-		return this.skills;
+		return skills;
 	}
 
 	public static final class L2PetSkillLearn
 	{
-		private final int id;
-		private final int level;
-		private final int minLevel;
+		@Getter private final int id;
+		@Getter private final int level;
+		@Getter private final int minLevel;
 
 		public L2PetSkillLearn(int id, int lvl, int minLvl)
 		{
 			this.id = id;
-			this.level = lvl;
-			this.minLevel = minLvl;
-		}
-
-		public int getId()
-		{
-			return this.id;
-		}
-
-		public int getLevel()
-		{
-			return this.level;
-		}
-
-		public int getMinLevel()
-		{
-			return this.minLevel;
+			level = lvl;
+			minLevel = minLvl;
 		}
 	}
 }

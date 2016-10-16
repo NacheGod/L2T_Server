@@ -28,7 +28,6 @@ import l2server.gameserver.model.actor.instance.L2DoorInstance;
  */
 public class L2DoorAI extends L2CharacterAI
 {
-
 	public L2DoorAI(L2DoorInstance.AIAccessor accessor)
 	{
 		super(accessor);
@@ -88,7 +87,7 @@ public class L2DoorAI extends L2CharacterAI
 	@Override
 	protected void onEvtAttacked(L2Character attacker)
 	{
-		L2DoorInstance me = (L2DoorInstance) this.actor;
+		L2DoorInstance me = (L2DoorInstance) actor;
 		ThreadPoolManager.getInstance().executeTask(new onEventAttackedDoorTask(me, attacker));
 	}
 
@@ -169,12 +168,12 @@ public class L2DoorAI extends L2CharacterAI
 		@Override
 		public void run()
 		{
-			for (L2DefenderInstance guard : this.door.getKnownDefenders())
+			for (L2DefenderInstance guard : door.getKnownDefenders())
 			{
 				if (actor.isInsideRadius(guard, guard.getFactionRange(), false, true) &&
-						Math.abs(this.attacker.getZ() - guard.getZ()) < 200)
+						Math.abs(attacker.getZ() - guard.getZ()) < 200)
 				{
-					guard.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, this.attacker, 15);
+					guard.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, attacker, 15);
 				}
 			}
 		}

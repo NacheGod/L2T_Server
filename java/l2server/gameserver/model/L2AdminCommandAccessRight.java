@@ -16,6 +16,7 @@
 package l2server.gameserver.model;
 
 import l2server.gameserver.datatables.AccessLevels;
+import lombok.Getter;
 
 /**
  * @author FBIagent<br>
@@ -25,12 +26,12 @@ public class L2AdminCommandAccessRight
 	/**
 	 * The admin command<br>
 	 */
-	private String adminCommand = null;
+	@Getter private String adminCommand = null;
 	/**
 	 * The access levels which can use the admin command<br>
 	 */
 	private L2AccessLevel[] accessLevels = null;
-	private boolean requireConfirm;
+	@Getter private boolean requireConfirm;
 
 	/**
 	 * Initialized members
@@ -41,7 +42,7 @@ public class L2AdminCommandAccessRight
 	public L2AdminCommandAccessRight(String adminCommand, String accessLevels, boolean confirm)
 	{
 		this.adminCommand = adminCommand;
-		this.requireConfirm = confirm;
+		requireConfirm = confirm;
 
 		String[] accessLevelsSplit = accessLevels.split(",");
 		int numLevels = accessLevelsSplit.length;
@@ -52,23 +53,14 @@ public class L2AdminCommandAccessRight
 		{
 			try
 			{
-				this.accessLevels[i] = AccessLevels.getInstance().getAccessLevel(Integer.parseInt(accessLevelsSplit[i]));
+				this.accessLevels[i] =
+						AccessLevels.getInstance().getAccessLevel(Integer.parseInt(accessLevelsSplit[i]));
 			}
 			catch (NumberFormatException nfe)
 			{
 				this.accessLevels[i] = null;
 			}
 		}
-	}
-
-	/**
-	 * Returns the admin command the access right belongs to<br><br>
-	 *
-	 * @return String: the admin command the access right belongs to<br>
-	 */
-	public String getAdminCommand()
-	{
-		return this.adminCommand;
 	}
 
 	/**
@@ -79,7 +71,7 @@ public class L2AdminCommandAccessRight
 	 */
 	public boolean hasAccess(L2AccessLevel characterAccessLevel)
 	{
-		for (L2AccessLevel accessLevel : this.accessLevels)
+		for (L2AccessLevel accessLevel : accessLevels)
 		{
 			if (accessLevel != null && (accessLevel.getLevel() == characterAccessLevel.getLevel() ||
 					characterAccessLevel.hasChildAccess(accessLevel)))
@@ -89,10 +81,5 @@ public class L2AdminCommandAccessRight
 		}
 
 		return false;
-	}
-
-	public boolean getRequireConfirm()
-	{
-		return this.requireConfirm;
 	}
 }

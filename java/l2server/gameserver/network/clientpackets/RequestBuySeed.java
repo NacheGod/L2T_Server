@@ -29,6 +29,7 @@ import l2server.gameserver.network.serverpackets.ActionFailed;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.gameserver.templates.item.L2Item;
 import l2server.gameserver.util.Util;
+import lombok.Getter;
 
 import static l2server.gameserver.model.actor.L2Npc.DEFAULT_INTERACTION_DISTANCE;
 import static l2server.gameserver.model.itemcontainer.PcInventory.MAX_ADENA;
@@ -49,7 +50,6 @@ import static l2server.gameserver.model.itemcontainer.PcInventory.MAX_ADENA;
 
 public class RequestBuySeed extends L2GameClientPacket
 {
-
 	private static final int BATCH_LENGTH = 12; // length of the one item
 
 	private int manorId;
@@ -58,25 +58,25 @@ public class RequestBuySeed extends L2GameClientPacket
 	@Override
 	protected void readImpl()
 	{
-		this.manorId = readD();
+		manorId = readD();
 
 		int count = readD();
-		if (count <= 0 || count > Config.MAX_ITEM_IN_PACKET || count * BATCH_LENGTH != this.buf.remaining())
+		if (count <= 0 || count > Config.MAX_ITEM_IN_PACKET || count * BATCH_LENGTH != buf.remaining())
 		{
 			return;
 		}
 
-		this.seeds = new Seed[count];
+		seeds = new Seed[count];
 		for (int i = 0; i < count; i++)
 		{
 			int itemId = readD();
 			long cnt = readQ();
 			if (cnt < 1)
 			{
-				this.seeds = null;
+				seeds = null;
 				return;
 			}
-			this.seeds[i] = new Seed(itemId, cnt);
+			seeds[i] = new Seed(itemId, cnt);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class RequestBuySeed extends L2GameClientPacket
 			return;
 		}
 
-		if (this.seeds == null)
+		if (seeds == null)
 		{
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
@@ -117,13 +117,13 @@ public class RequestBuySeed extends L2GameClientPacket
 			return;
 		}
 
-		Castle castle = CastleManager.getInstance().getCastleById(this.manorId);
+		Castle castle = CastleManager.getInstance().getCastleById(manorId);
 
 		long totalPrice = 0;
 		int slots = 0;
 		int totalWeight = 0;
 
-		for (Seed i : this.seeds)
+		for (Seed i : seeds)
 		{
 			if (!i.setProduction(castle))
 			{
@@ -173,7 +173,7 @@ public class RequestBuySeed extends L2GameClientPacket
 		}
 
 		// Proceed the purchase
-		for (Seed i : this.seeds)
+		for (Seed i : seeds)
 		{
 			// take adena and check seed amount once again
 			if (!player.reduceAdena("Buy", i.getPrice(), player, false) || !i.updateProduction(castle))
@@ -199,64 +199,53 @@ public class RequestBuySeed extends L2GameClientPacket
 
 	private static class Seed
 	{
-		private final int seedId;
-		private final long count;
+		@Getter private final int seedId;
+		@Getter private final long count;
 		SeedProduction seed;
 
 		public Seed(int id, long num)
 		{
-			this.seedId = id;
-			this.count = num;
-		}
-
-		public int getSeedId()
-		{
-			return this.seedId;
-		}
-
-		public long getCount()
-		{
-			return this.count;
+			seedId = id;
+			count = num;
 		}
 
 		public long getPrice()
 		{
-			return this.seed.getPrice() * this.count;
+			return seed.getPrice() * count;
 		}
 
 		public boolean setProduction(Castle c)
 		{
-			this.seed = c.getSeed(this.seedId, CastleManorManager.PERIOD_CURRENT);
+			seed = c.getSeed(seedId, CastleManorManager.PERIOD_CURRENT);
 			// invalid price - seed disabled
-			if (this.seed.getPrice() <= 0)
+			if (seed.getPrice() <= 0)
 			{
 				return false;
 			}
 			// try to buy more than castle can produce
-			if (this.seed.getCanProduce() < this.count)
+			if (seed.getCanProduce() < count)
 			{
 				return false;
 			}
 			// check for overflow
-			return MAX_ADENA / this.count >= this.seed.getPrice();
-
+			return MAX_ADENA / count >= seed.getPrice();
 		}
 
 		public boolean updateProduction(Castle c)
 		{
-			synchronized (this.seed)
+			synchronized (seed)
 			{
-				long amount = this.seed.getCanProduce();
-				if (this.count > amount)
+				long amount = seed.getCanProduce();
+				if (count > amount)
 				{
 					return false; // not enough seeds
 				}
-				this.seed.setCanProduce(amount - this.count);
+				seed.setCanProduce(amount - count);
 			}
 			// Update Castle Seeds Amount
 			if (Config.ALT_MANOR_SAVE_ALL_ACTIONS)
 			{
-				c.updateSeed(this.seedId, this.seed.getCanProduce(), CastleManorManager.PERIOD_CURRENT);
+				c.updateSeed(seedId, seed.getCanProduce(), CastleManorManager.PERIOD_CURRENT);
 			}
 			return true;
 		}

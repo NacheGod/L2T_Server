@@ -15,10 +15,6 @@
 
 package ai.individual;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import ai.group_template.L2AttackableAIScript;
 import l2server.gameserver.ThreadPoolManager;
 import l2server.gameserver.ai.CtrlIntention;
@@ -32,6 +28,10 @@ import l2server.gameserver.network.serverpackets.ExSendUIEvent;
 import l2server.gameserver.network.serverpackets.ExSendUIEventRemove;
 import l2server.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2server.util.Rnd;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author LasTravel
@@ -51,13 +51,13 @@ public class HarnakUndergroundRuins extends L2AttackableAIScript
 		for (int zoneId = 60028; zoneId <= 60051; zoneId++)
 		{
 			L2ZoneType zone = ZoneManager.getInstance().getZoneById(zoneId);
-			this.roomInfo.put(zone, new zoneInfo());
+			roomInfo.put(zone, new zoneInfo());
 
 			//Spawn the normal mobs here
 			SpawnTable.getInstance().spawnSpecificTable(zone.getName().replace(" ", "_"));
 		}
 
-		for (int npc : this.normalMobs)
+		for (int npc : normalMobs)
 		{
 			addKillId(npc);
 			addSpawnId(npc);
@@ -205,7 +205,7 @@ public class HarnakUndergroundRuins extends L2AttackableAIScript
 	@Override
 	public String onKill(L2Npc npc, L2PcInstance killer, boolean isPet)
 	{
-		for (Entry<L2ZoneType, zoneInfo> currentZone : this.roomInfo.entrySet())
+		for (Entry<L2ZoneType, zoneInfo> currentZone : roomInfo.entrySet())
 		{
 			if (currentZone.getKey().isInsideZone(npc))
 			{

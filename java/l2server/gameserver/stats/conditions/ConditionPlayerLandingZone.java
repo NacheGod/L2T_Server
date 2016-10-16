@@ -25,7 +25,6 @@ import l2server.gameserver.stats.Env;
  */
 public class ConditionPlayerLandingZone extends Condition
 {
-
 	private boolean val;
 
 	/**
@@ -44,6 +43,6 @@ public class ConditionPlayerLandingZone extends Condition
 	@Override
 	public boolean testImpl(Env env)
 	{
-		return env.player.isInsideZone(L2Character.ZONE_LANDING) == this.val;
+		return env.player.isInsideZone(L2Character.ZONE_LANDING) == val;
 	}
 }

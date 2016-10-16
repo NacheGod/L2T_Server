@@ -36,13 +36,12 @@ import java.util.logging.Level;
  */
 public final class RequestFriendDel extends L2GameClientPacket
 {
-
 	private String name;
 
 	@Override
 	protected void readImpl()
 	{
-		this.name = readS();
+		name = readS();
 	}
 
 	@Override
@@ -56,12 +55,12 @@ public final class RequestFriendDel extends L2GameClientPacket
 			return;
 		}
 
-		int id = CharNameTable.getInstance().getIdByName(this.name);
+		int id = CharNameTable.getInstance().getIdByName(name);
 
 		if (id == -1)
 		{
 			sm = SystemMessage.getSystemMessage(SystemMessageId.C1_NOT_ON_YOUR_FRIENDS_LIST);
-			sm.addString(this.name);
+			sm.addString(name);
 			activeChar.sendPacket(sm);
 			return;
 		}
@@ -69,7 +68,7 @@ public final class RequestFriendDel extends L2GameClientPacket
 		if (!activeChar.getFriendList().contains(id))
 		{
 			sm = SystemMessage.getSystemMessage(SystemMessageId.C1_NOT_ON_YOUR_FRIENDS_LIST);
-			sm.addString(this.name);
+			sm.addString(name);
 			activeChar.sendPacket(sm);
 			return;
 		}
@@ -91,14 +90,14 @@ public final class RequestFriendDel extends L2GameClientPacket
 
 			// Player deleted from your friendlist
 			sm = SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_BEEN_DELETED_FROM_YOUR_FRIENDS_LIST);
-			sm.addString(this.name);
+			sm.addString(name);
 			activeChar.sendPacket(sm);
 
 			activeChar.getFriendList().remove(new Integer(id));
 			activeChar.sendPacket(new FriendPacket(false, id, activeChar));
 			activeChar.sendPacket(new FriendList(activeChar));
 
-			L2PcInstance player = L2World.getInstance().getPlayer(this.name);
+			L2PcInstance player = L2World.getInstance().getPlayer(name);
 			if (player != null)
 			{
 				activeChar.removeFriendMemo(player.getObjectId());

@@ -21,6 +21,7 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 
@@ -31,12 +32,12 @@ public class AbilityTable
 {
 	public class Ability
 	{
-		private int type;
-		private int skillId;
-		private int maxLevel;
-		private int reqPoints;
-		private int reqSkill;
-		private int reqSkillLvl;
+		@Getter private int type;
+		@Getter private int skillId;
+		@Getter private int maxLevel;
+		@Getter private int reqPoints;
+		@Getter private int reqSkill;
+		@Getter private int reqSkillLvl;
 
 		public Ability(int type, int skillId, int maxLevel, int reqPoints, int reqSkill, int reqSkillLvl)
 		{
@@ -46,36 +47,6 @@ public class AbilityTable
 			this.reqPoints = reqPoints;
 			this.reqSkill = reqSkill;
 			this.reqSkillLvl = reqSkillLvl;
-		}
-
-		public int getType()
-		{
-			return this.type;
-		}
-
-		public int getSkillId()
-		{
-			return this.skillId;
-		}
-
-		public int getMaxLevel()
-		{
-			return this.maxLevel;
-		}
-
-		public int getReqPoints()
-		{
-			return this.reqPoints;
-		}
-
-		public int getReqSkill()
-		{
-			return this.reqSkill;
-		}
-
-		public int getReqSkillLvl()
-		{
-			return this.reqSkillLvl;
 		}
 	}
 
@@ -126,18 +97,18 @@ public class AbilityTable
 							reqSkillLvl = abilityNode.getInt("reqSkillLvl");
 						}
 
-						this.abilities.put(skillId, new Ability(type, skillId, maxLevel, reqPoints, reqSkill, reqSkillLvl));
+						abilities.put(skillId, new Ability(type, skillId, maxLevel, reqPoints, reqSkill, reqSkillLvl));
 					}
 				}
 			}
 		}
 
-		Log.info("AbilityTable: Loaded " + this.abilities.size() + " abilities.");
+		Log.info("AbilityTable: Loaded " + abilities.size() + " abilities.");
 	}
 
 	public Ability getAbility(int skillId)
 	{
-		return this.abilities.get(skillId);
+		return abilities.get(skillId);
 	}
 
 	public int getMaxPoints()
@@ -223,7 +194,6 @@ public class AbilityTable
 					}
 					else
 					{
-
 						int classId = player.getClassId();
 						if (classId > 146 && classId < 188)
 						{

@@ -7,16 +7,14 @@ import l2server.log.Log;
  */
 public class RequestBRBuyProduct extends L2GameClientPacket
 {
-	@SuppressWarnings("unused")
-	private int productId;
-	@SuppressWarnings("unused")
-	private int count;
+	@SuppressWarnings("unused") private int productId;
+	@SuppressWarnings("unused") private int count;
 
 	@Override
 	public void readImpl()
 	{
-		this.productId = readD();
-		this.count = readD();
+		productId = readD();
+		count = readD();
 	}
 
 	@Override

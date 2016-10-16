@@ -23,6 +23,7 @@ import l2server.gameserver.stats.SkillParser;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,9 +48,9 @@ public class SkillTable implements Reloadable
 
 	private SkillTable()
 	{
-		this.skills = new TLongObjectHashMap<>();
-		this.skillMaxLevel = new TIntIntHashMap();
-		this.enchantable = new HashSet<>();
+		skills = new TLongObjectHashMap<>();
+		skillMaxLevel = new TIntIntHashMap();
+		enchantable = new HashSet<>();
 		load();
 
 		ReloadableManager.getInstance().register("skills", this);
@@ -75,9 +76,9 @@ public class SkillTable implements Reloadable
 
 	private void load()
 	{
-		this.skills.clear();
-		this.skillMaxLevel.clear();
-		this.enchantable.clear();
+		skills.clear();
+		skillMaxLevel.clear();
+		enchantable.clear();
 
 		File dir = new File(Config.DATAPACK_ROOT, Config.DATA_FOLDER + "skills");
 		if (!dir.exists())
@@ -118,19 +119,19 @@ public class SkillTable implements Reloadable
 								skill.parse();
 								for (L2Skill s : skill.getSkills().values())
 								{
-									this.skills.put(getSkillHashCode(s.getId(), s.getLevel(), s.getEnchantRouteId(),
+									skills.put(getSkillHashCode(s.getId(), s.getLevel(), s.getEnchantRouteId(),
 											s.getEnchantLevel()), s);
 									if (s.getEnchantRouteId() > 0)
 									{
-										this.enchantable.add(s.getId());
+										enchantable.add(s.getId());
 										continue;
 									}
 
 									// only non-enchanted skills
-									final int maxLvl = this.skillMaxLevel.get(s.getId());
+									final int maxLvl = skillMaxLevel.get(s.getId());
 									if (s.getLevelHash() > maxLvl)
 									{
-										this.skillMaxLevel.put(s.getId(), s.getLevelHash());
+										skillMaxLevel.put(s.getId(), s.getLevelHash());
 									}
 								}
 							}
@@ -150,7 +151,7 @@ public class SkillTable implements Reloadable
 			sk.skill = getInfo(sk.id, sk.level);
 		}
 
-		Log.info("SkillTable: Loaded " + this.skills.size() + " skills.");
+		Log.info("SkillTable: Loaded " + skills.size() + " skills.");
 	}
 
 	/**
@@ -201,18 +202,18 @@ public class SkillTable implements Reloadable
 	public final L2Skill getInfo(final int skillId, final int level, int enchantRouteId, int enchantRouteLevel)
 	{
 		long hashCode = getSkillHashCode(skillId, level, enchantRouteId, enchantRouteLevel);
-		final L2Skill result = this.skills.get(hashCode);
+		final L2Skill result = skills.get(hashCode);
 		if (result != null)
 		{
 			return result;
 		}
 
 		// skill/level not found, fix for transformation scripts
-		final int maxLvl = this.skillMaxLevel.get(skillId);
+		final int maxLvl = skillMaxLevel.get(skillId);
 		// requested level too high
 		if (maxLvl > 0 && level > maxLvl)
 		{
-			return this.skills.get(getSkillHashCode(skillId, maxLvl));
+			return skills.get(getSkillHashCode(skillId, maxLvl));
 		}
 
 		String error = "No skill info found for skill id " + skillId;
@@ -232,12 +233,12 @@ public class SkillTable implements Reloadable
 
 	public final int getMaxLevel(final int skillId)
 	{
-		return this.skillMaxLevel.get(skillId);
+		return skillMaxLevel.get(skillId);
 	}
 
 	public final boolean isEnchantable(final int skillId)
 	{
-		return this.enchantable.contains(skillId);
+		return enchantable.contains(skillId);
 	}
 
 	/**
@@ -247,18 +248,18 @@ public class SkillTable implements Reloadable
 	{
 		L2Skill[] temp = new L2Skill[3 + (addNoble ? 1 : 0) + (hasCastle ? 2 : 0)];
 		int i = 0;
-		temp[i++] = this.skills.get(SkillTable.getSkillHashCode(19034, 1));
-		temp[i++] = this.skills.get(SkillTable.getSkillHashCode(19035, 1));
-		temp[i++] = this.skills.get(SkillTable.getSkillHashCode(1903, 1));
+		temp[i++] = skills.get(SkillTable.getSkillHashCode(19034, 1));
+		temp[i++] = skills.get(SkillTable.getSkillHashCode(19035, 1));
+		temp[i++] = skills.get(SkillTable.getSkillHashCode(1903, 1));
 
 		if (addNoble)
 		{
-			temp[i++] = this.skills.get(SkillTable.getSkillHashCode(326, 1));
+			temp[i++] = skills.get(SkillTable.getSkillHashCode(326, 1));
 		}
 		if (hasCastle)
 		{
-			temp[i++] = this.skills.get(SkillTable.getSkillHashCode(844, 1));
-			temp[i++] = this.skills.get(SkillTable.getSkillHashCode(845, 1));
+			temp[i++] = skills.get(SkillTable.getSkillHashCode(844, 1));
+			temp[i++] = skills.get(SkillTable.getSkillHashCode(845, 1));
 		}
 		return temp;
 	}
@@ -301,18 +302,12 @@ public class SkillTable implements Reloadable
 
 		private final int id;
 		private final int level;
-		private L2Skill skill = null;
+		@Getter private L2Skill skill = null;
 
 		FrequentSkill(int id, int level)
 		{
 			this.id = id;
 			this.level = level;
 		}
-
-		public L2Skill getSkill()
-		{
-			return this.skill;
-		}
-
 	}
 }

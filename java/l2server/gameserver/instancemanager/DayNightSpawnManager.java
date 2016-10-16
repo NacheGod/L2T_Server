@@ -30,7 +30,6 @@ import java.util.logging.Level;
  */
 public class DayNightSpawnManager
 {
-
 	private Map<L2Spawn, L2RaidBossInstance> bosses;
 
 	public static DayNightSpawnManager getInstance()
@@ -40,7 +39,7 @@ public class DayNightSpawnManager
 
 	private DayNightSpawnManager()
 	{
-		this.bosses = new HashMap<>();
+		bosses = new HashMap<>();
 
 		Log.info("DayNightSpawnManager: Day/Night handler initialized");
 	}
@@ -108,6 +107,6 @@ public class DayNightSpawnManager
 
 	public void cleanUp()
 	{
-		this.bosses.clear();
+		bosses.clear();
 	}
 }

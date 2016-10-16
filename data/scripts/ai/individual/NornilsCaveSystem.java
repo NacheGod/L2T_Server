@@ -15,10 +15,6 @@
 
 package ai.individual;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import ai.group_template.L2AttackableAIScript;
 import l2server.gameserver.ThreadPoolManager;
 import l2server.gameserver.datatables.SpawnTable;
@@ -27,6 +23,10 @@ import l2server.gameserver.model.actor.L2Npc;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.model.zone.L2ZoneType;
 import l2server.gameserver.network.serverpackets.ExSendUIEvent;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author LasTravel
@@ -44,7 +44,7 @@ public class NornilsCaveSystem extends L2AttackableAIScript
 	{
 		super(id, name, descr);
 
-		for (int a : this.mobs)
+		for (int a : mobs)
 		{
 			addKillId(a);
 		}
@@ -53,7 +53,7 @@ public class NornilsCaveSystem extends L2AttackableAIScript
 		{
 			L2ZoneType zone = ZoneManager.getInstance().getZoneById(zoneId);
 
-			this.roomInfo.put(zone, new zoneInfo());
+			roomInfo.put(zone, new zoneInfo());
 
 			//Spawn the normal mobs here
 			SpawnTable.getInstance().spawnSpecificTable(zone.getName().toLowerCase().replace(" ", "_"));
@@ -95,7 +95,7 @@ public class NornilsCaveSystem extends L2AttackableAIScript
 	@Override
 	public String onKill(L2Npc npc, L2PcInstance killer, boolean isPet)
 	{
-		for (Entry<L2ZoneType, zoneInfo> currentZone : this.roomInfo.entrySet())
+		for (Entry<L2ZoneType, zoneInfo> currentZone : roomInfo.entrySet())
 		{
 			if (currentZone.getKey().isInsideZone(npc))
 			{
@@ -107,7 +107,7 @@ public class NornilsCaveSystem extends L2AttackableAIScript
 					return super.onKill(npc, killer, isPet);
 				}
 
-				int calcPoints = currentPoints + this.pointsPerKill;
+				int calcPoints = currentPoints + pointsPerKill;
 				if (calcPoints >= 100)
 				{
 					//At this point the Zone should change the mobs

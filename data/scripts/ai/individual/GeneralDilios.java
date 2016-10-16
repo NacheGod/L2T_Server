@@ -15,9 +15,6 @@
 
 package ai.individual;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ai.group_template.L2AttackableAIScript;
 import l2server.gameserver.datatables.SpawnTable;
 import l2server.gameserver.model.L2Spawn;
@@ -26,6 +23,9 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.network.serverpackets.NpcSay;
 import l2server.gameserver.network.serverpackets.SocialAction;
 import l2server.util.Rnd;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Dilios AI
@@ -58,7 +58,7 @@ public class GeneralDilios extends L2AttackableAIScript
 	{
 		super(questId, name, descr);
 		findNpcs();
-		if (this.general == null || this.guards.isEmpty())
+		if (general == null || guards.isEmpty())
 		{
 			throw new NullPointerException("Cannot find npcs!");
 		}
@@ -73,11 +73,11 @@ public class GeneralDilios extends L2AttackableAIScript
 			{
 				if (spawn.getNpcId() == generalId)
 				{
-					this.general = spawn.getNpc();
+					general = spawn.getNpc();
 				}
 				else if (spawn.getNpcId() == guardId)
 				{
-					this.guards.add(spawn.getNpc());
+					guards.add(spawn.getNpc());
 				}
 			}
 		}
@@ -91,22 +91,22 @@ public class GeneralDilios extends L2AttackableAIScript
 			int value = Integer.parseInt(event.substring(8));
 			if (value < 6)
 			{
-				this.general.broadcastPacket(
-						new NpcSay(this.general.getObjectId(), 0, generalId, 1800704)); // Stabbing three times!
+				general.broadcastPacket(
+						new NpcSay(general.getObjectId(), 0, generalId, 1800704)); // Stabbing three times!
 				startQuestTimer("guard_animation_0", 3400, null, null);
 			}
 			else
 			{
 				value = -1;
-				this.general.broadcastPacket(
-						new NpcSay(this.general.getObjectId(), 1, generalId, diliosText[Rnd.get(diliosText.length)]));
+				general.broadcastPacket(
+						new NpcSay(general.getObjectId(), 1, generalId, diliosText[Rnd.get(diliosText.length)]));
 			}
 			startQuestTimer("command_" + (value + 1), 60000, null, null);
 		}
 		else if (event.startsWith("guard_animation_"))
 		{
 			int value = Integer.parseInt(event.substring(16));
-			for (L2Npc guard : this.guards)
+			for (L2Npc guard : guards)
 			{
 				guard.broadcastPacket(new SocialAction(guard.getObjectId(), 4));
 			}

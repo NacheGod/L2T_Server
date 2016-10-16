@@ -23,24 +23,21 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public class ExResponseCommissionInfo extends L2GameServerPacket
 {
-
-	@SuppressWarnings("unused")
-	private L2PcInstance player;
-	@SuppressWarnings("unused")
-	private L2ItemInstance item;
+	@SuppressWarnings("unused") private L2PcInstance player;
+	@SuppressWarnings("unused") private L2ItemInstance item;
 	private boolean success;
 
 	public ExResponseCommissionInfo(L2PcInstance player, int itemOID, boolean success)
 	{
 		this.player = player;
-		this.item = player.getInventory().getItemByObjectId(itemOID);
+		item = player.getInventory().getItemByObjectId(itemOID);
 		this.success = success;
 	}
 
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.success ? 0x01 : 0x00);
+		writeD(success ? 0x01 : 0x00);
 		writeD(0x00); // ItemID
 		writeD(0x00); // TODO: Price
 		writeQ(0x00); // TODO: Count

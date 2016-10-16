@@ -95,7 +95,7 @@ public class EffectFear extends L2Effect
 					return false;
 			}
 		}
-		 */
+		*/
 
 		if (getEffected() instanceof L2NpcInstance || getEffected() instanceof L2DefenderInstance ||
 				getEffected() instanceof L2FortCommanderInstance || getEffected() instanceof L2SiegeFlagInstance ||
@@ -113,11 +113,11 @@ public class EffectFear extends L2Effect
 
 			if (getEffected().getX() > getEffector().getX())
 			{
-				this.dX = 1;
+				dX = 1;
 			}
 			if (getEffected().getY() > getEffector().getY())
 			{
-				this.dY = 1;
+				dY = 1;
 			}
 
 			getEffected().startFear();
@@ -151,15 +151,15 @@ public class EffectFear extends L2Effect
 
 		if (getEffected().getX() > getEffector().getX())
 		{
-			this.dX = 1;
+			dX = 1;
 		}
 		if (getEffected().getY() > getEffector().getY())
 		{
-			this.dY = 1;
+			dY = 1;
 		}
 
-		posX += this.dX * FEAR_RANGE;
-		posY += this.dY * FEAR_RANGE;
+		posX += dX * FEAR_RANGE;
+		posY += dY * FEAR_RANGE;
 
 		if (Config.GEODATA > 0)
 		{

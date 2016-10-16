@@ -18,6 +18,7 @@ package l2server.gameserver.templates.chars;
 import l2server.gameserver.datatables.PlayerStatDataTable;
 import l2server.gameserver.model.base.Race;
 import l2server.gameserver.templates.StatsSet;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,8 @@ public class L2PcTemplate extends L2CharTemplate
 	public final double fCollisionHeightFemale;
 	public final double fCollisionRadiusFemale;
 
-	private List<PcTemplateItem> items = new ArrayList<>();
-	private List<Integer> skillIds = new ArrayList<>();
+	@Getter private List<PcTemplateItem> items = new ArrayList<>();
+	@Getter private List<Integer> skillIds = new ArrayList<>();
 
 	public L2PcTemplate(StatsSet set)
 	{
@@ -60,30 +61,22 @@ public class L2PcTemplate extends L2CharTemplate
 	{
 		if (amount == 1 || !equipped)
 		{
-			this.items.add(new PcTemplateItem(itemId, amount, equipped));
+			items.add(new PcTemplateItem(itemId, amount, equipped));
 		}
 		else
 		{
 			for (int i = 0; i < amount; i++)
 			{
-				this.items.add(new PcTemplateItem(itemId, 1, equipped));
+				items.add(new PcTemplateItem(itemId, 1, equipped));
 			}
 		}
 	}
 
-	/**
-	 * @return itemIds of all the starter equipment
-	 */
-	public List<PcTemplateItem> getItems()
-	{
-		return this.items;
-	}
-
 	public static final class PcTemplateItem
 	{
-		private final int itemId;
-		private final int amount;
-		private final boolean equipped;
+		@Getter private final int itemId;
+		@Getter private final int amount;
+		@Getter private final boolean equipped;
 
 		/**
 		 * @param amount
@@ -95,40 +88,11 @@ public class L2PcTemplate extends L2CharTemplate
 			this.amount = amount;
 			this.equipped = equipped;
 		}
-
-		/**
-		 * @return Returns the itemId.
-		 */
-		public int getItemId()
-		{
-			return this.itemId;
-		}
-
-		/**
-		 * @return Returns the amount.
-		 */
-		public int getAmount()
-		{
-			return this.amount;
-		}
-
-		/**
-		 * @return Returns the if the item should be equipped after char creation.
-		 */
-		public boolean isEquipped()
-		{
-			return this.equipped;
-		}
 	}
 
 	public void addSkill(int id)
 	{
-		this.skillIds.add(id);
-	}
-
-	public List<Integer> getSkillIds()
-	{
-		return this.skillIds;
+		skillIds.add(id);
 	}
 
 	public final int getFallHeight()

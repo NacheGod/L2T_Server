@@ -31,29 +31,25 @@ public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket
 		this.channel = channel;
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		if (this.channel == null)
+		if (channel == null)
 		{
 			return;
 		}
 
 		// L2PcInstance player = this.getClient().getActiveChar();
 
-		writeS(this.channel.getChannelLeader().getName()); // Channelowner
+		writeS(channel.getChannelLeader().getName()); // Channelowner
 		writeD(0); // Channelloot 0 or 1
-		writeD(this.channel.getMemberCount());
+		writeD(channel.getMemberCount());
 
-		writeD(this.channel.getPartys().size());
-		for (L2Party p : this.channel.getPartys())
+		writeD(channel.getPartys().size());
+		for (L2Party p : channel.getPartys())
 		{
 			writeS(p.getLeader().getName()); // Leadername
 			writeD(p.getPartyLeaderOID()); // Leaders ObjId

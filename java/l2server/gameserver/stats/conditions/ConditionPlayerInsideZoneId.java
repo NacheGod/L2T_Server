@@ -20,7 +20,6 @@ import l2server.gameserver.stats.Env;
 
 public class ConditionPlayerInsideZoneId extends Condition
 {
-
 	private int id;
 
 	/**
@@ -37,6 +36,6 @@ public class ConditionPlayerInsideZoneId extends Condition
 	@Override
 	public boolean testImpl(Env env)
 	{
-		return ZoneManager.getInstance().getZoneById(this.id).isCharacterInZone(env.player);
+		return ZoneManager.getInstance().getZoneById(id).isCharacterInZone(env.player);
 	}
 }

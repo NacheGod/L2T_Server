@@ -22,13 +22,12 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExDuelAskStart extends L2GameServerPacket
 {
-
 	private String requestorName;
 	private int partyDuel;
 
 	public ExDuelAskStart(String requestor, int partyDuel)
 	{
-		this.requestorName = requestor;
+		requestorName = requestor;
 		this.partyDuel = partyDuel;
 	}
 
@@ -37,7 +36,7 @@ public class ExDuelAskStart extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeS(this.requestorName);
-		writeD(this.partyDuel);
+		writeS(requestorName);
+		writeD(partyDuel);
 	}
 }

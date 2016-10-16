@@ -15,15 +15,15 @@
 
 package ai.group_template;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import l2server.gameserver.datatables.SpawnTable;
 import l2server.gameserver.model.L2Spawn;
 import l2server.gameserver.model.actor.L2Npc;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.network.serverpackets.SocialAction;
 import l2server.util.Rnd;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author LasTravel
@@ -52,16 +52,16 @@ public class TalkingIslandGuards extends L2AttackableAIScript
 			{
 				if (spawn.getNpcId() == generalId)
 				{
-					this.generals.add(spawn.getNpc());
+					generals.add(spawn.getNpc());
 				}
 				else if (spawn.getNpcId() == guardId)
 				{
-					this.guards.add(spawn.getNpc());
+					guards.add(spawn.getNpc());
 				}
 			}
 		}
 
-		if (!this.guards.isEmpty() && !this.generals.isEmpty())
+		if (!guards.isEmpty() && !generals.isEmpty())
 		{
 			startQuestTimer("socialgeneral", 5000, null, null);
 		}
@@ -72,20 +72,20 @@ public class TalkingIslandGuards extends L2AttackableAIScript
 	{
 		if (event.startsWith("socialgeneral"))
 		{
-			this.action = Rnd.get(12);
+			action = Rnd.get(12);
 
-			for (L2Npc general : this.generals)
+			for (L2Npc general : generals)
 			{
-				general.broadcastPacket(new SocialAction(general.getObjectId(), this.action));
+				general.broadcastPacket(new SocialAction(general.getObjectId(), action));
 			}
 
 			startQuestTimer("socialguards", 2000, null, null);
 		}
 		else if (event.startsWith("socialguards"))
 		{
-			for (L2Npc guard : this.guards)
+			for (L2Npc guard : guards)
 			{
-				guard.broadcastPacket(new SocialAction(guard.getObjectId(), this.action));
+				guard.broadcastPacket(new SocialAction(guard.getObjectId(), action));
 			}
 
 			startQuestTimer("socialgeneral", 8000, null, null);

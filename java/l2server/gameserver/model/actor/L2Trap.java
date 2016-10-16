@@ -29,6 +29,7 @@ import l2server.gameserver.taskmanager.DecayTaskManager;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
 import l2server.gameserver.templates.item.L2Weapon;
 import l2server.log.Log;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.logging.Level;
@@ -41,7 +42,7 @@ public class L2Trap extends L2Character
 	protected static final int TICK = 1000; // 1s
 
 	private boolean isTriggered;
-	private final L2Skill skill;
+	@Getter private final L2Skill skill;
 	private final int lifeTime;
 	private int timeRemaining;
 	private boolean hasLifeTime;
@@ -57,9 +58,9 @@ public class L2Trap extends L2Character
 		setName(template.Name);
 		setIsInvul(false);
 
-		this.isTriggered = false;
+		isTriggered = false;
 		this.skill = skill;
-		this.hasLifeTime = true;
+		hasLifeTime = true;
 		if (lifeTime != 0)
 		{
 			this.lifeTime = lifeTime;
@@ -68,10 +69,10 @@ public class L2Trap extends L2Character
 		{
 			this.lifeTime = 30000;
 		}
-		this.timeRemaining = this.lifeTime;
+		timeRemaining = this.lifeTime;
 		if (lifeTime < 0)
 		{
-			this.hasLifeTime = false;
+			hasLifeTime = false;
 		}
 
 		if (skill != null)
@@ -227,12 +228,6 @@ public class L2Trap extends L2Character
 	@Override
 	public void updateAbnormalEffect()
 	{
-
-	}
-
-	public L2Skill getSkill()
-	{
-		return this.skill;
 	}
 
 	public L2PcInstance getOwner()
@@ -257,7 +252,7 @@ public class L2Trap extends L2Character
 	 */
 	public boolean isTriggered()
 	{
-		return this.isTriggered;
+		return isTriggered;
 	}
 
 	/**
@@ -360,7 +355,7 @@ public class L2Trap extends L2Character
 	 */
 	public void trigger(L2Character target)
 	{
-		this.isTriggered = true;
+		isTriggered = true;
 		broadcastPacket(new NpcInfo(this));
 		setTarget(target);
 
@@ -405,7 +400,7 @@ public class L2Trap extends L2Character
 	@Override
 	public void sendInfo(L2PcInstance activeChar)
 	{
-		if (this.isTriggered || canSee(activeChar))
+		if (isTriggered || canSee(activeChar))
 		{
 			activeChar.sendPacket(new NpcInfo(this));
 		}
@@ -417,7 +412,7 @@ public class L2Trap extends L2Character
 		Collection<L2PcInstance> plrs = getKnownList().getKnownPlayers().values();
 		for (L2PcInstance player : plrs)
 		{
-			if (player != null && (this.isTriggered || canSee(player)))
+			if (player != null && (isTriggered || canSee(player)))
 			{
 				player.sendPacket(mov);
 			}
@@ -436,7 +431,7 @@ public class L2Trap extends L2Character
 			}
 			if (isInsideRadius(player, radiusInKnownlist, false, false))
 			{
-				if (this.isTriggered || canSee(player))
+				if (isTriggered || canSee(player))
 				{
 					player.sendPacket(mov);
 				}

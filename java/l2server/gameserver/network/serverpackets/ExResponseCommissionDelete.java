@@ -20,7 +20,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExResponseCommissionDelete extends L2GameServerPacket
 {
-
 	private boolean success;
 
 	public ExResponseCommissionDelete(boolean success)
@@ -31,6 +30,6 @@ public class ExResponseCommissionDelete extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.success ? 0x01 : 0x00);
+		writeD(success ? 0x01 : 0x00);
 	}
 }

@@ -44,7 +44,7 @@ public class Banking implements IVoicedCommandHandler
 		else if (command.equalsIgnoreCase("deposit"))
 		{
 			/*if (activeChar.getInventoryItemCount(57, 0) >= Config.BANKING_SYSTEM_ADENA)
-            {
+			{
 				if (!activeChar.reduceAdena("Goldbar", Config.BANKING_SYSTEM_ADENA, activeChar, false))
 					return false;
 				activeChar.getInventory().addItem("Goldbar", 3470, Config.BANKING_SYSTEM_GOLDBARS, activeChar, null);
@@ -85,6 +85,6 @@ public class Banking implements IVoicedCommandHandler
 	@Override
 	public String[] getVoicedCommandList()
 	{
-		return this.voicedCommands;
+		return voicedCommands;
 	}
 }

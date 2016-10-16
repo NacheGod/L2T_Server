@@ -30,7 +30,6 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 
 	protected ReceivablePacket()
 	{
-
 	}
 
 	protected abstract boolean read();
@@ -46,7 +45,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final void readB(final byte[] dst)
 	{
-		this.buf.get(dst);
+		buf.get(dst);
 	}
 
 	/**
@@ -60,7 +59,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final void readB(final byte[] dst, final int offset, final int len)
 	{
-		this.buf.get(dst, offset, len);
+		buf.get(dst, offset, len);
 	}
 
 	/**
@@ -71,7 +70,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final int readC()
 	{
-		return this.buf.get() & 0xFF;
+		return buf.get() & 0xFF;
 	}
 
 	/**
@@ -82,7 +81,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final int readH()
 	{
-		return this.buf.getShort() & 0xFFFF;
+		return buf.getShort() & 0xFFFF;
 	}
 
 	/**
@@ -93,7 +92,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final int readD()
 	{
-		return this.buf.getInt();
+		return buf.getInt();
 	}
 
 	/**
@@ -104,7 +103,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final long readQ()
 	{
-		return this.buf.getLong();
+		return buf.getLong();
 	}
 
 	/**
@@ -115,7 +114,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final double readF()
 	{
-		return this.buf.getDouble();
+		return buf.getDouble();
 	}
 
 	/**
@@ -125,15 +124,15 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	protected final String readS()
 	{
-		this.sbuf.clear();
+		sbuf.clear();
 
 		char ch;
-		while ((ch = this.buf.getChar()) != 0)
+		while ((ch = buf.getChar()) != 0)
 		{
-			this.sbuf.append(ch);
+			sbuf.append(ch);
 		}
 
-		return this.sbuf.toString();
+		return sbuf.toString();
 	}
 
 	/**
@@ -145,8 +144,8 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	 */
 	public void setBuffers(ByteBuffer data, T client, NioNetStringBuffer sBuffer)
 	{
-		this.buf = data;
+		buf = data;
 		this.client = client;
-		this.sbuf = sBuffer;
+		sbuf = sBuffer;
 	}
 }

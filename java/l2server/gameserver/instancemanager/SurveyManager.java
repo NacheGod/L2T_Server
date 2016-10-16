@@ -16,6 +16,7 @@
 package l2server.gameserver.instancemanager;
 
 import l2server.L2DatabaseFactory;
+import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,8 +41,8 @@ public class SurveyManager
 	private final String STORE_ANSWER = "INSERT INTO survey_answer (charId,survey_id,answer_id) VALUES (?,?)";
 
 	private int id = 0;
-	private String question;
-	private String description;
+	@Getter private String question;
+	@Getter private String description;
 	private Map<Integer, String> possibleAnswers;
 	private List<Integer> answers;
 
@@ -61,12 +62,12 @@ public class SurveyManager
 
 			if (rset.next())
 			{
-				this.id = rset.getInt("survey_id");
-				this.question = rset.getString("question");
-				this.description = rset.getString("description");
+				id = rset.getInt("survey_id");
+				question = rset.getString("question");
+				description = rset.getString("description");
 
 				PreparedStatement statement2 = con.prepareStatement(GET_CURRENT_SURVEY_POSSIBLE_ANSWERS);
-				statement2.setInt(1, this.id);
+				statement2.setInt(1, id);
 				ResultSet rset2 = statement2.executeQuery();
 				Map<Integer, String> possibleAnswers = new HashMap<>();
 				while (rset2.next())
@@ -77,7 +78,7 @@ public class SurveyManager
 				this.possibleAnswers = possibleAnswers;
 
 				statement2 = con.prepareStatement(GET_CURRENT_SURVEY_ANSWERS);
-				statement2.setInt(1, this.id);
+				statement2.setInt(1, id);
 				rset2 = statement2.executeQuery();
 				List<Integer> answers = new ArrayList<>();
 				while (rset2.next())
@@ -103,37 +104,27 @@ public class SurveyManager
 
 	public boolean isActive()
 	{
-		return this.id > 0;
-	}
-
-	public String getQuestion()
-	{
-		return this.question;
-	}
-
-	public String getDescription()
-	{
-		return this.description;
+		return id > 0;
 	}
 
 	public Integer[] getPossibleAnswerIds()
 	{
-		return (Integer[]) this.possibleAnswers.keySet().toArray();
+		return (Integer[]) possibleAnswers.keySet().toArray();
 	}
 
 	public String getPossibleAnswer(int id)
 	{
-		return this.possibleAnswers.get(id);
+		return possibleAnswers.get(id);
 	}
 
 	public boolean playerAnswered(int playerObjId)
 	{
-		return this.answers.contains(playerObjId);
+		return answers.contains(playerObjId);
 	}
 
 	public boolean storeAnswer(int playerObjId, int answerIndex)
 	{
-		if (this.answers.contains(playerObjId))
+		if (answers.contains(playerObjId))
 		{
 			return false;
 		}
@@ -155,7 +146,7 @@ public class SurveyManager
 		{
 			L2DatabaseFactory.close(con);
 		}
-		this.answers.add(playerObjId);
+		answers.add(playerObjId);
 		return true;
 	}
 

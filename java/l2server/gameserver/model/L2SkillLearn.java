@@ -16,6 +16,7 @@
 package l2server.gameserver.model;
 
 import l2server.gameserver.model.actor.instance.L2PcInstance;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,79 +31,34 @@ import java.util.Map;
 public final class L2SkillLearn
 {
 	// these two build the primary key
-	private final int id;
-	private final int level;
+	@Getter private final int id;
+	@Getter private final int level;
 
-	private final int spCost;
-	private final int minLevel;
-	private final int minDualLevel;
+	@Getter private final int spCost;
+	@Getter private final int minLevel;
+	@Getter private final int minDualLevel;
 
-	private final boolean learnedFromPanel;
+	@Getter private final boolean learnedFromPanel;
 	private final boolean learnedByFs;
 	private final boolean isTransfer;
 	private final boolean isAutoGet;
 
-	private final Map<Integer, Integer> costItems = new HashMap<>();
-	private final List<Integer> costSkills = new ArrayList<>();
+	@Getter private final Map<Integer, Integer> costItems = new HashMap<>();
+	@Getter private final List<Integer> costSkills = new ArrayList<>();
 
 	private boolean isRemember = false;
 
 	public L2SkillLearn(int id, int lvl, int cost, int minLvl, int minDualLvl, boolean panel, boolean fs, boolean transfer, boolean autoget)
 	{
 		this.id = id;
-		this.level = lvl;
-		this.minLevel = minLvl;
-		this.minDualLevel = minDualLvl;
-		this.spCost = cost;
-		this.learnedFromPanel = panel;
-		this.learnedByFs = fs;
-		this.isTransfer = transfer;
-		this.isAutoGet = autoget;
-	}
-
-	/**
-	 * @return Returns the id.
-	 */
-	public int getId()
-	{
-		return this.id;
-	}
-
-	/**
-	 * @return Returns the level.
-	 */
-	public int getLevel()
-	{
-		return this.level;
-	}
-
-	/**
-	 * @return Returns the minLevel.
-	 */
-	public int getMinLevel()
-	{
-		return this.minLevel;
-	}
-
-	public int getMinDualLevel()
-	{
-		return this.minDualLevel;
-	}
-
-	/**
-	 * @return Returns the spCost.
-	 */
-	public int getSpCost()
-	{
-		return this.spCost;
-	}
-
-	/**
-	 * Return true if skill can be learned by teachers
-	 */
-	public boolean isLearnedFromPanel()
-	{
-		return this.learnedFromPanel;
+		level = lvl;
+		minLevel = minLvl;
+		minDualLevel = minDualLvl;
+		spCost = cost;
+		learnedFromPanel = panel;
+		learnedByFs = fs;
+		isTransfer = transfer;
+		isAutoGet = autoget;
 	}
 
 	/**
@@ -110,37 +66,27 @@ public final class L2SkillLearn
 	 */
 	public boolean isLearnedByFS()
 	{
-		return this.learnedByFs;
+		return learnedByFs;
 	}
 
 	public boolean isTransferSkill()
 	{
-		return this.isTransfer;
+		return isTransfer;
 	}
 
 	public boolean isAutoGetSkill()
 	{
-		return this.isAutoGet;
+		return isAutoGet;
 	}
 
 	public void addCostItem(int itemId, int count)
 	{
-		this.costItems.put(itemId, count);
-	}
-
-	public Map<Integer, Integer> getCostItems()
-	{
-		return this.costItems;
+		costItems.put(itemId, count);
 	}
 
 	public void addCostSkill(int skillId)
 	{
-		this.costSkills.add(skillId);
-	}
-
-	public List<Integer> getCostSkills()
-	{
-		return this.costSkills;
+		costSkills.add(skillId);
 	}
 
 	public Map<Integer, Integer> getCostSkills(L2PcInstance player)
@@ -159,11 +105,11 @@ public final class L2SkillLearn
 
 	public void setIsRemember(boolean remember)
 	{
-		this.isRemember = remember;
+		isRemember = remember;
 	}
 
 	public boolean isRemember()
 	{
-		return this.isRemember;
+		return isRemember;
 	}
 }

@@ -17,6 +17,7 @@ package l2server.gameserver.pathfinding.geonodes;
 
 import l2server.gameserver.pathfinding.AbstractNode;
 import l2server.gameserver.pathfinding.AbstractNodeLoc;
+import lombok.Getter;
 
 /**
  * @author -Nemesiss-
@@ -24,18 +25,13 @@ import l2server.gameserver.pathfinding.AbstractNodeLoc;
 public class GeoNode extends AbstractNode
 {
 	private final int neighborsIdx;
-	private short cost;
-	private GeoNode[] neighbors;
+	@Getter private short cost;
+	@Getter private GeoNode[] neighbors;
 
 	public GeoNode(AbstractNodeLoc Loc, int Neighbors_idx)
 	{
 		super(Loc);
-		this.neighborsIdx = Neighbors_idx;
-	}
-
-	public short getCost()
-	{
-		return this.cost;
+		neighborsIdx = Neighbors_idx;
 	}
 
 	public void setCost(int cost)
@@ -43,20 +39,15 @@ public class GeoNode extends AbstractNode
 		this.cost = (short) cost;
 	}
 
-	public GeoNode[] getNeighbors()
-	{
-		return this.neighbors;
-	}
-
 	public void attachNeighbors()
 	{
 		if (getLoc() == null)
 		{
-			this.neighbors = null;
+			neighbors = null;
 		}
 		else
 		{
-			this.neighbors = GeoPathFinding.getInstance().readNeighbors(this, this.neighborsIdx);
+			neighbors = GeoPathFinding.getInstance().readNeighbors(this, neighborsIdx);
 		}
 	}
 }

@@ -22,7 +22,6 @@ import l2server.gameserver.model.L2ItemInstance;
  */
 public class ExPutItemResultForVariationCancel extends L2GameServerPacket
 {
-
 	private int itemObjId;
 	private int itemId;
 	private int itemAug1;
@@ -31,11 +30,11 @@ public class ExPutItemResultForVariationCancel extends L2GameServerPacket
 
 	public ExPutItemResultForVariationCancel(L2ItemInstance item, int price)
 	{
-		this.itemObjId = item.getObjectId();
-		this.itemId = item.getItemId();
+		itemObjId = item.getObjectId();
+		itemId = item.getItemId();
 		this.price = price;
-		this.itemAug1 = item.getAugmentation().getAugment1().getId();
-		this.itemAug2 = item.getAugmentation().getAugment2().getId();
+		itemAug1 = item.getAugmentation().getAugment1().getId();
+		itemAug2 = item.getAugmentation().getAugment2().getId();
 	}
 
 	/**
@@ -43,11 +42,11 @@ public class ExPutItemResultForVariationCancel extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.itemObjId);
-		writeD(this.itemId);
-		writeD(this.itemAug1);
-		writeD(this.itemAug2);
-		writeQ(this.price);
+		writeD(itemObjId);
+		writeD(itemId);
+		writeD(itemAug1);
+		writeD(itemAug2);
+		writeQ(price);
 		writeD(0x01);
 	}
 }

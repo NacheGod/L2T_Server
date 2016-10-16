@@ -23,13 +23,12 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public final class SnoopQuit extends L2GameClientPacket
 {
-
 	private int snoopID;
 
 	@Override
 	protected void readImpl()
 	{
-		this.snoopID = readD();
+		snoopID = readD();
 	}
 
 	/*
@@ -40,7 +39,7 @@ public final class SnoopQuit extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		L2PcInstance player = L2World.getInstance().getPlayer(this.snoopID);
+		L2PcInstance player = L2World.getInstance().getPlayer(snoopID);
 		if (player == null)
 		{
 			return;

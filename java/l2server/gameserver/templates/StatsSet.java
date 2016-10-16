@@ -16,6 +16,7 @@
 package l2server.gameserver.templates;
 
 import l2server.log.Log;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,18 +31,7 @@ import java.util.logging.Level;
  */
 public final class StatsSet
 {
-
-	private final Map<String, Object> set = new HashMap<>();
-
-	/**
-	 * Returns the set of values
-	 *
-	 * @return HashMap
-	 */
-	public final Map<String, Object> getSet()
-	{
-		return this.set;
-	}
+	@Getter private final Map<String, Object> set = new HashMap<>();
 
 	/**
 	 * Add a set of couple values in the current set
@@ -53,7 +43,7 @@ public final class StatsSet
 		Map<String, Object> newMap = newSet.getSet();
 		for (Entry<String, Object> entry : newMap.entrySet())
 		{
-			this.set.put(entry.getKey(), entry.getValue());
+			set.put(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -65,7 +55,7 @@ public final class StatsSet
 	 */
 	public boolean getBool(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Boolean value required for \"" + name + "\", but not specified");
@@ -94,7 +84,7 @@ public final class StatsSet
 	 */
 	public boolean getBool(String name, boolean deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -123,7 +113,7 @@ public final class StatsSet
 	 */
 	public byte getByte(String name, byte deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -150,7 +140,7 @@ public final class StatsSet
 	 */
 	public byte getByte(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Byte value required for \"" + name + "\", but not specified");
@@ -179,7 +169,7 @@ public final class StatsSet
 	 */
 	public short getShort(String name, short deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -206,7 +196,7 @@ public final class StatsSet
 	 */
 	public short getShort(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Short value required for \"" + name + "\", but not specified");
@@ -233,7 +223,7 @@ public final class StatsSet
 	 */
 	public int getInteger(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Integer value required for \"" + name + "\", but not specified");
@@ -262,7 +252,7 @@ public final class StatsSet
 	 */
 	public int getInteger(String name, int deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -290,7 +280,7 @@ public final class StatsSet
 	 */
 	public int[] getIntegerArray(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Integer value required for \"" + name + "\", but not specified");
@@ -324,7 +314,7 @@ public final class StatsSet
 	 */
 	public long getLong(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Integer value required for \"" + name + "\", but not specified");
@@ -353,7 +343,7 @@ public final class StatsSet
 	 */
 	public long getLong(String name, long deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -380,7 +370,7 @@ public final class StatsSet
 	 */
 	public float getFloat(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Float value required for \"" + name + "\", but not specified");
@@ -409,7 +399,7 @@ public final class StatsSet
 	 */
 	public float getFloat(String name, float deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -436,7 +426,7 @@ public final class StatsSet
 	 */
 	public double getDouble(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("Float value required for \"" + name + "\", but not specified");
@@ -465,7 +455,7 @@ public final class StatsSet
 	 */
 	public double getDouble(String name, float deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -492,7 +482,7 @@ public final class StatsSet
 	 */
 	public String getString(String name)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException("String value required for \"" + name + "\", but not specified");
@@ -510,7 +500,7 @@ public final class StatsSet
 	 */
 	public String getString(String name, String deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -529,7 +519,7 @@ public final class StatsSet
 	@SuppressWarnings("unchecked")
 	public <T extends Enum<T>> T getEnum(String name, Class<T> enumClass)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			throw new IllegalArgumentException(
@@ -562,7 +552,7 @@ public final class StatsSet
 	@SuppressWarnings("unchecked")
 	public <T extends Enum<T>> T getEnum(String name, Class<T> enumClass, T deflt)
 	{
-		Object val = this.set.get(name);
+		Object val = set.get(name);
 		if (val == null)
 		{
 			return deflt;
@@ -590,7 +580,7 @@ public final class StatsSet
 	 */
 	public void set(String name, String value)
 	{
-		this.set.put(name, value);
+		set.put(name, value);
 	}
 
 	/**
@@ -601,7 +591,7 @@ public final class StatsSet
 	 */
 	public void set(String name, boolean value)
 	{
-		this.set.put(name, value);
+		set.put(name, value);
 	}
 
 	/**
@@ -612,7 +602,7 @@ public final class StatsSet
 	 */
 	public void set(String name, int value)
 	{
-		this.set.put(name, value);
+		set.put(name, value);
 	}
 
 	/**
@@ -641,7 +631,7 @@ public final class StatsSet
 	 */
 	public void set(String name, double value)
 	{
-		this.set.put(name, value);
+		set.put(name, value);
 	}
 
 	/**
@@ -652,7 +642,7 @@ public final class StatsSet
 	 */
 	public void set(String name, long value)
 	{
-		this.set.put(name, value);
+		set.put(name, value);
 	}
 
 	/**
@@ -663,6 +653,6 @@ public final class StatsSet
 	 */
 	public void set(String name, Enum<?> value)
 	{
-		this.set.put(name, value);
+		set.put(name, value);
 	}
 }

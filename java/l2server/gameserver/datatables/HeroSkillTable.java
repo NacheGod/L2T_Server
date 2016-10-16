@@ -27,9 +27,9 @@ public class HeroSkillTable
 
 	private HeroSkillTable()
 	{
-		for (int i = 0; i < this.heroSkillsId.length; i++)
+		for (int i = 0; i < heroSkillsId.length; i++)
 		{
-			this.heroSkills[i] = SkillTable.getInstance().getInfo(this.heroSkillsId[i], 1);
+			heroSkills[i] = SkillTable.getInstance().getInfo(heroSkillsId[i], 1);
 		}
 	}
 
@@ -46,7 +46,7 @@ public class HeroSkillTable
 	public static boolean isHeroSkill(int skillid)
 	{
 		/*
-         * Do not perform checks directly on L2Skill array,
+		 * Do not perform checks directly on L2Skill array,
 		 * it will cause errors due to SkillTable not initialized
 		 */
 		for (int id : heroSkillsId)

@@ -15,6 +15,8 @@
 
 package l2server.gameserver.scripting;
 
+import lombok.Getter;
+
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,13 +28,13 @@ import java.io.FileNotFoundException;
  */
 public abstract class ManagedScript
 {
-	private File scriptFile;
+	@Getter private File scriptFile;
 	private long lastLoadTime;
 	private boolean isActive;
 
 	public ManagedScript()
 	{
-		this.scriptFile = L2ScriptEngineManager.getInstance().getCurrentLoadingScript();
+		scriptFile = L2ScriptEngineManager.getInstance().getCurrentLoadingScript();
 		setLastLoadTime(System.currentTimeMillis());
 	}
 
@@ -63,20 +65,12 @@ public abstract class ManagedScript
 
 	public void setActive(boolean status)
 	{
-		this.isActive = status;
+		isActive = status;
 	}
 
 	public boolean isActive()
 	{
-		return this.isActive;
-	}
-
-	/**
-	 * @return Returns the scriptFile.
-	 */
-	public File getScriptFile()
-	{
-		return this.scriptFile;
+		return isActive;
 	}
 
 	/**
@@ -92,7 +86,7 @@ public abstract class ManagedScript
 	 */
 	protected long getLastLoadTime()
 	{
-		return this.lastLoadTime;
+		return lastLoadTime;
 	}
 
 	public abstract String getScriptName();

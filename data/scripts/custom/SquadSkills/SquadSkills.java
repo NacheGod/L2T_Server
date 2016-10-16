@@ -15,13 +15,6 @@
 
 package custom.SquadSkills;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import l2server.Config;
 import l2server.gameserver.cache.HtmCache;
 import l2server.gameserver.datatables.SkillTable;
@@ -35,6 +28,13 @@ import l2server.gameserver.network.SystemMessageId;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author LasTravel
@@ -99,13 +99,13 @@ public class SquadSkills extends Quest
 	{
 		super(questId, name, descr);
 
-		for (int i : this.courtWizzards)
+		for (int i : courtWizzards)
 		{
 			addStartNpc(i);
 			addTalkId(i);
 		}
 
-		for (int i : this.supportUnitCaptain)
+		for (int i : supportUnitCaptain)
 		{
 			addStartNpc(i);
 			addTalkId(i);
@@ -134,7 +134,7 @@ public class SquadSkills extends Quest
 						int itemId = d.getInt("itemId");
 						int count = d.getInt("count");
 
-						this.skillInfo.add(new SkillInfo(id, level, clanLevel, reputation, itemId, count));
+						skillInfo.add(new SkillInfo(id, level, clanLevel, reputation, itemId, count));
 					}
 				}
 			}
@@ -162,32 +162,32 @@ public class SquadSkills extends Quest
 
 		private int getSkillid()
 		{
-			return this.skillId;
+			return skillId;
 		}
 
 		private int getSkillLevel()
 		{
-			return this.level;
+			return level;
 		}
 
 		private int getClanLevel()
 		{
-			return this.clanLevel;
+			return clanLevel;
 		}
 
 		private int getReputation()
 		{
-			return this.reputation;
+			return reputation;
 		}
 
 		private int getItemId()
 		{
-			return this.itemId;
+			return itemId;
 		}
 
 		private int getCount()
 		{
-			return this.count;
+			return count;
 		}
 	}
 
@@ -206,8 +206,9 @@ public class SquadSkills extends Quest
 			String pledgeInfo = "<table width=300>";
 
 			//Add the main clan
-			pledgeInfo += "<tr><td><a action=\"bypass -h Quest " + this.qn + " show_available_skills_0\">" +
-					playerClan.getName() + " (Main Clan)</a></td></tr>";
+			pledgeInfo +=
+					"<tr><td><a action=\"bypass -h Quest " + qn + " show_available_skills_0\">" + playerClan.getName() +
+							" (Main Clan)</a></td></tr>";
 
 			//SubPledges
 			SubPledge[] subPledges = playerClan.getAllSubPledges();
@@ -218,9 +219,8 @@ public class SquadSkills extends Quest
 				{
 					continue;
 				}
-				pledgeInfo +=
-						"<tr><td><a action=\"bypass -h Quest " + this.qn + " show_available_skills_" + pledge.getId() +
-								"\">" + pledge.getName() + "</a></td></tr>";
+				pledgeInfo += "<tr><td><a action=\"bypass -h Quest " + qn + " show_available_skills_" + pledge.getId() +
+						"\">" + pledge.getName() + "</a></td></tr>";
 			}
 
 			pledgeInfo += "</table>";
@@ -249,15 +249,16 @@ public class SquadSkills extends Quest
 					{
 						continue;
 					}
-					skillInfo += "<tr><td><a action=\"bypass -h Quest " + this.qn + " try_learn_skill_" + toLearn.getKey() +
-							"_" + toLearn.getValue() + "_" + pledgeType + "\">" +
-							SkillTable.getInstance().getInfo(toLearn.getKey(), 1).getName() + " (Level: " +
-							toLearn.getValue() + ")</a></td></tr>";
+					skillInfo +=
+							"<tr><td><a action=\"bypass -h Quest " + qn + " try_learn_skill_" + toLearn.getKey() + "_" +
+									toLearn.getValue() + "_" + pledgeType + "\">" +
+									SkillTable.getInstance().getInfo(toLearn.getKey(), 1).getName() + " (Level: " +
+									toLearn.getValue() + ")</a></td></tr>";
 				}
 			}
 			skillInfo += "</table>";
 
-			skillInfo += "<br><br> <a action=\"bypass -h Quest " + this.qn + " show_subPledges\">Back</a>";
+			skillInfo += "<br><br> <a action=\"bypass -h Quest " + qn + " show_subPledges\">Back</a>";
 
 			return HtmCache.getInstance().getHtm(null, Config.DATA_FOLDER + "scripts/custom/SquadSkills/skillList.html")
 					.replace("%skillList%", skillInfo);
@@ -287,7 +288,7 @@ public class SquadSkills extends Quest
 
 			SkillInfo info = null;
 
-			for (SkillInfo skill : this.skillInfo)
+			for (SkillInfo skill : skillInfo)
 			{
 				if (skill.getSkillid() == skillId && skill.getSkillLevel() == level)
 				{
@@ -300,7 +301,7 @@ public class SquadSkills extends Quest
 						return null;
 					}
 
-					if (!player.destroyItemByItemId(this.qn, skill.getItemId(), skill.getCount(), player, false))
+					if (!player.destroyItemByItemId(qn, skill.getItemId(), skill.getCount(), player, false))
 					{
 						player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.ITEM_MISSING_TO_LEARN_SKILL));
 						return null;

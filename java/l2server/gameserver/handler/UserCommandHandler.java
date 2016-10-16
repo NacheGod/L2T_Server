@@ -26,7 +26,6 @@ import l2server.log.Log;
  */
 public class UserCommandHandler
 {
-
 	private TIntObjectHashMap<IUserCommandHandler> datatable;
 
 	public static UserCommandHandler getInstance()
@@ -36,7 +35,7 @@ public class UserCommandHandler
 
 	private UserCommandHandler()
 	{
-		this.datatable = new TIntObjectHashMap<>();
+		datatable = new TIntObjectHashMap<>();
 	}
 
 	public void registerUserCommandHandler(IUserCommandHandler handler)
@@ -48,7 +47,7 @@ public class UserCommandHandler
 			{
 				Log.fine("Adding handler for user command " + id);
 			}
-			this.datatable.put(id, handler);
+			datatable.put(id, handler);
 		}
 	}
 
@@ -58,7 +57,7 @@ public class UserCommandHandler
 		{
 			Log.fine("getting handler for user command: " + userCommand);
 		}
-		return this.datatable.get(userCommand);
+		return datatable.get(userCommand);
 	}
 
 	/**
@@ -66,7 +65,7 @@ public class UserCommandHandler
 	 */
 	public int size()
 	{
-		return this.datatable.size();
+		return datatable.size();
 	}
 
 	@SuppressWarnings("synthetic-access")

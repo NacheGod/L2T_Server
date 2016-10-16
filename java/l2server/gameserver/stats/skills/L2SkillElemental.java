@@ -28,7 +28,6 @@ import l2server.gameserver.templates.StatsSet;
 
 public class L2SkillElemental extends L2Skill
 {
-
 	private final int[] seeds;
 	private final boolean seedAny;
 
@@ -36,12 +35,12 @@ public class L2SkillElemental extends L2Skill
 	{
 		super(set);
 
-		this.seeds = new int[3];
-		this.seeds[0] = set.getInteger("seed1", 0);
-		this.seeds[1] = set.getInteger("seed2", 0);
-		this.seeds[2] = set.getInteger("seed3", 0);
+		seeds = new int[3];
+		seeds[0] = set.getInteger("seed1", 0);
+		seeds[1] = set.getInteger("seed2", 0);
+		seeds[2] = set.getInteger("seed3", 0);
 
-		this.seedAny = set.getInteger("seed_any", 0) == 1;
+		seedAny = set.getInteger("seed_any", 0) == 1;
 	}
 
 	@Override
@@ -84,14 +83,14 @@ public class L2SkillElemental extends L2Skill
 			}
 
 			boolean charged = true;
-			if (!this.seedAny)
+			if (!seedAny)
 			{
-				for (int seed : this.seeds)
+				for (int seed : seeds)
 				{
 					if (seed != 0)
 					{
 						L2Abnormal e = target.getFirstEffect(seed);
-						if (e == null || !e.getInUse())
+						if (e == null || !e.isInUse())
 						{
 							charged = false;
 							break;
@@ -102,12 +101,12 @@ public class L2SkillElemental extends L2Skill
 			else
 			{
 				charged = false;
-				for (int seed : this.seeds)
+				for (int seed : seeds)
 				{
 					if (seed != 0)
 					{
 						L2Abnormal e = target.getFirstEffect(seed);
-						if (e != null && e.getInUse())
+						if (e != null && e.isInUse())
 						{
 							charged = true;
 							break;

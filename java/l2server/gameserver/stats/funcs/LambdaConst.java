@@ -22,7 +22,6 @@ import l2server.gameserver.stats.Env;
  */
 public final class LambdaConst extends Lambda
 {
-
 	private final double value;
 
 	public LambdaConst(double value)
@@ -33,6 +32,6 @@ public final class LambdaConst extends Lambda
 	@Override
 	public double calc(Env env)
 	{
-		return this.value;
+		return value;
 	}
 }

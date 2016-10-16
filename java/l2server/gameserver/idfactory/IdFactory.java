@@ -28,7 +28,6 @@ import java.sql.*;
  */
 public abstract class IdFactory
 {
-
 	protected static final String[] ID_CHECKS = {
 			"SELECT owner_id	FROM items				 WHERE object_id >= ?   AND object_id < ?",
 			"SELECT object_id   FROM items				 WHERE object_id >= ?   AND object_id < ?",
@@ -331,7 +330,7 @@ public abstract class IdFactory
 
 	public boolean isInitialized()
 	{
-		return this.initialized;
+		return initialized;
 	}
 
 	public static IdFactory getInstance()

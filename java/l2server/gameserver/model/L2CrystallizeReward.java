@@ -15,34 +15,21 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * @author Pere
  */
 public class L2CrystallizeReward
 {
-	private final int itemId;
-	private final int count;
-	private final double chance;
+	@Getter private final int itemId;
+	@Getter private final int count;
+	@Getter private final double chance;
 
 	public L2CrystallizeReward(int itemId, int count, double chance)
 	{
 		this.itemId = itemId;
 		this.count = count;
 		this.chance = chance;
-	}
-
-	public int getItemId()
-	{
-		return this.itemId;
-	}
-
-	public int getCount()
-	{
-		return this.count;
-	}
-
-	public double getChance()
-	{
-		return this.chance;
 	}
 }

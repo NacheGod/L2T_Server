@@ -2,6 +2,7 @@ package l2server.gsregistering;
 
 import l2server.images.ImagesTable;
 import l2server.loginserver.GameServerTable;
+import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,14 +22,12 @@ import java.util.ResourceBundle;
  */
 public class GUserInterface extends BaseGameServerRegister implements ActionListener
 {
-
 	/**
 	 *
 	 */
-	@SuppressWarnings("unused")
-	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused") private static final long serialVersionUID = 1L;
 
-	private final JFrame frame;
+	@Getter private final JFrame frame;
 
 	JTableModel dtm;
 	JProgressBar progressBar;
@@ -39,7 +38,7 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 	{
 		super(bundle);
 
-		this.frame = new JFrame();
+		frame = new JFrame();
 		getFrame().setTitle(getBundle().getString("toolName"));
 		getFrame().setSize(600, 400);
 		getFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,13 +82,13 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 		String name = getBundle().getString("gsName");
 		String action = getBundle().getString("gsAction");
 
-		this.dtm = new JTableModel(new Object[]{"ID", name, action});
-		this.gsTable = new JTable(this.dtm);
-		this.gsTable.addMouseListener(new JTableButtonMouseListener(this.gsTable));
+		dtm = new JTableModel(new Object[]{"ID", name, action});
+		gsTable = new JTable(dtm);
+		gsTable.addMouseListener(new JTableButtonMouseListener(gsTable));
 
-		this.gsTable.getColumnModel().getColumn(0).setMaxWidth(30);
+		gsTable.getColumnModel().getColumn(0).setMaxWidth(30);
 
-		TableColumn actionCollumn = this.gsTable.getColumnModel().getColumn(2);
+		TableColumn actionCollumn = gsTable.getColumnModel().getColumn(2);
 		actionCollumn.setCellRenderer(new ButtonCellRenderer());
 
 		cons.fill = GridBagConstraints.BOTH;
@@ -100,18 +99,18 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 		cons.gridwidth = 2;
 		JLayeredPane layer = new JLayeredPane();
 		layer.setLayout(new BoxLayout(layer, BoxLayout.PAGE_AXIS));
-		layer.add(new JScrollPane(this.gsTable), 0);
-		this.progressBar = new JProgressBar();
-		this.progressBar.setIndeterminate(true);
-		this.progressBar.setVisible(false);
-		layer.add(this.progressBar, BorderLayout.CENTER, 1);
+		layer.add(new JScrollPane(gsTable), 0);
+		progressBar = new JProgressBar();
+		progressBar.setIndeterminate(true);
+		progressBar.setVisible(false);
+		layer.add(progressBar, BorderLayout.CENTER, 1);
 		//layer.setV
 		getFrame().add(layer, cons);
 
 		// maximize, doesn't seem really needed
 		//getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
 		/*
-        // Work-around JVM maximize issue on linux
+		// Work-around JVM maximize issue on linux
 		String osName = System.getProperty("os.name");
 		if (osName.equals("Linux"))
 		{
@@ -133,7 +132,6 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 	@Override
 	public void load()
 	{
-
 		SwingUtilities.invokeLater(() -> progressBar.setVisible(true));
 
 		super.load();
@@ -181,7 +179,7 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 					System.exit(1);
 				}
 				// reset
-				this.dtm.setRowCount(0);
+				dtm.setRowCount(0);
 
 				for (final int id : GameServerTable.getInstance().getRegisteredGameServers().keySet())
 				{
@@ -200,15 +198,15 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 							try
 							{
 								BaseGameServerRegister.unregisterGameServer(id);
-								GUserInterface.this.refreshAsync();
+								refreshAsync();
 							}
 							catch (SQLException e1)
 							{
-								GUserInterface.this.showError(getBundle().getString("errorUnregister"), e1);
+								showError(getBundle().getString("errorUnregister"), e1);
 							}
 						}
 					});
-					this.dtm.addRow(new Object[]{id, name, button});
+					dtm.addRow(new Object[]{id, name, button});
 				}
 			});
 		}
@@ -249,24 +247,15 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 					}
 					catch (SQLException e1)
 					{
-						GUserInterface.this.showError(getBundle().getString("errorUnregister"), e1);
+						showError(getBundle().getString("errorUnregister"), e1);
 					}
 				}
 				break;
 		}
 	}
 
-	/**
-	 * @return Returns the frame.
-	 */
-	public JFrame getFrame()
-	{
-		return this.frame;
-	}
-
 	class ButtonCellRenderer implements TableCellRenderer
 	{
-
 		/* (non-Javadoc)
 		 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 		 */
@@ -294,17 +283,17 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 
 		private void forwardEvent(MouseEvent e)
 		{
-			TableColumnModel columnModel = this.table.getColumnModel();
+			TableColumnModel columnModel = table.getColumnModel();
 			int column = columnModel.getColumnIndexAtX(e.getX());
-			int row = e.getY() / this.table.getRowHeight();
+			int row = e.getY() / table.getRowHeight();
 			Object value;
 
-			if (row >= this.table.getRowCount() || row < 0 || column >= this.table.getColumnCount() || column < 0)
+			if (row >= table.getRowCount() || row < 0 || column >= table.getColumnCount() || column < 0)
 			{
 				return;
 			}
 
-			value = this.table.getValueAt(row, column);
+			value = table.getValueAt(row, column);
 
 			if (value instanceof JButton)
 			{
@@ -313,7 +302,7 @@ public class GUserInterface extends BaseGameServerRegister implements ActionList
 				{
 					b.getModel().setPressed(true);
 					b.getModel().setArmed(true);
-					this.table.repaint();
+					table.repaint();
 				}
 				else if (e.getID() == MouseEvent.MOUSE_RELEASED)
 				{

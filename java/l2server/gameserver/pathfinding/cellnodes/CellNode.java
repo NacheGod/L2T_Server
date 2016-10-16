@@ -17,12 +17,14 @@ package l2server.gameserver.pathfinding.cellnodes;
 
 import l2server.gameserver.pathfinding.AbstractNode;
 import l2server.gameserver.pathfinding.AbstractNodeLoc;
+import lombok.Getter;
+import lombok.Setter;
 
 public class CellNode extends AbstractNode
 {
-	private CellNode next = null;
+	@Getter @Setter private CellNode next = null;
 	private boolean isInUse = true;
-	private float cost = -1000;
+	@Getter private float cost = -1000;
 
 	public CellNode(AbstractNodeLoc loc)
 	{
@@ -31,27 +33,12 @@ public class CellNode extends AbstractNode
 
 	public boolean isInUse()
 	{
-		return this.isInUse;
+		return isInUse;
 	}
 
 	public void setInUse()
 	{
-		this.isInUse = true;
-	}
-
-	public CellNode getNext()
-	{
-		return this.next;
-	}
-
-	public void setNext(CellNode next)
-	{
-		this.next = next;
-	}
-
-	public float getCost()
-	{
-		return this.cost;
+		isInUse = true;
 	}
 
 	public void setCost(double cost)
@@ -62,8 +49,8 @@ public class CellNode extends AbstractNode
 	public void free()
 	{
 		setParent(null);
-		this.cost = -1000;
-		this.isInUse = false;
-		this.next = null;
+		cost = -1000;
+		isInUse = false;
+		next = null;
 	}
 }

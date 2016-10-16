@@ -20,7 +20,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExCaptureOrc extends L2GameServerPacket
 {
-
 	private static final byte[] test;
 
 	static
@@ -99,6 +98,6 @@ public class ExCaptureOrc extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeB(this.test);
+		writeB(test);
 	}
 }

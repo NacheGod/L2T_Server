@@ -22,7 +22,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExSetCompassZoneCode extends L2GameServerPacket
 {
-
 	public static final int ALTEREDZONE = 0x08;
 	public static final int SIEGEWARZONE1 = 0x0A;
 	public static final int SIEGEWARZONE2 = 0x0B;
@@ -35,7 +34,7 @@ public class ExSetCompassZoneCode extends L2GameServerPacket
 
 	public ExSetCompassZoneCode(int val)
 	{
-		this.zoneType = val;
+		zoneType = val;
 	}
 
 	/**
@@ -43,6 +42,6 @@ public class ExSetCompassZoneCode extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.zoneType);
+		writeD(zoneType);
 	}
 }

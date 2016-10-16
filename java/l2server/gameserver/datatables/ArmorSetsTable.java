@@ -36,7 +36,6 @@ import java.io.File;
  */
 public class ArmorSetsTable implements Reloadable
 {
-
 	private TIntObjectHashMap<L2ArmorSet> armorSets;
 
 	public static ArmorSetsTable getInstance()
@@ -46,7 +45,7 @@ public class ArmorSetsTable implements Reloadable
 
 	private ArmorSetsTable()
 	{
-		this.armorSets = new TIntObjectHashMap<>();
+		armorSets = new TIntObjectHashMap<>();
 		reload();
 
 		ReloadableManager.getInstance().register("armorsets", this);
@@ -89,10 +88,10 @@ public class ArmorSetsTable implements Reloadable
 							}
 						}
 
-						this.armorSets.put(id, new L2ArmorSet(id, parts, skills, enchant6Skill, shieldSkill));
+						armorSets.put(id, new L2ArmorSet(id, parts, skills, enchant6Skill, shieldSkill));
 					}
 				}
-				Log.info("ArmorSetsTable: Loaded " + this.armorSets.size() + " armor sets.");
+				Log.info("ArmorSetsTable: Loaded " + armorSets.size() + " armor sets.");
 			}
 		}
 
@@ -107,12 +106,12 @@ public class ArmorSetsTable implements Reloadable
 
 	public boolean setExists(int chestId)
 	{
-		return this.armorSets.containsKey(chestId);
+		return armorSets.containsKey(chestId);
 	}
 
 	public L2ArmorSet getSet(int chestId)
 	{
-		return this.armorSets.get(chestId);
+		return armorSets.get(chestId);
 	}
 
 	@SuppressWarnings("synthetic-access")

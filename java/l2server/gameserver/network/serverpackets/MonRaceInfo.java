@@ -37,7 +37,7 @@ public class MonRaceInfo extends L2GameServerPacket
 	public MonRaceInfo(int unknown1, int unknown2, L2Npc[] monsters, int[][] speeds)
 	{
 		/*
-         * -1 0 to initial the race
+		 * -1 0 to initial the race
 		 * 0 15322 to start race
 		 * 13765 -1 in middle of race
 		 * -1 0 to end the race
@@ -53,29 +53,29 @@ public class MonRaceInfo extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.unknown1);
-		writeD(this.unknown2);
+		writeD(unknown1);
+		writeD(unknown2);
 		writeD(8);
 
 		for (int i = 0; i < 8; i++)
 		{
-			//Logozo.info("MOnster "+(i+1)+" npcid "+_monsters[i].getNpcTemplate().getNpcId());
-			writeD(this.monsters[i].getObjectId()); //npcObjectID
-			writeD(this.monsters[i].getTemplate().NpcId + 1000000); //npcID
+			//Log.info("MOnster "+(i+1)+" npcid "+_monsters[i].getNpcTemplate().getNpcId());
+			writeD(monsters[i].getObjectId()); //npcObjectID
+			writeD(monsters[i].getTemplate().NpcId + 1000000); //npcID
 			writeD(14107); //origin X
 			writeD(181875 + 58 * (7 - i)); //origin Y
 			writeD(-3566); //origin Z
 			writeD(12080); //end X
 			writeD(181875 + 58 * (7 - i)); //end Y
 			writeD(-3566); //end Z
-			writeF(this.monsters[i].getTemplate().fCollisionHeight); //coll. height
-			writeF(this.monsters[i].getTemplate().fCollisionRadius); //coll. radius
+			writeF(monsters[i].getTemplate().fCollisionHeight); //coll. height
+			writeF(monsters[i].getTemplate().fCollisionRadius); //coll. radius
 			writeD(120); // ?? unknown
 			for (int j = 0; j < 20; j++)
 			{
-				if (this.unknown1 == 0)
+				if (unknown1 == 0)
 				{
-					writeC(this.speeds[i][j]);
+					writeC(speeds[i][j]);
 				}
 				else
 				{

@@ -23,6 +23,7 @@ import l2server.loginserver.network.L2LoginClient;
 import l2server.loginserver.network.L2LoginPacketHandler;
 import l2server.network.Core;
 import l2server.network.CoreConfig;
+import lombok.Getter;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -39,18 +40,13 @@ public class L2LoginServer
 {
 	public static final int PROTOCOL_REV = 0x0106;
 
-	private static L2LoginServer instance;
-	private GameServerListener gameServerListener;
+	@Getter private static L2LoginServer instance;
+	@Getter private GameServerListener gameServerListener;
 	private Core<L2LoginClient> selectorThread;
 
 	public static void main(String[] args)
 	{
 		instance = new L2LoginServer();
-	}
-
-	public static L2LoginServer getInstance()
-	{
-		return instance;
 	}
 
 	public L2LoginServer()
@@ -145,7 +141,7 @@ public class L2LoginServer
 		final SelectorHelper sh = new SelectorHelper();
 		try
 		{
-			this.selectorThread = new Core<>(sc, sh, lph, sh, sh);
+			selectorThread = new Core<>(sc, sh, lph, sh, sh);
 		}
 		catch (IOException e)
 		{
@@ -155,8 +151,8 @@ public class L2LoginServer
 
 		try
 		{
-			this.gameServerListener = new GameServerListener();
-			this.gameServerListener.start();
+			gameServerListener = new GameServerListener();
+			gameServerListener.start();
 			Log.info("Listening for GameServers on " + Config.GAME_SERVER_LOGIN_HOST + ":" +
 					Config.GAME_SERVER_LOGIN_PORT);
 		}
@@ -168,22 +164,17 @@ public class L2LoginServer
 
 		try
 		{
-			this.selectorThread.openServerSocket(bindAddress, Config.PORT_LOGIN);
+			selectorThread.openServerSocket(bindAddress, Config.PORT_LOGIN);
 		}
 		catch (IOException e)
 		{
 			Log.log(Level.SEVERE, "FATAL: Failed to open server socket. Reason: " + e.getMessage(), e);
 			System.exit(1);
 		}
-		this.selectorThread.start();
+		selectorThread.start();
 
 		Log.info("Login Server ready on " + (bindAddress == null ? "*" : bindAddress.getHostAddress()) + ":" +
 				Config.PORT_LOGIN);
-	}
-
-	public GameServerListener getGameServerListener()
-	{
-		return this.gameServerListener;
 	}
 
 	private void loadBanFile()

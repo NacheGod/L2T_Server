@@ -15,6 +15,9 @@
 
 package l2server.gameserver.model.olympiad;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,33 +42,33 @@ public class HeroInfo
 		public String result;
 	}
 
-	private final int id;
-	private final String name;
-	private final int classId;
+	@Getter private final int id;
+	@Getter private final String name;
+	@Getter private final int classId;
 
-	private int victories;
-	private int defeats;
-	private int draws;
+	@Getter @Setter private int victories;
+	@Getter @Setter private int defeats;
+	@Getter @Setter private int draws;
 
-	private int count = 1;
-	private boolean played = true;
-	private String clanName = "";
-	private int clanCrest = 0;
-	private String allyName = "";
-	private int allyCrest = 0;
+	@Getter private int count = 1;
+	@Getter @Setter private boolean played = true;
+	@Getter @Setter private String clanName = "";
+	@Getter @Setter private int clanCrest = 0;
+	@Getter @Setter private String allyName = "";
+	@Getter @Setter private int allyCrest = 0;
 
-	private String message;
-	private List<DiaryEntry> diary = new ArrayList<>();
-	private List<FightInfo> fights = new ArrayList<>();
+	@Getter @Setter private String message;
+	@Getter private List<DiaryEntry> diary = new ArrayList<>();
+	@Getter private List<FightInfo> fights = new ArrayList<>();
 
 	public HeroInfo(OlympiadNobleInfo nobleInfo)
 	{
-		this.id = nobleInfo.getId();
-		this.name = nobleInfo.getName();
-		this.classId = nobleInfo.getClassId();
-		this.victories = nobleInfo.getVictories();
-		this.defeats = nobleInfo.getDefeats();
-		this.draws = nobleInfo.getDraws();
+		id = nobleInfo.getId();
+		name = nobleInfo.getName();
+		classId = nobleInfo.getClassId();
+		victories = nobleInfo.getVictories();
+		defeats = nobleInfo.getDefeats();
+		draws = nobleInfo.getDraws();
 	}
 
 	public HeroInfo(int id, String name, int classId, int count, boolean played)
@@ -77,138 +80,18 @@ public class HeroInfo
 		this.played = played;
 	}
 
-	public int getId()
-	{
-		return this.id;
-	}
-
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public int getClassId()
-	{
-		return this.classId;
-	}
-
-	public int getVictories()
-	{
-		return this.victories;
-	}
-
-	public void setVictories(int victories)
-	{
-		this.victories = victories;
-	}
-
-	public int getDefeats()
-	{
-		return this.defeats;
-	}
-
-	public void setDefeats(int defeats)
-	{
-		this.defeats = defeats;
-	}
-
-	public int getDraws()
-	{
-		return this.draws;
-	}
-
-	public void setDraws(int draws)
-	{
-		this.draws = draws;
-	}
-
-	public int getCount()
-	{
-		return this.count;
-	}
-
 	public void increaseCount()
 	{
-		this.count++;
-	}
-
-	public boolean getPlayed()
-	{
-		return this.played;
-	}
-
-	public void setPlayed(boolean played)
-	{
-		this.played = played;
-	}
-
-	public String getClanName()
-	{
-		return this.clanName;
-	}
-
-	public void setClanName(String clanName)
-	{
-		this.clanName = clanName;
-	}
-
-	public int getClanCrest()
-	{
-		return this.clanCrest;
-	}
-
-	public void setClanCrest(int clanCrest)
-	{
-		this.clanCrest = clanCrest;
-	}
-
-	public String getAllyName()
-	{
-		return this.allyName;
-	}
-
-	public void setAllyName(String allyName)
-	{
-		this.allyName = allyName;
-	}
-
-	public int getAllyCrest()
-	{
-		return this.allyCrest;
-	}
-
-	public void setAllyCrest(int allyCrest)
-	{
-		this.allyCrest = allyCrest;
-	}
-
-	public String getMessage()
-	{
-		return this.message;
-	}
-
-	public void setMessage(String message)
-	{
-		this.message = message;
+		count++;
 	}
 
 	public void addDiaryEntry(DiaryEntry entry)
 	{
-		this.diary.add(entry);
-	}
-
-	public List<DiaryEntry> getDiary()
-	{
-		return this.diary;
+		diary.add(entry);
 	}
 
 	public void addFight(FightInfo fight)
 	{
-		this.fights.add(fight);
-	}
-
-	public List<FightInfo> getFights()
-	{
-		return this.fights;
+		fights.add(fight);
 	}
 }

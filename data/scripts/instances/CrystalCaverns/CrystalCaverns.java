@@ -12,29 +12,14 @@ Please maintain consistency between the Crystal Caverns scripts.
 
 package instances.CrystalCaverns;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import l2server.Config;
 import l2server.gameserver.GeoData;
 import l2server.gameserver.ai.CtrlIntention;
 import l2server.gameserver.datatables.SkillTable;
 import l2server.gameserver.instancemanager.InstanceManager;
 import l2server.gameserver.instancemanager.InstanceManager.InstanceWorld;
-import l2server.gameserver.model.L2CharPosition;
-import l2server.gameserver.model.L2ItemInstance;
-import l2server.gameserver.model.L2Object;
-import l2server.gameserver.model.L2Party;
-import l2server.gameserver.model.L2Skill;
-import l2server.gameserver.model.L2World;
-import l2server.gameserver.model.Location;
-import l2server.gameserver.model.actor.L2Attackable;
-import l2server.gameserver.model.actor.L2Character;
-import l2server.gameserver.model.actor.L2Npc;
-import l2server.gameserver.model.actor.L2Summon;
-import l2server.gameserver.model.actor.L2Trap;
+import l2server.gameserver.model.*;
+import l2server.gameserver.model.actor.*;
 import l2server.gameserver.model.actor.instance.L2DoorInstance;
 import l2server.gameserver.model.actor.instance.L2MonsterInstance;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
@@ -44,24 +29,20 @@ import l2server.gameserver.model.quest.QuestState;
 import l2server.gameserver.model.quest.State;
 import l2server.gameserver.model.zone.L2ZoneType;
 import l2server.gameserver.network.SystemMessageId;
-import l2server.gameserver.network.serverpackets.ActionFailed;
-import l2server.gameserver.network.serverpackets.CreatureSay;
-import l2server.gameserver.network.serverpackets.FlyToLocation;
+import l2server.gameserver.network.serverpackets.*;
 import l2server.gameserver.network.serverpackets.FlyToLocation.FlyType;
-import l2server.gameserver.network.serverpackets.MagicSkillUse;
-import l2server.gameserver.network.serverpackets.PlaySound;
-import l2server.gameserver.network.serverpackets.SocialAction;
-import l2server.gameserver.network.serverpackets.SpecialCamera;
-import l2server.gameserver.network.serverpackets.SystemMessage;
-import l2server.gameserver.network.serverpackets.ValidateLocation;
 import l2server.gameserver.templates.skills.L2SkillTargetType;
 import l2server.gameserver.util.Util;
 import l2server.log.Log;
 import l2server.util.Rnd;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class CrystalCaverns extends Quest
 {
-
 	private static class CrystalGolem
 	{
 		public L2ItemInstance foodItem = null;
@@ -376,7 +357,6 @@ public class CrystalCaverns extends Quest
 			{22418, 146795, 152641, -12165, 33850}
 			// {22308, 145093, 152502, -12165, 31841},{22308, 146158, 152776, -12165, 30810},
 			// {22308, 146116, 152976, -12133, 32571},
-
 	};
 	private static int[][] STEAM2_SPAWNS = {
 			{22306, 147740, 152767, -12165, 65043},
@@ -395,7 +375,7 @@ public class CrystalCaverns extends Quest
 			{22307, 151058, 152316, -12146, 65342},
 			{22307, 151057, 152461, -12165, 2171}
 	/*{22308, 150794, 152455, -12165, 31613},{22308, 150665, 152383, -12165, 32767},
-    {22308, 151697, 152621, -12167, 31423},{22309, 151061, 152581, -12165, 6228},
+	{22308, 151697, 152621, -12167, 31423},{22309, 151061, 152581, -12165, 6228},
 	{22309, 150653, 152253, -12132, 31343},{22309, 150628, 152431, -12165, 33022},
 	{22309, 151620, 152487, -12165, 30114},{22309, 151672, 152544, -12165, 31846},
 	{22309, 150488, 152350, -12165, 29072},{22310, 151139, 152238, -12132, 1069}*/
@@ -446,7 +426,7 @@ public class CrystalCaverns extends Quest
 		{
 			if (door.getDoorId() == doorId)
 			{
-				if (door.getOpen())
+				if (door.isOpen())
 				{
 					door.closeMe();
 				}
@@ -871,7 +851,6 @@ public class CrystalCaverns extends Quest
 		addSpawn(29102,154380,143468,-12708,43943,false,0,false,world.instanceId,0);//down power
 		addSpawn(32271,153573,142069,-9722,11175,false,0,false,world.instanceId);
 		world.Baylor = addSpawn(BAYLOR,153557,142089,-12735,11175,false,0,false,world.instanceId,0);
-
 	}*/
 
 	@Override
@@ -936,7 +915,6 @@ public class CrystalCaverns extends Quest
 	@Override
 	public String onSkillSee(L2Npc npc, L2PcInstance caster, L2Skill skill, L2Object[] targets, boolean isPet)
 	{
-
 		boolean doReturn = true;
 		for (L2Object obj : targets)
 		{
@@ -1820,7 +1798,7 @@ public class CrystalCaverns extends Quest
 						new PlaySound(1, "BS01_D", 1, npc.getObjectId(), npc.getX(), npc.getY(), npc.getZ()));
 				Instance baylorInstance = InstanceManager.getInstance().getInstance(npc.getInstanceId());
 				baylorInstance.setDuration(300000);
-				this.startQuestTimer("spawn_oracle", 1000, npc, null);
+				startQuestTimer("spawn_oracle", 1000, npc, null);
 				giveRewards(player, npc.getInstanceId(), -1, true);
 			}
 		}
@@ -2095,7 +2073,7 @@ public class CrystalCaverns extends Quest
 					{
 						if (door.getDoorId() == room + 24220000)
 						{
-							if (door.getOpen())
+							if (door.isOpen())
 							{
 								return "";
 							}
@@ -2157,7 +2135,7 @@ public class CrystalCaverns extends Quest
 					{
 						if (door.getDoorId() == doorId)
 						{
-							if (door.getOpen() && world.openedDoors.get(door) == character)
+							if (door.isOpen() && world.openedDoors.get(door) == character)
 							{
 								door.closeMe();
 								world.openedDoors.remove(door);

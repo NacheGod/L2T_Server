@@ -19,6 +19,8 @@ import l2server.configurator.ConfigUserInterface.ConfigFile.ConfigComment;
 import l2server.configurator.ConfigUserInterface.ConfigFile.ConfigProperty;
 import l2server.i18n.LanguageControl;
 import l2server.images.ImagesTable;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +40,6 @@ import java.util.regex.Pattern;
  */
 public class ConfigUserInterface extends JFrame implements ActionListener
 {
-
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -46,9 +47,9 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 
 	private JTabbedPane tabPane = new JTabbedPane();
 
-	private List<ConfigFile> configs = new ArrayList<>();
+	@Getter @Setter private List<ConfigFile> configs = new ArrayList<>();
 
-	private ResourceBundle bundle;
+	@Getter @Setter private ResourceBundle bundle;
 
 	/**
 	 * @param args
@@ -79,7 +80,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		setBundle(bundle);
 		setTitle(bundle.getString("toolName"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(750, 500);
+		setSize(750, 500);
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints cons = new GridBagConstraints();
@@ -113,14 +114,14 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		toolBar.setFloatable(false);
 		toolBar.setRollover(true);
 		toolBar.add(createToolButton("disk.png", bundle.getString("save"), "save"));
-		this.add(toolBar, cons);
+		add(toolBar, cons);
 
 		cons.gridy++;
 		cons.fill = GridBagConstraints.BOTH;
 		cons.weighty = 1;
 		loadConfigs();
 		buildInterface();
-		this.add(this.tabPane, cons);
+		add(tabPane, cons);
 	}
 
 	private JButton createToolButton(String image, String text, String action)
@@ -191,7 +192,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 			cons.gridy++;
 			cons.weighty = 1;
 			panel.add(new JLabel(), cons); // filler
-			this.tabPane.addTab(cf.getName(), new JScrollPane(panel));
+			tabPane.addTab(cf.getName(), new JScrollPane(panel));
 		}
 	}
 
@@ -347,7 +348,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 	static class ConfigFile
 	{
 		private File file;
-		private String name;
+		@Getter @Setter private String name;
 		private final List<ConfigComment> configs = new ArrayList<>();
 
 		public ConfigFile(File file)
@@ -359,38 +360,22 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 
 		public void addConfigProperty(String name, Object value, ValueType type, String comments)
 		{
-			this.configs.add(new ConfigProperty(name, value, type, comments));
+			configs.add(new ConfigProperty(name, value, type, comments));
 		}
 
 		public void addConfigComment(String comment)
 		{
-			this.configs.add(new ConfigComment(comment));
+			configs.add(new ConfigComment(comment));
 		}
 
 		public void addConfigProperty(String name, Object value, String comments)
 		{
-			this.addConfigProperty(name, value, ValueType.firstTypeMatch(value), comments);
+			addConfigProperty(name, value, ValueType.firstTypeMatch(value), comments);
 		}
 
 		public List<ConfigComment> getConfigProperties()
 		{
-			return this.configs;
-		}
-
-		/**
-		 * @param name The name to set.
-		 */
-		public void setName(String name)
-		{
-			this.name = name;
-		}
-
-		/**
-		 * @return Returns the name.
-		 */
-		public String getName()
-		{
-			return this.name;
+			return configs;
 		}
 
 		public void save() throws IOException
@@ -398,8 +383,8 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 			BufferedWriter bufWriter = null;
 			try
 			{
-				bufWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(this.file)));
-				for (ConfigComment cc : this.configs)
+				bufWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+				for (ConfigComment cc : configs)
 				{
 					cc.save(bufWriter);
 				}
@@ -415,29 +400,12 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 
 		class ConfigComment
 		{
-
-			private String comments;
+			@Getter @Setter private String comments;
 
 			/**
 			 * @param comments
 			 */
 			public ConfigComment(String comments)
-			{
-				this.comments = comments;
-			}
-
-			/**
-			 * @return Returns the comments.
-			 */
-			public String getComments()
-			{
-				return this.comments;
-			}
-
-			/**
-			 * @param comments The comments to set.
-			 */
-			public void setComments(String comments)
 			{
 				this.comments = comments;
 			}
@@ -455,8 +423,8 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		class ConfigProperty extends ConfigComment
 		{
 			private String propname;
-			private Object value;
-			private ValueType type;
+			@Getter private Object value;
+			@Getter @Setter private ValueType type;
 			private JComponent component;
 
 			/**
@@ -472,7 +440,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 				{
 					throw new IllegalArgumentException("Value Instance Type doesn't match the type argument.");
 				}
-				this.propname = name;
+				propname = name;
 				this.type = type;
 				this.value = value;
 			}
@@ -482,7 +450,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 			 */
 			public String getName()
 			{
-				return this.propname;
+				return propname;
 			}
 
 			/**
@@ -490,7 +458,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 			 */
 			public String getDisplayName()
 			{
-				return unCamelize(this.propname);
+				return unCamelize(propname);
 			}
 
 			/**
@@ -498,15 +466,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 			 */
 			public void setName(String name)
 			{
-				this.propname = name;
-			}
-
-			/**
-			 * @return Returns the value.
-			 */
-			public Object getValue()
-			{
-				return this.value;
+				propname = name;
 			}
 
 			/**
@@ -517,29 +477,13 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 				this.value = value;
 			}
 
-			/**
-			 * @return Returns the type.
-			 */
-			public ValueType getType()
-			{
-				return this.type;
-			}
-
-			/**
-			 * @param type The type to set.
-			 */
-			public void setType(ValueType type)
-			{
-				this.type = type;
-			}
-
 			public JComponent getValueComponent()
 			{
-				if (this.component == null)
+				if (component == null)
 				{
-					this.component = createValueComponent();
+					component = createValueComponent();
 				}
-				return this.component;
+				return component;
 			}
 
 			public JComponent createValueComponent()
@@ -618,19 +562,11 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		IPv4(Inet4Address.class),
 		STRING(String.class);
 
-		private final Class<?> type;
+		@Getter private final Class<?> type;
 
 		ValueType(Class<?> type)
 		{
 			this.type = type;
-		}
-
-		/**
-		 * @return Returns the type.
-		 */
-		public Class<?> getType()
-		{
-			return this.type;
 		}
 
 		public static ValueType firstTypeMatch(Object value)
@@ -659,7 +595,7 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		switch (cmd)
 		{
 			case "save":
-				for (ConfigFile cf : ConfigUserInterface.this.getConfigs())
+				for (ConfigFile cf : getConfigs())
 				{
 					try
 					{
@@ -696,27 +632,6 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		}
 	}
 
-	/**
-	 * @param configs The configuration to set.
-	 */
-	public void setConfigs(List<ConfigFile> configs)
-	{
-		this.configs = configs;
-	}
-
-	/**
-	 * @return Returns the configuration.
-	 */
-	public List<ConfigFile> getConfigs()
-	{
-		return this.configs;
-	}
-
-	/**
-	 * @return Returns the configuration setting name in a
-	 * human readable form.
-	 */
-
 	public static String unCamelize(final String keyName)
 	{
 		Pattern p = Pattern.compile("\\p{Lu}");
@@ -733,21 +648,5 @@ public class ConfigUserInterface extends JFrame implements ActionListener
 		}
 		m.appendTail(sb);
 		return sb.toString().trim();
-	}
-
-	/**
-	 * @param bundle The bundle to set.
-	 */
-	public void setBundle(ResourceBundle bundle)
-	{
-		this.bundle = bundle;
-	}
-
-	/**
-	 * @return Returns the bundle.
-	 */
-	public ResourceBundle getBundle()
-	{
-		return this.bundle;
 	}
 }

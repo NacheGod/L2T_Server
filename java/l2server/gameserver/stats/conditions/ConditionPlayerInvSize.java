@@ -25,7 +25,6 @@ import l2server.gameserver.stats.Env;
  */
 public class ConditionPlayerInvSize extends Condition
 {
-
 	private final int size;
 
 	/**
@@ -47,7 +46,7 @@ public class ConditionPlayerInvSize extends Condition
 		if (env.player instanceof L2PcInstance)
 		{
 			return ((L2PcInstance) env.player).getInventory().getSize(false) <=
-					((L2PcInstance) env.player).getInventoryLimit() - this.size;
+					((L2PcInstance) env.player).getInventoryLimit() - size;
 		}
 		return true;
 	}

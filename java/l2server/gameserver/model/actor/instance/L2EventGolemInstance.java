@@ -6,14 +6,16 @@ import l2server.gameserver.events.instanced.types.DestroyTheGolem;
 import l2server.gameserver.model.L2Skill;
 import l2server.gameserver.model.actor.L2Character;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Pere
  */
 public class L2EventGolemInstance extends L2MonsterInstance
 {
-	private EventTeam team = null;
-	private int maxHp;
+	@Getter @Setter private EventTeam team = null;
+	@Getter @Setter private int maxHp;
 
 	public L2EventGolemInstance(int objectId, L2NpcTemplate template)
 	{
@@ -36,7 +38,7 @@ public class L2EventGolemInstance extends L2MonsterInstance
 	public void reduceCurrentHp(double i, L2Character attacker, boolean awake, boolean isDOT, L2Skill skill)
 	{
 		if (EventsManager.getInstance().isPlayerParticipant(attacker.getObjectId()) &&
-				!this.team.containsPlayer(attacker.getObjectId()))
+				!team.containsPlayer(attacker.getObjectId()))
 		{
 			getStatus().reduceHp(1, attacker, awake, isDOT, false);
 		}
@@ -54,26 +56,5 @@ public class L2EventGolemInstance extends L2MonsterInstance
 			((DestroyTheGolem) ((L2PcInstance) killer).getEvent()).onGolemDestroyed((L2PcInstance) killer, getTeam());
 		}
 		return super.doDie(killer);
-	}
-
-	public EventTeam getTeam()
-	{
-		return this.team;
-	}
-
-	public void setTeam(EventTeam team)
-	{
-		this.team = team;
-	}
-
-	public void setMaxHp(int maxHp)
-	{
-		this.maxHp = maxHp;
-	}
-
-	@Override
-	public int getMaxHp()
-	{
-		return this.maxHp;
 	}
 }

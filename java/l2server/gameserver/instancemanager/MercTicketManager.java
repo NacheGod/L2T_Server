@@ -51,7 +51,6 @@ import java.util.logging.Level;
  */
 public class MercTicketManager
 {
-
 	public static MercTicketManager getInstance()
 	{
 		return SingletonHolder.instance;
@@ -1748,7 +1747,7 @@ public class MercTicketManager
 				dropticket.setDropTime(0); //avoids it from beeing removed by the auto item destroyer
 				L2World.getInstance().storeObject(dropticket); //add to the world
 				// and keep track of this ticket in the list
-				this.droppedTickets.add(dropticket);
+				droppedTickets.add(dropticket);
 
 				return NPC_IDS[i];
 			}
@@ -1833,18 +1832,18 @@ public class MercTicketManager
 
 	public final List<L2ItemInstance> getDroppedTickets()
 	{
-		if (this.droppedTickets == null)
+		if (droppedTickets == null)
 		{
 			synchronized (this)
 			{
-				if (this.droppedTickets == null)
+				if (droppedTickets == null)
 				{
-					this.droppedTickets = new ArrayList<>();
+					droppedTickets = new ArrayList<>();
 				}
 			}
 		}
 
-		return this.droppedTickets;
+		return droppedTickets;
 	}
 
 	@SuppressWarnings("synthetic-access")

@@ -15,9 +15,6 @@
 
 package vehicles;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import l2server.gameserver.ThreadPoolManager;
 import l2server.gameserver.instancemanager.BoatManager;
 import l2server.gameserver.model.VehiclePathPoint;
@@ -26,6 +23,9 @@ import l2server.gameserver.network.clientpackets.Say2;
 import l2server.gameserver.network.serverpackets.CreatureSay;
 import l2server.gameserver.network.serverpackets.PlaySound;
 import l2server.log.Log;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author DS
@@ -106,7 +106,8 @@ public class BoatInnadrilTour implements Runnable
 		ARRIVAL1 = new CreatureSay(0, Say2.BOAT, 801, 1175);
 
 		INNADRIL_SOUND =
-				new PlaySound(0, "itemsound.ship_arrival_departure", 1, this.boat.getObjectId(), DOCK.x, DOCK.y, DOCK.z);
+				new PlaySound(0, "itemsound.ship_arrival_departure", 1, this.boat.getObjectId(), DOCK.x, DOCK.y,
+						DOCK.z);
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class BoatInnadrilTour implements Runnable
 	{
 		try
 		{
-			switch (this.cycle)
+			switch (cycle)
 			{
 				case 0:
 					BoatManager.getInstance().broadcastPacket(DOCK, DOCK, LEAVE_INNADRIL5);
@@ -130,8 +131,8 @@ public class BoatInnadrilTour implements Runnable
 					break;
 				case 3:
 					BoatManager.getInstance().broadcastPackets(DOCK, DOCK, LEAVING_INNADRIL, INNADRIL_SOUND);
-					this.boat.payForRide(0, 1, 107092, 219098, -3952);
-					this.boat.executePath(TOUR);
+					boat.payForRide(0, 1, 107092, 219098, -3952);
+					boat.executePath(TOUR);
 					ThreadPoolManager.getInstance().scheduleGeneral(this, 650000);
 					break;
 				case 4:
@@ -158,10 +159,10 @@ public class BoatInnadrilTour implements Runnable
 					ThreadPoolManager.getInstance().scheduleGeneral(this, 300000);
 					break;
 			}
-			this.cycle++;
-			if (this.cycle > 9)
+			cycle++;
+			if (cycle > 9)
 			{
-				this.cycle = 0;
+				cycle = 0;
 			}
 		}
 		catch (Exception e)

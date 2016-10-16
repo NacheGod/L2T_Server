@@ -18,6 +18,7 @@ package l2server.gameserver.scripting;
 import com.l2jserver.script.jython.JythonScriptEngine;
 import l2server.Config;
 import l2server.log.Log;
+import lombok.Getter;
 
 import javax.script.*;
 import java.io.*;
@@ -44,7 +45,7 @@ public final class L2ScriptEngineManager
 
 	private final Map<String, ScriptEngine> nameEngines = new HashMap<>();
 	private final Map<String, ScriptEngine> extEngines = new HashMap<>();
-	private final List<ScriptManager<?>> scriptManagers = new LinkedList<>();
+	@Getter private final List<ScriptManager<?>> scriptManagers = new LinkedList<>();
 
 	private final CompiledScriptCache cache;
 
@@ -82,11 +83,11 @@ public final class L2ScriptEngineManager
 		List<ScriptEngineFactory> factories = scriptEngineManager.getEngineFactories();
 		if (USE_COMPILED_CACHE)
 		{
-			this.cache = loadCompiledScriptCache();
+			cache = loadCompiledScriptCache();
 		}
 		else
 		{
-			this.cache = null;
+			cache = null;
 		}
 		Log.info("Initializing Script Engine Manager");
 
@@ -98,7 +99,7 @@ public final class L2ScriptEngineManager
 				boolean reg = false;
 				for (String name : factory.getNames())
 				{
-					ScriptEngine existentEngine = this.nameEngines.get(name);
+					ScriptEngine existentEngine = nameEngines.get(name);
 
 					if (existentEngine != null)
 					{
@@ -112,7 +113,7 @@ public final class L2ScriptEngineManager
 					}
 
 					reg = true;
-					this.nameEngines.put(name, engine);
+					nameEngines.put(name, engine);
 				}
 
 				if (reg)
@@ -126,7 +127,7 @@ public final class L2ScriptEngineManager
 				{
 					if (!ext.equals("java") || factory.getLanguageName().equals("java"))
 					{
-						this.extEngines.put(ext, engine);
+						extEngines.put(ext, engine);
 					}
 				}
 			}
@@ -148,7 +149,7 @@ public final class L2ScriptEngineManager
 		String configScript = "import sys;sys.path.insert(0,'" + dataPackDirForwardSlashes + "');";
 		try
 		{
-			this.eval("jython", configScript);
+			eval("jython", configScript);
 		}
 		catch (ScriptException e)
 		{
@@ -158,12 +159,12 @@ public final class L2ScriptEngineManager
 
 	private ScriptEngine getEngineByName(String name)
 	{
-		return this.nameEngines.get(name);
+		return nameEngines.get(name);
 	}
 
 	private ScriptEngine getEngineByExtension(String ext)
 	{
-		return this.extEngines.get(ext);
+		return extEngines.get(ext);
 	}
 
 	public void executeScriptList(File list) throws IOException
@@ -256,12 +257,12 @@ public final class L2ScriptEngineManager
 
 	public void executeAllScriptsInDirectory(File dir)
 	{
-		this.executeAllScriptsInDirectory(dir, false, 0);
+		executeAllScriptsInDirectory(dir, false, 0);
 	}
 
 	public void executeAllScriptsInDirectory(File dir, boolean recurseDown, int maxDepth)
 	{
-		this.executeAllScriptsInDirectory(dir, recurseDown, maxDepth, 0);
+		executeAllScriptsInDirectory(dir, recurseDown, maxDepth, 0);
 	}
 
 	private void executeAllScriptsInDirectory(File dir, boolean recurseDown, int maxDepth, int currentDepth)
@@ -303,7 +304,7 @@ public final class L2ScriptEngineManager
 					catch (ScriptException e)
 					{
 						reportScriptFileError(file, e);
-						//Logozo.log(Level.WARNING, "", e);
+						//Log.log(Level.WARNING, "", e);
 					}
 				}
 			}
@@ -316,7 +317,7 @@ public final class L2ScriptEngineManager
 
 	public CompiledScriptCache getCompiledScriptCache()
 	{
-		return this.cache;
+		return cache;
 	}
 
 	public CompiledScriptCache loadCompiledScriptCache()
@@ -443,7 +444,7 @@ public final class L2ScriptEngineManager
 				engine.setContext(context);
 				if (USE_COMPILED_CACHE)
 				{
-					CompiledScript cs = this.cache.loadCompiledScript(engine, file);
+					CompiledScript cs = cache.loadCompiledScript(engine, file);
 					cs.eval(context);
 				}
 				else
@@ -509,7 +510,7 @@ public final class L2ScriptEngineManager
 		}
 		else
 		{
-			return this.getScriptContext(engine);
+			return getScriptContext(engine);
 		}
 	}
 
@@ -529,7 +530,7 @@ public final class L2ScriptEngineManager
 
 	public Object eval(String engineName, String script) throws ScriptException
 	{
-		return this.eval(engineName, script, null);
+		return eval(engineName, script, null);
 	}
 
 	public Object eval(String engineName, String script, ScriptContext context) throws ScriptException
@@ -541,13 +542,13 @@ public final class L2ScriptEngineManager
 		}
 		else
 		{
-			return this.eval(engine, script, context);
+			return eval(engine, script, context);
 		}
 	}
 
 	public Object eval(ScriptEngine engine, String script) throws ScriptException
 	{
-		return this.eval(engine, script, null);
+		return eval(engine, script, null);
 	}
 
 	public void reportScriptFileError(File script, ScriptException e)
@@ -571,17 +572,12 @@ public final class L2ScriptEngineManager
 
 	public void registerScriptManager(ScriptManager<?> manager)
 	{
-		this.scriptManagers.add(manager);
+		scriptManagers.add(manager);
 	}
 
 	public void removeScriptManager(ScriptManager<?> manager)
 	{
-		this.scriptManagers.remove(manager);
-	}
-
-	public List<ScriptManager<?>> getScriptManagers()
-	{
-		return this.scriptManagers;
+		scriptManagers.remove(manager);
 	}
 
 	/**
@@ -597,7 +593,7 @@ public final class L2ScriptEngineManager
 	 */
 	protected File getCurrentLoadingScript()
 	{
-		return this.currentLoadingScript;
+		return currentLoadingScript;
 	}
 
 	@SuppressWarnings("synthetic-access")

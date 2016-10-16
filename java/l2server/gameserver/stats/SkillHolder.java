@@ -17,6 +17,7 @@ package l2server.gameserver.stats;
 
 import l2server.gameserver.datatables.SkillTable;
 import l2server.gameserver.model.L2Skill;
+import lombok.Getter;
 
 /**
  * @author BiggBoss
@@ -24,8 +25,8 @@ import l2server.gameserver.model.L2Skill;
  */
 public final class SkillHolder
 {
-	private final int skillId;
-	private final int skillLvl;
+	@Getter private final int skillId;
+	@Getter private final int skillLvl;
 
 	public SkillHolder(int skillId, int skillLvl)
 	{
@@ -35,22 +36,12 @@ public final class SkillHolder
 
 	public SkillHolder(L2Skill skill)
 	{
-		this.skillId = skill.getId();
-		this.skillLvl = skill.getLevelHash();
-	}
-
-	public final int getSkillId()
-	{
-		return this.skillId;
-	}
-
-	public final int getSkillLvl()
-	{
-		return this.skillLvl;
+		skillId = skill.getId();
+		skillLvl = skill.getLevelHash();
 	}
 
 	public final L2Skill getSkill()
 	{
-		return SkillTable.getInstance().getInfo(this.skillId, this.skillLvl);
+		return SkillTable.getInstance().getInfo(skillId, skillLvl);
 	}
 }

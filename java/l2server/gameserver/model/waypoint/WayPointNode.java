@@ -32,6 +32,7 @@ import l2server.gameserver.model.actor.L2Character;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.network.serverpackets.MyTargetSelected;
 import l2server.util.Point3D;
+import lombok.Getter;
 
 import java.util.*;
 
@@ -43,7 +44,7 @@ import java.util.*;
 
 public class WayPointNode extends L2Object
 {
-	private int id;
+	@Getter private int id;
 	private String title, type;
 	private static final String NORMAL = "Node", SELECTED = "Selected", LINKED = "Linked";
 	private static int lineId = 5560;
@@ -56,7 +57,7 @@ public class WayPointNode extends L2Object
 	public WayPointNode(int objectId)
 	{
 		super(objectId);
-		this.linkLists = Collections.synchronizedMap(new WeakHashMap<WayPointNode, List<WayPointNode>>());
+		linkLists = Collections.synchronizedMap(new WeakHashMap<WayPointNode, List<WayPointNode>>());
 	}
 
 	/* (non-Javadoc)
@@ -156,7 +157,7 @@ public class WayPointNode extends L2Object
 
 	public final String getTitle()
 	{
-		return this.title;
+		return title;
 	}
 
 	public final void setTitle(String title)
@@ -164,14 +165,9 @@ public class WayPointNode extends L2Object
 		this.title = title;
 	}
 
-	public int getId()
-	{
-		return this.id;
-	}
-
 	public String getType()
 	{
-		return this.type;
+		return type;
 	}
 
 	public void setType(String type)
@@ -214,7 +210,7 @@ public class WayPointNode extends L2Object
 
 	public void addLineInfo(WayPointNode node, List<WayPointNode> line)
 	{
-		this.linkLists.put(node, line);
+		linkLists.put(node, line);
 	}
 
 	/**
@@ -241,7 +237,7 @@ public class WayPointNode extends L2Object
 	 */
 	public void eraseLine(WayPointNode target)
 	{
-		this.linkLists.remove(target);
+		linkLists.remove(target);
 	}
 
 	/**
@@ -250,7 +246,7 @@ public class WayPointNode extends L2Object
 	 */
 	private List<WayPointNode> getLineInfo(WayPointNode selectedNode)
 	{
-		return this.linkLists.get(selectedNode);
+		return linkLists.get(selectedNode);
 	}
 
 	public static void setLineId(int line_id)
@@ -262,7 +258,7 @@ public class WayPointNode extends L2Object
 	{
 		List<WayPointNode> list = new ArrayList<>();
 
-		for (List<WayPointNode> points : this.linkLists.values())
+		for (List<WayPointNode> points : linkLists.values())
 		{
 			list.addAll(points);
 		}

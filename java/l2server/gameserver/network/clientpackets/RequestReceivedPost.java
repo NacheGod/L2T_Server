@@ -32,13 +32,12 @@ import static l2server.gameserver.model.actor.L2Character.ZONE_PEACE;
  */
 public final class RequestReceivedPost extends L2GameClientPacket
 {
-
 	private int msgId;
 
 	@Override
 	protected void readImpl()
 	{
-		this.msgId = readD();
+		msgId = readD();
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public final class RequestReceivedPost extends L2GameClientPacket
 			return;
 		}
 
-		final Message msg = MailManager.getInstance().getMessage(this.msgId);
+		final Message msg = MailManager.getInstance().getMessage(msgId);
 		if (msg == null)
 		{
 			return;
@@ -75,7 +74,7 @@ public final class RequestReceivedPost extends L2GameClientPacket
 		}
 
 		activeChar.sendPacket(new ExReplyReceivedPost(msg));
-		activeChar.sendPacket(new ExChangePostState(true, this.msgId, Message.READED));
+		activeChar.sendPacket(new ExChangePostState(true, msgId, Message.READED));
 		msg.markAsRead();
 	}
 

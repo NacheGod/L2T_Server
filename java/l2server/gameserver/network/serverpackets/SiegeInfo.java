@@ -45,7 +45,6 @@ import java.util.Calendar;
  */
 public class SiegeInfo extends L2GameServerPacket
 {
-
 	private Castle castle;
 
 	public SiegeInfo(Castle castle)
@@ -62,12 +61,12 @@ public class SiegeInfo extends L2GameServerPacket
 			return;
 		}
 
-		writeD(this.castle.getCastleId());
-		writeD(this.castle.getOwnerId() == activeChar.getClanId() && activeChar.isClanLeader() ? 0x01 : 0x00);
-		writeD(this.castle.getOwnerId());
-		if (this.castle.getOwnerId() > 0)
+		writeD(castle.getCastleId());
+		writeD(castle.getOwnerId() == activeChar.getClanId() && activeChar.isClanLeader() ? 0x01 : 0x00);
+		writeD(castle.getOwnerId());
+		if (castle.getOwnerId() > 0)
 		{
-			L2Clan owner = ClanTable.getInstance().getClan(this.castle.getOwnerId());
+			L2Clan owner = ClanTable.getInstance().getClan(castle.getOwnerId());
 			if (owner != null)
 			{
 				writeS(owner.getName()); // Clan Name
@@ -77,7 +76,7 @@ public class SiegeInfo extends L2GameServerPacket
 			}
 			else
 			{
-				Log.warning("Null owner for castle: " + this.castle.getName());
+				Log.warning("Null owner for castle: " + castle.getName());
 			}
 		}
 		else
@@ -89,7 +88,7 @@ public class SiegeInfo extends L2GameServerPacket
 		}
 
 		writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
-		writeD((int) (this.castle.getSiege().getSiegeDate().getTimeInMillis() / 1000));
+		writeD((int) (castle.getSiege().getSiegeDate().getTimeInMillis() / 1000));
 		writeD(0x00); //number of choices?
 	}
 }

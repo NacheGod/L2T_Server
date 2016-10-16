@@ -15,6 +15,8 @@
 
 package l2server.loginserver.network.serverpackets;
 
+import lombok.Getter;
+
 /**
  * @author KenM
  */
@@ -27,16 +29,11 @@ public final class AccountKicked extends L2LoginServerPacket
 		REASON_7_DAYS_SUSPENDED(0x10),
 		REASON_PERMANENTLY_BANNED(0x20);
 
-		private final int code;
+		@Getter private final int code;
 
 		AccountKickedReason(int code)
 		{
 			this.code = code;
-		}
-
-		public final int getCode()
-		{
-			return this.code;
 		}
 	}
 
@@ -53,6 +50,6 @@ public final class AccountKicked extends L2LoginServerPacket
 	protected void write()
 	{
 		writeC(0x02);
-		writeD(this.reason.getCode());
+		writeD(reason.getCode());
 	}
 }

@@ -35,14 +35,13 @@ import l2server.log.Log;
  */
 public final class RequestRestartPoint extends L2GameClientPacket
 {
-
 	protected int requestedPointType;
 	protected boolean continuation;
 
 	@Override
 	protected void readImpl()
 	{
-		this.requestedPointType = readD();
+		requestedPointType = readD();
 	}
 
 	class DeathTask implements Runnable

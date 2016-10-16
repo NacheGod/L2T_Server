@@ -29,17 +29,13 @@ public class ExShowQuestMark extends L2GameServerPacket
 		this.state = state;
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.questId);
-		writeD(this.state);
+		writeD(questId);
+		writeD(state);
 	}
 }

@@ -29,6 +29,8 @@ import l2server.gameserver.network.SystemMessageId;
 import l2server.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.log.Log;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,7 +40,6 @@ import java.util.logging.Level;
 
 public class ClanHall
 {
-
 	private int clanHallId;
 	private List<L2DoorInstance> doors;
 	private String name;
@@ -47,7 +48,7 @@ public class ClanHall
 	private String desc;
 	private String location;
 	protected long paidUntil;
-	private L2ClanHallZone zone;
+	@Getter @Setter private L2ClanHallZone zone;
 	private int grade;
 	protected final int chRate = 604800000;
 	protected boolean isFree = true;
@@ -68,11 +69,11 @@ public class ClanHall
 
 	public class ClanHallFunction
 	{
-		private int type;
-		private int lvl;
+		@Getter private int type;
+		@Getter @Setter private int lvl;
 		protected int fee;
 		protected int tempFee;
-		private long rate;
+		@Getter private long rate;
 		private long endDate;
 		protected boolean inDebt;
 		public boolean cwh;
@@ -82,51 +83,31 @@ public class ClanHall
 		{
 			this.type = type;
 			this.lvl = lvl;
-			this.fee = lease;
-			this.tempFee = tempLease;
+			fee = lease;
+			tempFee = tempLease;
 			this.rate = rate;
-			this.endDate = time;
+			endDate = time;
 			initializeTask(cwh);
-		}
-
-		public int getType()
-		{
-			return this.type;
-		}
-
-		public int getLvl()
-		{
-			return this.lvl;
 		}
 
 		public int getLease()
 		{
-			return this.fee;
-		}
-
-		public long getRate()
-		{
-			return this.rate;
+			return fee;
 		}
 
 		public long getEndTime()
 		{
-			return this.endDate;
-		}
-
-		public void setLvl(int lvl)
-		{
-			this.lvl = lvl;
+			return endDate;
 		}
 
 		public void setLease(int lease)
 		{
-			this.fee = lease;
+			fee = lease;
 		}
 
 		public void setEndTime(long time)
 		{
-			this.endDate = time;
+			endDate = time;
 		}
 
 		private void initializeTask(boolean cwh)
@@ -136,9 +117,9 @@ public class ClanHall
 				return;
 			}
 			long currentTime = System.currentTimeMillis();
-			if (this.endDate > currentTime)
+			if (endDate > currentTime)
 			{
-				ThreadPoolManager.getInstance().scheduleGeneral(new FunctionTask(cwh), this.endDate - currentTime);
+				ThreadPoolManager.getInstance().scheduleGeneral(new FunctionTask(cwh), endDate - currentTime);
 			}
 			else
 			{
@@ -158,7 +139,7 @@ public class ClanHall
 			{
 				try
 				{
-					if (ClanHall.this.isFree)
+					if (isFree)
 					{
 						return;
 					}
@@ -167,12 +148,12 @@ public class ClanHall
 						int fee = ClanHallFunction.this.fee;
 						if (getEndTime() == -1)
 						{
-							fee = ClanHallFunction.this.tempFee;
+							fee = tempFee;
 						}
 
 						setEndTime(System.currentTimeMillis() + getRate());
 						dbSave();
-						if (ClanHallFunction.this.cwh)
+						if (cwh)
 						{
 							ClanTable.getInstance().getClan(getOwnerId()).getWarehouse()
 									.destroyItemByItemId("CH_function_fee", 57, fee, null, null);
@@ -241,13 +222,13 @@ public class ClanHall
 		this.desc = desc;
 		this.location = location;
 		this.paidUntil = paidUntil;
-		this.grade = Grade;
+		grade = Grade;
 		this.paid = paid;
-		this.functions = new HashMap<>();
+		functions = new HashMap<>();
 
 		if (ownerId != 0)
 		{
-			this.isFree = false;
+			isFree = false;
 			initialyzeTask(false);
 			loadFunctions();
 		}
@@ -258,7 +239,7 @@ public class ClanHall
 	 */
 	public final boolean getPaid()
 	{
-		return this.paid;
+		return paid;
 	}
 
 	/**
@@ -266,7 +247,7 @@ public class ClanHall
 	 */
 	public final int getId()
 	{
-		return this.clanHallId;
+		return clanHallId;
 	}
 
 	/**
@@ -274,7 +255,7 @@ public class ClanHall
 	 */
 	public final String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	/**
@@ -282,7 +263,7 @@ public class ClanHall
 	 */
 	public final int getOwnerId()
 	{
-		return this.ownerId;
+		return ownerId;
 	}
 
 	/**
@@ -290,7 +271,7 @@ public class ClanHall
 	 */
 	public final long getLease()
 	{
-		return this.lease;
+		return lease;
 	}
 
 	/**
@@ -298,7 +279,7 @@ public class ClanHall
 	 */
 	public final String getDesc()
 	{
-		return this.desc;
+		return desc;
 	}
 
 	/**
@@ -306,7 +287,7 @@ public class ClanHall
 	 */
 	public final String getLocation()
 	{
-		return this.location;
+		return location;
 	}
 
 	/**
@@ -314,7 +295,7 @@ public class ClanHall
 	 */
 	public final long getPaidUntil()
 	{
-		return this.paidUntil;
+		return paidUntil;
 	}
 
 	/**
@@ -322,7 +303,7 @@ public class ClanHall
 	 */
 	public final int getGrade()
 	{
-		return this.grade;
+		return grade;
 	}
 
 	/**
@@ -330,11 +311,11 @@ public class ClanHall
 	 */
 	public final List<L2DoorInstance> getDoors()
 	{
-		if (this.doors == null)
+		if (doors == null)
 		{
-			this.doors = new ArrayList<>();
+			doors = new ArrayList<>();
 		}
-		return this.doors;
+		return doors;
 	}
 
 	/**
@@ -361,29 +342,11 @@ public class ClanHall
 	 */
 	public ClanHallFunction getFunction(int type)
 	{
-		if (this.functions.get(type) != null)
+		if (functions.get(type) != null)
 		{
-			return this.functions.get(type);
+			return functions.get(type);
 		}
 		return null;
-	}
-
-	/**
-	 * Sets this clan halls zone
-	 *
-	 * @param zone
-	 */
-	public void setZone(L2ClanHallZone zone)
-	{
-		this.zone = zone;
-	}
-
-	/**
-	 * Returns the zone of this clan hall
-	 */
-	public L2ClanHallZone getZone()
-	{
-		return this.zone;
 	}
 
 	/**
@@ -391,16 +354,16 @@ public class ClanHall
 	 */
 	public void free()
 	{
-		this.ownerId = 0;
-		this.isFree = true;
-		Set<Integer> functionIds = new HashSet<>(this.functions.keySet());
+		ownerId = 0;
+		isFree = true;
+		Set<Integer> functionIds = new HashSet<>(functions.keySet());
 		for (int funcId : functionIds)
 		{
 			removeFunction(funcId);
 		}
-		this.functions.clear();
-		this.paidUntil = 0;
-		this.paid = false;
+		functions.clear();
+		paidUntil = 0;
+		paid = false;
 		updateDb();
 	}
 
@@ -410,13 +373,13 @@ public class ClanHall
 	public void setOwner(L2Clan clan)
 	{
 		// Verify that this ClanHall is Free and Clan isn't null
-		if (this.ownerId > 0 || clan == null)
+		if (ownerId > 0 || clan == null)
 		{
 			return;
 		}
-		this.ownerId = clan.getClanId();
-		this.isFree = false;
-		this.paidUntil = System.currentTimeMillis();
+		ownerId = clan.getClanId();
+		isFree = false;
+		paidUntil = System.currentTimeMillis();
 		initialyzeTask(true);
 		// Annonce to Online member new ClanHall
 		clan.broadcastToOnlineMembers(new PledgeShowInfoUpdate(clan));
@@ -485,7 +448,7 @@ public class ClanHall
 	 */
 	public void banishForeigners()
 	{
-		this.zone.banishForeigners(getOwnerId());
+		zone.banishForeigners(getOwnerId());
 	}
 
 	/**
@@ -504,7 +467,7 @@ public class ClanHall
 			rs = statement.executeQuery();
 			while (rs.next())
 			{
-				this.functions.put(rs.getInt("type"),
+				functions.put(rs.getInt("type"),
 						new ClanHallFunction(rs.getInt("type"), rs.getInt("lvl"), rs.getInt("lease"), 0,
 								rs.getLong("rate"), rs.getLong("endTime"), true));
 			}
@@ -525,7 +488,7 @@ public class ClanHall
 	 */
 	public void removeFunction(int functionType)
 	{
-		this.functions.remove(functionType);
+		functions.remove(functionType);
 		Connection con = null;
 		try
 		{
@@ -568,7 +531,7 @@ public class ClanHall
 		}
 		if (addNew)
 		{
-			this.functions.put(type, new ClanHallFunction(type, lvl, lease, 0, rate, 0, false));
+			functions.put(type, new ClanHallFunction(type, lvl, lease, 0, rate, 0, false));
 		}
 		else
 		{
@@ -578,21 +541,21 @@ public class ClanHall
 			}
 			else
 			{
-				int diffLease = lease - this.functions.get(type).getLease();
+				int diffLease = lease - functions.get(type).getLease();
 				if (Config.DEBUG)
 				{
 					Log.warning("Called ClanHall.updateFunctions diffLease : " + diffLease);
 				}
 				if (diffLease > 0)
 				{
-					this.functions.remove(type);
-					this.functions.put(type, new ClanHallFunction(type, lvl, lease, 0, rate, -1, false));
+					functions.remove(type);
+					functions.put(type, new ClanHallFunction(type, lvl, lease, 0, rate, -1, false));
 				}
 				else
 				{
-					this.functions.get(type).setLease(lease);
-					this.functions.get(type).setLvl(lvl);
-					this.functions.get(type).dbSave();
+					functions.get(type).setLease(lease);
+					functions.get(type).setLvl(lvl);
+					functions.get(type).dbSave();
 				}
 			}
 		}
@@ -611,10 +574,10 @@ public class ClanHall
 			PreparedStatement statement;
 
 			statement = con.prepareStatement("UPDATE clanhall SET ownerId=?, paidUntil=?, paid=? WHERE id=?");
-			statement.setInt(1, this.ownerId);
-			statement.setLong(2, this.paidUntil);
-			statement.setInt(3, this.paid ? 1 : 0);
-			statement.setInt(4, this.clanHallId);
+			statement.setInt(1, ownerId);
+			statement.setLong(2, paidUntil);
+			statement.setInt(3, paid ? 1 : 0);
+			statement.setInt(4, clanHallId);
 			statement.execute();
 			statement.close();
 		}
@@ -634,13 +597,13 @@ public class ClanHall
 	private void initialyzeTask(boolean forced)
 	{
 		long currentTime = System.currentTimeMillis();
-		if (this.paidUntil > currentTime)
+		if (paidUntil > currentTime)
 		{
-			ThreadPoolManager.getInstance().scheduleGeneral(new FeeTask(), this.paidUntil - currentTime);
+			ThreadPoolManager.getInstance().scheduleGeneral(new FeeTask(), paidUntil - currentTime);
 		}
-		else if (!this.paid && !forced)
+		else if (!paid && !forced)
 		{
-			if (System.currentTimeMillis() + 1000 * 60 * 60 * 24 <= this.paidUntil + this.chRate)
+			if (System.currentTimeMillis() + 1000 * 60 * 60 * 24 <= paidUntil + chRate)
 			{
 				ThreadPoolManager.getInstance()
 						.scheduleGeneral(new FeeTask(), System.currentTimeMillis() + 1000 * 60 * 60 * 24);
@@ -648,7 +611,7 @@ public class ClanHall
 			else
 			{
 				ThreadPoolManager.getInstance()
-						.scheduleGeneral(new FeeTask(), this.paidUntil + this.chRate - System.currentTimeMillis());
+						.scheduleGeneral(new FeeTask(), paidUntil + chRate - System.currentTimeMillis());
 			}
 		}
 		else
@@ -742,8 +705,7 @@ public class ClanHall
 						}
 						else
 						{
-							ThreadPoolManager.getInstance()
-									.scheduleGeneral(new FeeTask(), paidUntil + chRate - time);
+							ThreadPoolManager.getInstance().scheduleGeneral(new FeeTask(), paidUntil + chRate - time);
 						}
 					}
 				}

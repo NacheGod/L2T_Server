@@ -27,7 +27,6 @@ import l2server.gameserver.templates.item.L2Item;
  */
 public class ConditionTargetBodyPart extends Condition
 {
-
 	private L2Armor armor;
 
 	/**
@@ -52,7 +51,7 @@ public class ConditionTargetBodyPart extends Condition
 			return true;
 		}
 		int bodypart = env.target.getAttackingBodyPart();
-		int armor_part = this.armor.getBodyPart();
+		int armor_part = armor.getBodyPart();
 		switch (bodypart)
 		{
 			case Inventory.PAPERDOLL_CHEST:

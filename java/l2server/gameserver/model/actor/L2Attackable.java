@@ -41,6 +41,8 @@ import l2server.gameserver.templates.item.L2EtcItemType;
 import l2server.gameserver.util.Util;
 import l2server.log.Log;
 import l2server.util.Rnd;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,9 +54,9 @@ import java.util.logging.Level;
 
 public class L2Attackable extends L2Npc
 {
-	private boolean isRaid = false;
+	@Setter private boolean isRaid = false;
 	private boolean isRaidMinion = false;
-	private boolean champion = false;
+	@Getter @Setter private boolean champion = false;
 
 	/**
 	 * This class contains all AggroInfo of the L2Attackable against the attacker L2Character.
@@ -66,53 +68,48 @@ public class L2Attackable extends L2Npc
 	 */
 	public static final class AggroInfo
 	{
-		private final L2Character attacker;
+		@Getter private final L2Character attacker;
 		private int hate = 0;
 		private int damage = 0;
 
 		public AggroInfo(L2Character pAttacker)
 		{
-			this.attacker = pAttacker;
-		}
-
-		public final L2Character getAttacker()
-		{
-			return this.attacker;
+			attacker = pAttacker;
 		}
 
 		public final int getHate()
 		{
-			return this.hate;
+			return hate;
 		}
 
 		public final int checkHate(L2Attackable owner)
 		{
-			if (this.attacker.isAlikeDead() || !this.attacker.isVisible() || !owner.getKnownList().knowsObject(this.attacker))
+			if (attacker.isAlikeDead() || !attacker.isVisible() || !owner.getKnownList().knowsObject(attacker))
 			{
-				this.hate = 0;
+				hate = 0;
 			}
 
-			return this.hate;
+			return hate;
 		}
 
 		public final void addHate(int value)
 		{
-			this.hate = (int) Math.min(this.hate + (long) value, 999999999);
+			hate = (int) Math.min(hate + (long) value, 999999999);
 		}
 
 		public final void stopHate()
 		{
-			this.hate = 0;
+			hate = 0;
 		}
 
 		public final int getDamage()
 		{
-			return this.damage;
+			return damage;
 		}
 
 		public final void addDamage(int value)
 		{
-			this.damage = (int) Math.min(this.damage + (long) value, 999999999);
+			damage = (int) Math.min(damage + (long) value, 999999999);
 		}
 
 		@Override
@@ -125,7 +122,7 @@ public class L2Attackable extends L2Npc
 
 			if (obj instanceof AggroInfo)
 			{
-				return ((AggroInfo) obj).getAttacker() == this.attacker;
+				return ((AggroInfo) obj).getAttacker() == attacker;
 			}
 
 			return false;
@@ -134,7 +131,7 @@ public class L2Attackable extends L2Npc
 		@Override
 		public final int hashCode()
 		{
-			return this.attacker.getObjectId();
+			return attacker.getObjectId();
 		}
 	}
 
@@ -153,13 +150,13 @@ public class L2Attackable extends L2Npc
 
 		public RewardInfo(L2Character pAttacker, int pDmg)
 		{
-			this.attacker = pAttacker;
-			this.dmg = pDmg;
+			attacker = pAttacker;
+			dmg = pDmg;
 		}
 
 		public void addDamage(int pDmg)
 		{
-			this.dmg += pDmg;
+			dmg += pDmg;
 		}
 
 		@Override
@@ -172,7 +169,7 @@ public class L2Attackable extends L2Npc
 
 			if (obj instanceof RewardInfo)
 			{
-				return ((RewardInfo) obj).attacker == this.attacker;
+				return ((RewardInfo) obj).attacker == attacker;
 			}
 
 			return false;
@@ -181,7 +178,7 @@ public class L2Attackable extends L2Npc
 		@Override
 		public int hashCode()
 		{
-			return this.attacker.getObjectId();
+			return attacker.getObjectId();
 		}
 	}
 
@@ -199,7 +196,7 @@ public class L2Attackable extends L2Npc
 		AbsorberInfo(int objId, double pAbsorbedHP)
 		{
 			this.objId = objId;
-			this.absorbedHP = pAbsorbedHP;
+			absorbedHP = pAbsorbedHP;
 		}
 
 		@Override
@@ -212,7 +209,7 @@ public class L2Attackable extends L2Npc
 
 			if (obj instanceof AbsorberInfo)
 			{
-				return ((AbsorberInfo) obj).objId == this.objId;
+				return ((AbsorberInfo) obj).objId == objId;
 			}
 
 			return false;
@@ -221,7 +218,7 @@ public class L2Attackable extends L2Npc
 		@Override
 		public int hashCode()
 		{
-			return this.objId;
+			return objId;
 		}
 	}
 
@@ -239,12 +236,12 @@ public class L2Attackable extends L2Npc
 
 		public int getItemId()
 		{
-			return this.itemId;
+			return itemId;
 		}
 
 		public long getCount()
 		{
-			return this.count;
+			return count;
 		}
 	}
 
@@ -252,31 +249,31 @@ public class L2Attackable extends L2Npc
 
 	public final ConcurrentHashMap<L2Character, AggroInfo> getAggroList()
 	{
-		return this.aggroList;
+		return aggroList;
 	}
 
 	private boolean isReturningToSpawnPoint = false;
 
 	public final boolean isReturningToSpawnPoint()
 	{
-		return this.isReturningToSpawnPoint;
+		return isReturningToSpawnPoint;
 	}
 
 	public final void setisReturningToSpawnPoint(boolean value)
 	{
-		this.isReturningToSpawnPoint = value;
+		isReturningToSpawnPoint = value;
 	}
 
 	private boolean canReturnToSpawnPoint = true;
 
 	public final boolean canReturnToSpawnPoint()
 	{
-		return this.canReturnToSpawnPoint;
+		return canReturnToSpawnPoint;
 	}
 
 	public final void setCanReturnToSpawnPoint(boolean value)
 	{
-		this.canReturnToSpawnPoint = value;
+		canReturnToSpawnPoint = value;
 	}
 
 	public boolean canSeeThroughSilentMove()
@@ -295,23 +292,23 @@ public class L2Attackable extends L2Npc
 	private RewardItem[] sweepItems;
 
 	private RewardItem[] harvestItems;
-	private boolean seeded;
-	private int seedType = 0;
+	@Getter private boolean seeded;
+	@Getter private int seedType = 0;
 	private int seederObjId = 0;
 
-	private boolean overhit;
+	@Getter private boolean overhit;
 
-	private double overhitDamage;
+	@Getter private double overhitDamage;
 
-	private L2Character overhitAttacker;
+	@Getter private L2Character overhitAttacker;
 
-	private L2CommandChannel firstCommandChannelAttacked = null;
-	private CommandChannelTimer commandChannelTimer = null;
-	private long commandChannelLastAttack = 0;
+	@Getter @Setter private L2CommandChannel firstCommandChannelAttacked = null;
+	@Getter private CommandChannelTimer commandChannelTimer = null;
+	@Getter private long commandChannelLastAttack = 0;
 
-	private boolean absorbed;
+	@Getter private boolean absorbed;
 
-	private ConcurrentHashMap<Integer, AbsorberInfo> absorbersList = new ConcurrentHashMap<>();
+	@Getter private ConcurrentHashMap<Integer, AbsorberInfo> absorbersList = new ConcurrentHashMap<>();
 
 	private boolean mustGiveExpSp;
 
@@ -339,7 +336,7 @@ public class L2Attackable extends L2Npc
 		super(objectId, template);
 		setInstanceType(InstanceType.L2Attackable);
 		setIsInvul(false);
-		this.mustGiveExpSp = true;
+		mustGiveExpSp = true;
 	}
 
 	@Override
@@ -493,29 +490,29 @@ public class L2Attackable extends L2Npc
 				attacker.getParty().isInCommandChannel() &&
 				attacker.getParty().getCommandChannel().meetRaidWarCondition(this))
 		{
-			if (this.firstCommandChannelAttacked == null) //looting right isn't set
+			if (firstCommandChannelAttacked == null) //looting right isn't set
 			{
 				synchronized (this)
 				{
-					if (this.firstCommandChannelAttacked == null)
+					if (firstCommandChannelAttacked == null)
 					{
-						this.firstCommandChannelAttacked = attacker.getParty().getCommandChannel();
-						if (this.firstCommandChannelAttacked != null)
+						firstCommandChannelAttacked = attacker.getParty().getCommandChannel();
+						if (firstCommandChannelAttacked != null)
 						{
-							this.commandChannelTimer = new CommandChannelTimer(this);
-							this.commandChannelLastAttack = System.currentTimeMillis();
+							commandChannelTimer = new CommandChannelTimer(this);
+							commandChannelLastAttack = System.currentTimeMillis();
 							ThreadPoolManager.getInstance()
-									.scheduleGeneral(this.commandChannelTimer, 10000); // check for last attack
-							this.firstCommandChannelAttacked.broadcastToChannelMembers(
+									.scheduleGeneral(commandChannelTimer, 10000); // check for last attack
+							firstCommandChannelAttacked.broadcastToChannelMembers(
 									new CreatureSay(0, Say2.PARTYROOM_ALL, "",
 											"You have looting rights!")); //TODO: retail msg
 						}
 					}
 				}
 			}
-			else if (attacker.getParty().getCommandChannel().equals(this.firstCommandChannelAttacked)) //is in same channel
+			else if (attacker.getParty().getCommandChannel().equals(firstCommandChannelAttacked)) //is in same channel
 			{
-				this.commandChannelLastAttack = System.currentTimeMillis(); // update last attack time
+				commandChannelLastAttack = System.currentTimeMillis(); // update last attack time
 			}
 		}
 
@@ -552,12 +549,12 @@ public class L2Attackable extends L2Npc
 
 	public void setMustRewardExpSp(boolean value)
 	{
-		this.mustGiveExpSp = value;
+		mustGiveExpSp = value;
 	}
 
 	public boolean getMustRewardExpSP()
 	{
-		return this.mustGiveExpSp;
+		return mustGiveExpSp;
 	}
 
 	/**
@@ -608,7 +605,7 @@ public class L2Attackable extends L2Npc
 					{
 						ThreadPoolManager.getInstance()
 								.scheduleEffect(new OnKillNotifyTask(this, quest, player, killer instanceof L2Summon),
-										Math.min(this.onKillDelay, quest.getOnKillDelay(getNpcId())));
+										Math.min(onKillDelay, quest.getOnKillDelay(getNpcId())));
 					}
 				}
 			}
@@ -640,7 +637,7 @@ public class L2Attackable extends L2Npc
 		@Override
 		public void run()
 		{
-			this.quest.notifyKill(this.attackable, this.killer, this.isPet);
+			quest.notifyKill(attackable, killer, isPet);
 		}
 	}
 
@@ -865,8 +862,8 @@ public class L2Attackable extends L2Npc
 									L2PcInstance pcAttacker = (L2PcInstance) attacker;
 									if (pcAttacker.getSkillLevelHash(467) > 0)
 									{
-										L2Skill skill = SkillTable.getInstance()
-												.getInfo(467, attacker.getSkillLevelHash(467));
+										L2Skill skill =
+												SkillTable.getInstance().getInfo(467, attacker.getSkillLevelHash(467));
 
 										if (skill.getExpNeeded() <= addexp)
 										{
@@ -1420,7 +1417,7 @@ public class L2Attackable extends L2Npc
 		if (ai.getAttacker() instanceof L2PcInstance)
 		{
 			L2PcInstance act = (L2PcInstance) ai.getAttacker();
-			if (act.getAppearance().getInvisible() /*|| ai.getAttacker().isInvul()*/ || act.isSpawnProtected())
+			if (act.getAppearance().isInvisible() /*|| ai.getAttacker().isInvul()*/ || act.isSpawnProtected())
 			{
 				//Remove Object Should Use This Method and Can be Blocked While Interating
 				getAggroList().remove(target);
@@ -1686,7 +1683,7 @@ public class L2Attackable extends L2Npc
 
 			// Check to prevent very high level player to nearly kill mob and let low level player do the last hit.
 			/*if (!getAttackByList().isEmpty())
-            {
+			{
 				for (L2Character atkChar: getAttackByList())
 					if (atkChar != null && atkChar.getLevel() > highestLevel)
 						highestLevel = atkChar.getLevel();
@@ -1820,7 +1817,7 @@ public class L2Attackable extends L2Npc
 			// Set the table this.sweepItems of this L2Attackable
 			if (!sweepList.isEmpty())
 			{
-				this.sweepItems = sweepList.toArray(new RewardItem[sweepList.size()]);
+				sweepItems = sweepList.toArray(new RewardItem[sweepList.size()]);
 			}
 		}
 
@@ -1839,7 +1836,7 @@ public class L2Attackable extends L2Npc
 
 			// Check if the autoLoot mode is active
 			if ((isFlying() || !isRaid() && Config.AUTO_LOOT || isRaid() && Config.AUTO_LOOT_RAIDS) &&
-					!(this instanceof L2ArmyMonsterInstance && !this.isAggressive()))
+					!(this instanceof L2ArmyMonsterInstance && !isAggressive()))
 			{
 				player.doAutoLoot(this, item); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
 			}
@@ -1908,7 +1905,7 @@ public class L2Attackable extends L2Npc
 
 				// Check if the autoLoot mode is active
 				if ((isFlying() || !isRaid() && Config.AUTO_LOOT || isRaid() && Config.AUTO_LOOT_RAIDS) &&
-						!(this instanceof L2ArmyMonsterInstance && !this.isAggressive()))
+						!(this instanceof L2ArmyMonsterInstance && !isAggressive()))
 				{
 					player.doAutoLoot(this,
 							item); // Give the item(s) to the L2PcInstance that has killed the L2Attackable
@@ -1933,13 +1930,13 @@ public class L2Attackable extends L2Npc
 
 		ThreadPoolManager.getInstance().scheduleGeneral(() ->
 		{
-			if (isSpoil() && this.sweepItems != null && player.getCurrentClass().getLevel() >= 85)
+			if (isSpoil() && sweepItems != null && player.getCurrentClass().getLevel() >= 85)
 			{
 				final L2PcInstance spoiler = L2World.getInstance().getPlayer(getIsSpoiledBy());
 				if (spoiler != null && Util.checkIfInRange(900, L2Attackable.this, spoiler, false))
 				{
 					setSpoil(false);
-					for (RewardItem ritem : this.sweepItems)
+					for (RewardItem ritem : sweepItems)
 					{
 						if (spoiler.isInParty())
 						{
@@ -2211,9 +2208,9 @@ public class L2Attackable extends L2Npc
 		getAggroList().clear();
 
 		// clear overhit values
-		this.overhit = false;
-		this.overhitDamage = 0;
-		this.overhitAttacker = null;
+		overhit = false;
+		overhitDamage = 0;
+		overhitAttacker = null;
 	}
 
 	/**
@@ -2221,7 +2218,7 @@ public class L2Attackable extends L2Npc
 	 */
 	public boolean isSweepActive()
 	{
-		return this.sweepItems != null;
+		return sweepItems != null;
 	}
 
 	/**
@@ -2229,8 +2226,8 @@ public class L2Attackable extends L2Npc
 	 */
 	public synchronized RewardItem[] takeSweep()
 	{
-		RewardItem[] sweep = this.sweepItems;
-		this.sweepItems = null;
+		RewardItem[] sweep = sweepItems;
+		sweepItems = null;
 		return sweep;
 	}
 
@@ -2239,8 +2236,8 @@ public class L2Attackable extends L2Npc
 	 */
 	public synchronized RewardItem[] takeHarvest()
 	{
-		RewardItem[] harvest = this.harvestItems;
-		this.harvestItems = null;
+		RewardItem[] harvest = harvestItems;
+		harvestItems = null;
 		return harvest;
 	}
 
@@ -2251,7 +2248,7 @@ public class L2Attackable extends L2Npc
 	 */
 	public void overhitEnabled(boolean status)
 	{
-		this.overhit = status;
+		overhit = status;
 	}
 
 	/**
@@ -2270,41 +2267,13 @@ public class L2Attackable extends L2Npc
 			// we didn't killed the mob with the over-hit strike. (it wasn't really an over-hit strike)
 			// let's just clear all the over-hit related values
 			overhitEnabled(false);
-			this.overhitDamage = 0;
-			this.overhitAttacker = null;
+			overhitDamage = 0;
+			overhitAttacker = null;
 			return;
 		}
 		overhitEnabled(true);
-		this.overhitDamage = overhitDmg;
-		this.overhitAttacker = attacker;
-	}
-
-	/**
-	 * Return the L2Character who hit on the L2Attackable using an over-hit enabled skill.
-	 *
-	 * @return L2Character attacker
-	 */
-	public L2Character getOverhitAttacker()
-	{
-		return this.overhitAttacker;
-	}
-
-	/**
-	 * Return the ammount of damage done on the L2Attackable using an over-hit enabled skill.
-	 *
-	 * @return double damage
-	 */
-	public double getOverhitDamage()
-	{
-		return this.overhitDamage;
-	}
-
-	/**
-	 * Return True if the L2Attackable was hit by an over-hit enabled skill.
-	 */
-	public boolean isOverhit()
-	{
-		return this.overhit;
+		overhitDamage = overhitDmg;
+		overhitAttacker = attacker;
 	}
 
 	/**
@@ -2312,15 +2281,7 @@ public class L2Attackable extends L2Npc
 	 */
 	public void absorbSoul()
 	{
-		this.absorbed = true;
-	}
-
-	/**
-	 * Return True if the L2Attackable had his soul absorbed.
-	 */
-	public boolean isAbsorbed()
-	{
-		return this.absorbed;
+		absorbed = true;
 	}
 
 	/**
@@ -2338,13 +2299,13 @@ public class L2Attackable extends L2Npc
 	public void addAbsorber(L2PcInstance attacker)
 	{
 		// If we have no this.absorbersList initiated, do it
-		AbsorberInfo ai = this.absorbersList.get(attacker.getObjectId());
+		AbsorberInfo ai = absorbersList.get(attacker.getObjectId());
 
 		// If the L2Character attacker isn't already in the this.absorbersList of this L2Attackable, add it
 		if (ai == null)
 		{
 			ai = new AbsorberInfo(attacker.getObjectId(), getCurrentHp());
-			this.absorbersList.put(attacker.getObjectId(), ai);
+			absorbersList.put(attacker.getObjectId(), ai);
 		}
 		else
 		{
@@ -2358,13 +2319,8 @@ public class L2Attackable extends L2Npc
 
 	public void resetAbsorbList()
 	{
-		this.absorbed = false;
-		this.absorbersList.clear();
-	}
-
-	public ConcurrentHashMap<Integer, AbsorberInfo> getAbsorbersList()
-	{
-		return this.absorbersList;
+		absorbed = false;
+		absorbersList.clear();
 	}
 
 	/**
@@ -2476,15 +2432,15 @@ public class L2Attackable extends L2Npc
 		// Clear all aggro char from list
 		clearAggroList();
 		// Clear Harvester Rewrard List
-		this.harvestItems = null;
+		harvestItems = null;
 		// Clear mod Seeded stat
-		this.seeded = false;
-		this.seedType = 0;
-		this.seederObjId = 0;
+		seeded = false;
+		seedType = 0;
+		seederObjId = 0;
 		// Clear overhit value
 		overhitEnabled(false);
 
-		this.sweepItems = null;
+		sweepItems = null;
 		resetAbsorbList();
 
 		setWalking();
@@ -2504,7 +2460,7 @@ public class L2Attackable extends L2Npc
 	 */
 	public boolean isSpoil()
 	{
-		return this.isSpoil;
+		return isSpoil;
 	}
 
 	/**
@@ -2517,19 +2473,19 @@ public class L2Attackable extends L2Npc
 
 	public final int getIsSpoiledBy()
 	{
-		return this.isSpoiledBy;
+		return isSpoiledBy;
 	}
 
 	public final void setIsSpoiledBy(int value)
 	{
-		this.isSpoiledBy = value;
+		isSpoiledBy = value;
 	}
 
 	private boolean canBeSweeped = true;
 
 	public final boolean canBeSweeped()
 	{
-		return this.canBeSweeped;
+		return canBeSweeped;
 	}
 
 	public final void setCanBeSweeped(final boolean canBeSweeped)
@@ -2542,9 +2498,9 @@ public class L2Attackable extends L2Npc
 	 */
 	public void setSeeded(L2PcInstance seeder)
 	{
-		if (this.seedType != 0 && this.seederObjId == seeder.getObjectId())
+		if (seedType != 0 && seederObjId == seeder.getObjectId())
 		{
-			setSeeded(this.seedType, seeder.getLevel());
+			setSeeded(seedType, seeder.getLevel());
 		}
 	}
 
@@ -2556,17 +2512,17 @@ public class L2Attackable extends L2Npc
 	 */
 	public void setSeeded(int id, L2PcInstance seeder)
 	{
-		if (!this.seeded)
+		if (!seeded)
 		{
-			this.seedType = id;
-			this.seederObjId = seeder.getObjectId();
+			seedType = id;
+			seederObjId = seeder.getObjectId();
 		}
 	}
 
 	private void setSeeded(int id, int seederLvl)
 	{
-		this.seeded = true;
-		this.seedType = id;
+		seeded = true;
+		seedType = id;
 		int count = 1;
 
 		Map<Integer, L2Skill> skills = getTemplate().getSkills();
@@ -2605,7 +2561,7 @@ public class L2Attackable extends L2Npc
 			}
 		}
 
-		int diff = getLevel() - (L2Manor.getInstance().getSeedLevel(this.seedType) - 5);
+		int diff = getLevel() - (L2Manor.getInstance().getSeedLevel(seedType) - 5);
 
 		// hi-lvl mobs bonus
 		if (diff > 0)
@@ -2615,24 +2571,14 @@ public class L2Attackable extends L2Npc
 
 		ArrayList<RewardItem> harvested = new ArrayList<>();
 
-		harvested.add(new RewardItem(L2Manor.getInstance().getCropType(this.seedType), count * Config.RATE_DROP_MANOR));
+		harvested.add(new RewardItem(L2Manor.getInstance().getCropType(seedType), count * Config.RATE_DROP_MANOR));
 
-		this.harvestItems = harvested.toArray(new RewardItem[harvested.size()]);
+		harvestItems = harvested.toArray(new RewardItem[harvested.size()]);
 	}
 
 	public int getSeederId()
 	{
-		return this.seederObjId;
-	}
-
-	public int getSeedType()
-	{
-		return this.seedType;
-	}
-
-	public boolean isSeeded()
-	{
-		return this.seeded;
+		return seederObjId;
 	}
 
 	/**
@@ -2643,7 +2589,7 @@ public class L2Attackable extends L2Npc
 	 */
 	public final void setOnKillDelay(int delay)
 	{
-		this.onKillDelay = delay;
+		onKillDelay = delay;
 	}
 
 	/**
@@ -2667,35 +2613,12 @@ public class L2Attackable extends L2Npc
 		this.commandChannelTimer = commandChannelTimer;
 	}
 
-	public CommandChannelTimer getCommandChannelTimer()
-	{
-		return this.commandChannelTimer;
-	}
-
-	public L2CommandChannel getFirstCommandChannelAttacked()
-	{
-		return this.firstCommandChannelAttacked;
-	}
-
-	public void setFirstCommandChannelAttacked(L2CommandChannel firstCommandChannelAttacked)
-	{
-		this.firstCommandChannelAttacked = firstCommandChannelAttacked;
-	}
-
-	/**
-	 * @return the _commandChannelLastAttack
-	 */
-	public long getCommandChannelLastAttack()
-	{
-		return this.commandChannelLastAttack;
-	}
-
 	/**
 	 * @param channelLastAttack the this.commandChannelLastAttack to set
 	 */
 	public void setCommandChannelLastAttack(long channelLastAttack)
 	{
-		this.commandChannelLastAttack = channelLastAttack;
+		commandChannelLastAttack = channelLastAttack;
 	}
 
 	private static class CommandChannelTimer implements Runnable
@@ -2713,12 +2636,12 @@ public class L2Attackable extends L2Npc
 		@Override
 		public void run()
 		{
-			if (System.currentTimeMillis() - this.monster.getCommandChannelLastAttack() >
+			if (System.currentTimeMillis() - monster.getCommandChannelLastAttack() >
 					Config.LOOT_RAIDS_PRIVILEGE_INTERVAL * 1000)
 			{
-				this.monster.setCommandChannelTimer(null);
-				this.monster.setFirstCommandChannelAttacked(null);
-				this.monster.setCommandChannelLastAttack(0);
+				monster.setCommandChannelTimer(null);
+				monster.setFirstCommandChannelAttacked(null);
+				monster.setCommandChannelLastAttack(0);
 			}
 			else
 			{
@@ -2773,7 +2696,6 @@ public class L2Attackable extends L2Npc
 	public boolean useVitalityRate()
 	{
 		return !(isChampion() && !Config.L2JMOD_CHAMPION_ENABLE_VITALITY);
-
 	}
 
 	/**
@@ -2782,17 +2704,7 @@ public class L2Attackable extends L2Npc
 	@Override
 	public boolean isRaid()
 	{
-		return this.isRaid;
-	}
-
-	/**
-	 * Set this Npc as a Raid instance.<BR><BR>
-	 *
-	 * @param isRaid
-	 */
-	public void setIsRaid(boolean isRaid)
-	{
-		this.isRaid = isRaid;
+		return isRaid;
 	}
 
 	/**
@@ -2802,14 +2714,14 @@ public class L2Attackable extends L2Npc
 	 */
 	public void setIsRaidMinion(boolean val)
 	{
-		this.isRaid = val;
-		this.isRaidMinion = val;
+		isRaid = val;
+		isRaidMinion = val;
 	}
 
 	@Override
 	public boolean isRaidMinion()
 	{
-		return this.isRaidMinion;
+		return isRaidMinion;
 	}
 
 	@Override
@@ -2824,17 +2736,6 @@ public class L2Attackable extends L2Npc
 	public L2Attackable getLeader()
 	{
 		return null;
-	}
-
-	public void setChampion(boolean champ)
-	{
-		this.champion = champ;
-	}
-
-	@Override
-	public boolean isChampion()
-	{
-		return this.champion;
 	}
 
 	public void escape(String message)
@@ -2876,14 +2777,14 @@ public class L2Attackable extends L2Npc
 		@Override
 		public void run()
 		{
-			this.mob.enableAllSkills();
-			this.mob.setIsCastingNow(false);
-			if (!this.mob.isRaid())
+			mob.enableAllSkills();
+			mob.setIsCastingNow(false);
+			if (!mob.isRaid())
 			{
-				this.mob.setCurrentHpMp(this.mob.getMaxHp(), this.mob.getMaxMp());
+				mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp());
 			}
-			this.mob.setIsInvul(false);
-			this.mob.teleToLocation(this.mob.getSpawn().getX(), this.mob.getSpawn().getY(), this.mob.getSpawn().getZ());
+			mob.setIsInvul(false);
+			mob.teleToLocation(mob.getSpawn().getX(), mob.getSpawn().getY(), mob.getSpawn().getZ());
 		}
 	}
 

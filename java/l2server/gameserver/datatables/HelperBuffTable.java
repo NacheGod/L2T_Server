@@ -21,6 +21,7 @@ import l2server.gameserver.templates.StatsSet;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,25 +38,25 @@ public class HelperBuffTable
 	/**
 	 * The table containing all Buff of the Newbie Helper
 	 */
-	private List<L2HelperBuff> helperBuff;
+	@Getter private List<L2HelperBuff> helperBuffTable = new ArrayList<>();
 
 	/**
 	 * The player level since Newbie Helper can give the fisrt buff <BR>
 	 * Used to generate message : "Come back here when you have reached level ...")
 	 */
-	private int magicClassLowestLevel = 100;
-	private int physicClassLowestLevel = 100;
+	@Getter private int magicClassLowestLevel = 100;
+	@Getter private int physicClassLowestLevel = 100;
 
 	/**
 	 * The player level above which Newbie Helper won't give any buff <BR>
 	 * Used to generate message : "Only novice character of level ... or less can receive my support magic.")
 	 */
-	private int magicClassHighestLevel = 1;
-	private int physicClassHighestLevel = 1;
+	@Getter private int magicClassHighestLevel = 1;
+	@Getter private int physicClassHighestLevel = 1;
 
-	private int servitorLowestLevel = 100;
+	@Getter private int servitorLowestLevel = 100;
 
-	private int servitorHighestLevel = 1;
+	@Getter private int servitorHighestLevel = 1;
 
 	public static HelperBuffTable getInstance()
 	{
@@ -67,7 +68,6 @@ public class HelperBuffTable
 	 */
 	private HelperBuffTable()
 	{
-		this.helperBuff = new ArrayList<>();
 		restoreHelperBuffData();
 	}
 
@@ -101,103 +101,47 @@ public class HelperBuffTable
 
 						if (!isMagicClass)
 						{
-							if (lowerLevel < this.physicClassLowestLevel)
+							if (lowerLevel < physicClassLowestLevel)
 							{
-								this.physicClassLowestLevel = lowerLevel;
+								physicClassLowestLevel = lowerLevel;
 							}
 
 							if (upperLevel > physicClassHighestLevel)
 							{
-								this.physicClassHighestLevel = upperLevel;
+								physicClassHighestLevel = upperLevel;
 							}
 						}
 						else
 						{
-							if (lowerLevel < this.magicClassLowestLevel)
+							if (lowerLevel < magicClassLowestLevel)
 							{
-								this.magicClassLowestLevel = lowerLevel;
+								magicClassLowestLevel = lowerLevel;
 							}
 
 							if (upperLevel > magicClassHighestLevel)
 							{
-								this.magicClassHighestLevel = upperLevel;
+								magicClassHighestLevel = upperLevel;
 							}
 						}
 						if (forSummon)
 						{
-							if (lowerLevel < this.servitorLowestLevel)
+							if (lowerLevel < servitorLowestLevel)
 							{
-								this.servitorLowestLevel = lowerLevel;
+								servitorLowestLevel = lowerLevel;
 							}
 
 							if (upperLevel > servitorHighestLevel)
 							{
-								this.servitorHighestLevel = upperLevel;
+								servitorHighestLevel = upperLevel;
 							}
 						}
 						L2HelperBuff template = new L2HelperBuff(helperBuffDat);
-						this.helperBuff.add(template);
+						helperBuffTable.add(template);
 					}
 				}
 			}
 		}
-		Log.info("HelperBuffTable: Loaded: " + this.helperBuff.size() + " buffs!");
-	}
-
-	/**
-	 * Return the Helper Buff List
-	 */
-	public List<L2HelperBuff> getHelperBuffTable()
-	{
-		return this.helperBuff;
-	}
-
-	/**
-	 * @return Returns the magicClassHighestLevel.
-	 */
-	public int getMagicClassHighestLevel()
-	{
-		return this.magicClassHighestLevel;
-	}
-
-	/**
-	 * @return Returns the magicClassLowestLevel.
-	 */
-	public int getMagicClassLowestLevel()
-	{
-		return this.magicClassLowestLevel;
-	}
-
-	/**
-	 * @return Returns the physicClassHighestLevel.
-	 */
-	public int getPhysicClassHighestLevel()
-	{
-		return this.physicClassHighestLevel;
-	}
-
-	/**
-	 * @return Returns the physicClassLowestLevel.
-	 */
-	public int getPhysicClassLowestLevel()
-	{
-		return this.physicClassLowestLevel;
-	}
-
-	/**
-	 * @return Returns the servitorLowestLevel.
-	 */
-	public int getServitorLowestLevel()
-	{
-		return this.servitorLowestLevel;
-	}
-
-	/**
-	 * @return Returns the servitorHighestLevel.
-	 */
-	public int getServitorHighestLevel()
-	{
-		return this.servitorHighestLevel;
+		Log.info("HelperBuffTable: Loaded: " + helperBuffTable.size() + " buffs!");
 	}
 
 	@SuppressWarnings("synthetic-access")

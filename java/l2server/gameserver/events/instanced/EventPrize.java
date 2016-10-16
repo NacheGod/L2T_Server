@@ -17,6 +17,7 @@ package l2server.gameserver.events.instanced;
 
 import l2server.util.Rnd;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,39 +32,24 @@ public abstract class EventPrize
 
 	public EventPrize(XmlNode node)
 	{
-		this.chance = node.getFloat("chance");
-		this.dependsOnPerformance = node.getBool("dependsOnPerformance", false);
+		chance = node.getFloat("chance");
+		dependsOnPerformance = node.getBool("dependsOnPerformance", false);
 	}
 
 	public abstract EventPrizeItem getItem();
 
 	public static class EventPrizeItem extends EventPrize
 	{
-		private final int id;
-		private final int min;
-		private final int max;
+		@Getter private final int id;
+		@Getter private final int min;
+		@Getter private final int max;
 
 		public EventPrizeItem(XmlNode node)
 		{
 			super(node);
-			this.id = node.getInt("id");
-			this.min = node.getInt("min");
-			this.max = node.getInt("max");
-		}
-
-		public int getId()
-		{
-			return this.id;
-		}
-
-		public int getMin()
-		{
-			return this.min;
-		}
-
-		public int getMax()
-		{
-			return this.max;
+			id = node.getInt("id");
+			min = node.getInt("min");
+			max = node.getInt("max");
 		}
 
 		@Override
@@ -84,7 +70,7 @@ public abstract class EventPrize
 			{
 				if (subNode.getName().equalsIgnoreCase("item"))
 				{
-					this.items.add(new EventPrizeItem(subNode));
+					items.add(new EventPrizeItem(subNode));
 				}
 			}
 		}
@@ -94,7 +80,7 @@ public abstract class EventPrize
 		{
 			float rnd = Rnd.get(100000) / 1000.0f;
 			float percent = 0.0f;
-			for (EventPrizeItem item : this.items)
+			for (EventPrizeItem item : items)
 			{
 				percent += item.getChance();
 				if (percent > rnd)
@@ -103,17 +89,17 @@ public abstract class EventPrize
 				}
 			}
 
-			return this.items.get(0);
+			return items.get(0);
 		}
 	}
 
 	public float getChance()
 	{
-		return this.chance;
+		return chance;
 	}
 
 	public boolean dependsOnPerformance()
 	{
-		return this.dependsOnPerformance;
+		return dependsOnPerformance;
 	}
 }

@@ -31,7 +31,6 @@ import l2server.log.Log;
 
 public class RequestPartyMatchList extends L2GameClientPacket
 {
-
 	private int roomid;
 	private int membersmax;
 	private int lvlmin;
@@ -44,9 +43,9 @@ public class RequestPartyMatchList extends L2GameClientPacket
 	{
 		roomid = readD();
 		membersmax = readD();
-		this.lvlmin = readD();
-		this.lvlmax = readD();
-		this.loot = readD();
+		lvlmin = readD();
+		lvlmax = readD();
+		loot = readD();
 		roomtitle = readS();
 	}
 
@@ -67,9 +66,9 @@ public class RequestPartyMatchList extends L2GameClientPacket
 			{
 				Log.info("PartyMatchRoom #" + room.getId() + " changed by " + activeChar.getName());
 				room.setMaxMembers(membersmax);
-				room.setMinLvl(this.lvlmin);
-				room.setMaxLvl(this.lvlmax);
-				room.setLootType(this.loot);
+				room.setMinLvl(lvlmin);
+				room.setMaxLvl(lvlmax);
+				room.setLootType(loot);
 				room.setTitle(roomtitle);
 
 				for (L2PcInstance member : room.getPartyMembers())
@@ -88,8 +87,7 @@ public class RequestPartyMatchList extends L2GameClientPacket
 		{
 			int maxid = PartyMatchRoomList.getInstance().getMaxId();
 
-			PartyMatchRoom room =
-					new PartyMatchRoom(maxid, roomtitle, this.loot, this.lvlmin, this.lvlmax, membersmax, activeChar);
+			PartyMatchRoom room = new PartyMatchRoom(maxid, roomtitle, loot, lvlmin, lvlmax, membersmax, activeChar);
 
 			Log.info("PartyMatchRoom #" + maxid + " created by " + activeChar.getName());
 			// Remove from waiting list

@@ -15,6 +15,8 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * This class ...
  *
@@ -23,34 +25,18 @@ package l2server.gameserver.model;
 public final class L2PledgeSkillLearn
 {
 	// these two build the primary key
-	private final int id;
-	private final int level;
+	@Getter private final int id;
+	@Getter private final int level;
 
-	private final int repCost;
+	@Getter private final int repCost;
 	private final int baseLvl;
 
 	public L2PledgeSkillLearn(int id, int lvl, int baseLvl, int cost)
 	{
 		this.id = id;
-		this.level = lvl;
+		level = lvl;
 		this.baseLvl = baseLvl;
-		this.repCost = cost;
-	}
-
-	/**
-	 * @return Returns the id.
-	 */
-	public int getId()
-	{
-		return this.id;
-	}
-
-	/**
-	 * @return Returns the level.
-	 */
-	public int getLevel()
-	{
-		return this.level;
+		repCost = cost;
 	}
 
 	/**
@@ -58,14 +44,6 @@ public final class L2PledgeSkillLearn
 	 */
 	public int getBaseLevel()
 	{
-		return this.baseLvl;
-	}
-
-	/**
-	 * @return Returns the spCost.
-	 */
-	public int getRepCost()
-	{
-		return this.repCost;
+		return baseLvl;
 	}
 }

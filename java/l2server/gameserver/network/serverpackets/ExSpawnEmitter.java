@@ -37,18 +37,14 @@ public class ExSpawnEmitter extends L2GameServerPacket
 		this(player.getObjectId(), npc.getObjectId());
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.npcObjectId);
-		writeD(this.playerObjectId);
+		writeD(npcObjectId);
+		writeD(playerObjectId);
 		writeD(0x00); // ?
 	}
 }

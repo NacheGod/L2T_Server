@@ -16,6 +16,7 @@ import l2server.gameserver.network.serverpackets.*;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
 import l2server.gameserver.templates.skills.L2SkillTargetType;
 import l2server.log.Log;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.StringTokenizer;
@@ -27,7 +28,7 @@ public class L2MobSummonInstance extends L2SummonInstance
 {
 	private boolean previousFollowStatus = true;
 
-	private L2ItemInstance controlItem;
+	@Getter private L2ItemInstance controlItem;
 
 	public L2MobSummonInstance(int objectId, L2NpcTemplate template, L2PcInstance owner, L2ItemInstance controlItem)
 	{
@@ -251,7 +252,7 @@ public class L2MobSummonInstance extends L2SummonInstance
 					if (isInsideRadius(target, 1500, true, false))
 					{
 						/*
-                        L2PcInstance receptor = ((L2MobSummonInstance)target).getOwner();
+						L2PcInstance receptor = ((L2MobSummonInstance)target).getOwner();
 						receptor.setMobSummonExchangeRequest(true, this);
 						String confirmText = getOwner().getName() + " wants to exchange your " + receptor.getPet().getName() + " for his " + getName() + ". Do you accept?";
 						ConfirmDlg dlg = new ConfirmDlg(SystemMessageId.S1.getId()).addString(confirmText);
@@ -541,7 +542,6 @@ public class L2MobSummonInstance extends L2SummonInstance
 
 		if (owner != null)
 		{
-
 		}
 
 		return true;
@@ -549,12 +549,7 @@ public class L2MobSummonInstance extends L2SummonInstance
 
 	public void setControlItem(L2ItemInstance item)
 	{
-		this.controlItem = item;
-	}
-
-	public L2ItemInstance getControlItem()
-	{
-		return this.controlItem;
+		controlItem = item;
 	}
 
 	@Override
@@ -564,9 +559,9 @@ public class L2MobSummonInstance extends L2SummonInstance
 
 		if (value)
 		{
-			this.previousFollowStatus = getFollowStatus();
+			previousFollowStatus = getFollowStatus();
 			// if immobilized temporarly disable follow mode
-			if (this.previousFollowStatus)
+			if (previousFollowStatus)
 			{
 				setFollowStatus(false);
 			}
@@ -574,7 +569,7 @@ public class L2MobSummonInstance extends L2SummonInstance
 		else
 		{
 			// if not more immobilized restore previous follow mode
-			setFollowStatus(this.previousFollowStatus);
+			setFollowStatus(previousFollowStatus);
 		}
 	}
 
@@ -613,7 +608,7 @@ public class L2MobSummonInstance extends L2SummonInstance
 					continue;
 				}
 
-				if (!player.isGM() && getOwner() != null && getOwner().getAppearance().getInvisible())
+				if (!player.isGM() && getOwner() != null && getOwner().getAppearance().isInvisible())
 				{
 					continue;
 				}
@@ -636,6 +631,6 @@ public class L2MobSummonInstance extends L2SummonInstance
 	@Override
 	public void setOwner(L2PcInstance newOwner)
 	{
-		this.owner = newOwner;
+		owner = newOwner;
 	}
 }

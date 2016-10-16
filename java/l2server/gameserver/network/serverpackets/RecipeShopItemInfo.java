@@ -24,7 +24,6 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public class RecipeShopItemInfo extends L2GameServerPacket
 {
-
 	private L2PcInstance player;
 	private int recipeId;
 
@@ -37,10 +36,10 @@ public class RecipeShopItemInfo extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.player.getObjectId());
-		writeD(this.recipeId);
-		writeD((int) this.player.getCurrentMp());
-		writeD(this.player.getMaxMp());
+		writeD(player.getObjectId());
+		writeD(recipeId);
+		writeD((int) player.getCurrentMp());
+		writeD(player.getMaxMp());
 		writeD(0xffffffff);
 	}
 }

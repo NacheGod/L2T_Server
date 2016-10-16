@@ -17,6 +17,7 @@ package l2server.gameserver.network;
 
 import l2server.gameserver.network.serverpackets.ExShowScreenMessage;
 import l2server.log.Log;
+import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -32,7 +33,6 @@ import java.util.logging.Level;
  */
 public final class NpcStringId
 {
-
 	private static final NSLocalisation[] EMPTY_NSL_ARRAY = new NSLocalisation[0];
 	public static final NpcStringId[] EMPTY_ARRAY = new NpcStringId[0];
 
@@ -25819,7 +25819,7 @@ public final class NpcStringId
 		return new BuilderContainer(builders.toArray(new Builder[builders.size()]));
 	}
 
-	private final int id;
+	@Getter private final int id;
 	private String name;
 	private byte params;
 	private NSLocalisation[] localisations;
@@ -25828,12 +25828,7 @@ public final class NpcStringId
 	private NpcStringId(final int id)
 	{
 		this.id = id;
-		this.localisations = EMPTY_NSL_ARRAY;
-	}
-
-	public final int getId()
-	{
-		return this.id;
+		localisations = EMPTY_NSL_ARRAY;
 	}
 
 	private void setName(final String name)
@@ -25843,12 +25838,12 @@ public final class NpcStringId
 
 	public final String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public final int getParamCount()
 	{
-		return this.params;
+		return params;
 	}
 
 	/**
@@ -25870,7 +25865,7 @@ public final class NpcStringId
 
 		if (params != 0)
 		{
-			this.staticScreenMessage = null;
+			staticScreenMessage = null;
 		}
 
 		this.params = (byte) params;
@@ -25879,9 +25874,9 @@ public final class NpcStringId
 	public final NSLocalisation getLocalisation(final String lang)
 	{
 		NSLocalisation nsl;
-		for (int i = this.localisations.length; i-- > 0; )
+		for (int i = localisations.length; i-- > 0; )
 		{
-			nsl = this.localisations[i];
+			nsl = localisations[i];
 			if (nsl.getLanguage().hashCode() == lang.hashCode())
 			{
 				return nsl;
@@ -25892,7 +25887,7 @@ public final class NpcStringId
 
 	public final void attachLocalizedText(final String lang, final String text)
 	{
-		final int length = this.localisations.length;
+		final int length = localisations.length;
 		final NSLocalisation[] localisations = Arrays.copyOf(this.localisations, length + 1);
 		localisations[length] = new NSLocalisation(lang, text);
 		this.localisations = localisations;
@@ -25900,17 +25895,17 @@ public final class NpcStringId
 
 	public final void removeAllLocalisations()
 	{
-		this.localisations = EMPTY_NSL_ARRAY;
+		localisations = EMPTY_NSL_ARRAY;
 	}
 
 	public final ExShowScreenMessage getStaticScreenMessage()
 	{
-		return this.staticScreenMessage;
+		return staticScreenMessage;
 	}
 
 	public final void setStaticSystemMessage(final ExShowScreenMessage ns)
 	{
-		this.staticScreenMessage = ns;
+		staticScreenMessage = ns;
 	}
 
 	@Override
@@ -25927,17 +25922,17 @@ public final class NpcStringId
 		public NSLocalisation(final String lang, final String text)
 		{
 			this.lang = lang;
-			this.builder = newBuilder(text);
+			builder = newBuilder(text);
 		}
 
 		public final String getLanguage()
 		{
-			return this.lang;
+			return lang;
 		}
 
 		public final String getLocalisation(final Object... params)
 		{
-			return this.builder.toString(params);
+			return builder.toString(params);
 		}
 	}
 
@@ -25974,7 +25969,7 @@ public final class NpcStringId
 		@Override
 		public final String toString(final Object... params)
 		{
-			final int buildersLength = this.builders.length;
+			final int buildersLength = builders.length;
 			final int paramsLength = params.length;
 			final String[] builds = new String[buildersLength];
 
@@ -25985,7 +25980,7 @@ public final class NpcStringId
 			{
 				for (i = buildersLength; i-- > 0; )
 				{
-					builder = this.builders[i];
+					builder = builders[i];
 					paramIndex = builder.getIndex();
 					build = paramIndex != -1 && paramIndex < paramsLength ? builder.toString(params[paramIndex]) :
 							builder.toString();
@@ -25997,7 +25992,7 @@ public final class NpcStringId
 			{
 				for (i = buildersLength; i-- > 0; )
 				{
-					build = this.builders[i].toString();
+					build = builders[i].toString();
 					buildTextLen += build.length();
 					builds[i] = build;
 				}
@@ -26051,7 +26046,7 @@ public final class NpcStringId
 		@Override
 		public final String toString()
 		{
-			return this.text;
+			return text;
 		}
 	}
 
@@ -26060,7 +26055,7 @@ public final class NpcStringId
 	 */
 	private static final class BuilderObject implements Builder
 	{
-		private final int index;
+		@Getter private final int index;
 
 		public BuilderObject(final int id)
 		{
@@ -26069,7 +26064,7 @@ public final class NpcStringId
 				throw new RuntimeException("Illegal id " + id);
 			}
 
-			this.index = id - 1;
+			index = id - 1;
 		}
 
 		@Override
@@ -26090,15 +26085,9 @@ public final class NpcStringId
 		}
 
 		@Override
-		public final int getIndex()
-		{
-			return this.index;
-		}
-
-		@Override
 		public final String toString()
 		{
-			return "[PARAM-" + (this.index + 1) + "]";
+			return "[PARAM-" + (index + 1) + "]";
 		}
 	}
 
@@ -26112,19 +26101,19 @@ public final class NpcStringId
 
 		public FastStringBuilder(final int capacity)
 		{
-			this.array = new char[capacity];
+			array = new char[capacity];
 		}
 
 		public final void append(final String text)
 		{
-			text.getChars(0, text.length(), this.array, this.len);
-			this.len += text.length();
+			text.getChars(0, text.length(), array, len);
+			len += text.length();
 		}
 
 		@Override
 		public final String toString()
 		{
-			return new String(this.array);
+			return new String(array);
 		}
 	}
 }

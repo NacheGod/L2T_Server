@@ -20,6 +20,7 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.stats.Stats;
 import l2server.gameserver.stats.funcs.FuncAdd;
 import l2server.gameserver.stats.funcs.LambdaConst;
+import lombok.Getter;
 
 public final class Elementals
 {
@@ -87,7 +88,7 @@ public final class Elementals
 
 		ElementalItemType(int maxLvl)
 		{
-			this.maxLevel = maxLvl;
+			maxLevel = maxLvl;
 		}
 	}
 
@@ -229,127 +230,117 @@ public final class Elementals
 
 		public ElementalStatBoni(byte type, int value)
 		{
-			this.elementalType = type;
-			this.elementalValue = value;
-			this.active = false;
+			elementalType = type;
+			elementalValue = value;
+			active = false;
 		}
 
 		public void applyBonus(L2PcInstance player, boolean isArmor)
 		{
 			// make sure the bonuses are not applied twice..
-			if (this.active)
+			if (active)
 			{
 				return;
 			}
 
-			switch (this.elementalType)
+			switch (elementalType)
 			{
 				case FIRE:
 					player.addStatFunc(new FuncAdd(isArmor ? Stats.FIRE_RES : Stats.FIRE_POWER, this,
-							new LambdaConst(this.elementalValue)));
+							new LambdaConst(elementalValue)));
 					break;
 				case WATER:
 					player.addStatFunc(new FuncAdd(isArmor ? Stats.WATER_RES : Stats.WATER_POWER, this,
-							new LambdaConst(this.elementalValue)));
+							new LambdaConst(elementalValue)));
 					break;
 				case WIND:
 					player.addStatFunc(new FuncAdd(isArmor ? Stats.WIND_RES : Stats.WIND_POWER, this,
-							new LambdaConst(this.elementalValue)));
+							new LambdaConst(elementalValue)));
 					break;
 				case EARTH:
 					player.addStatFunc(new FuncAdd(isArmor ? Stats.EARTH_RES : Stats.EARTH_POWER, this,
-							new LambdaConst(this.elementalValue)));
+							new LambdaConst(elementalValue)));
 					break;
 				case DARK:
 					player.addStatFunc(new FuncAdd(isArmor ? Stats.DARK_RES : Stats.DARK_POWER, this,
-							new LambdaConst(this.elementalValue)));
+							new LambdaConst(elementalValue)));
 					break;
 				case HOLY:
 					player.addStatFunc(new FuncAdd(isArmor ? Stats.HOLY_RES : Stats.HOLY_POWER, this,
-							new LambdaConst(this.elementalValue)));
+							new LambdaConst(elementalValue)));
 					break;
 			}
 
-			this.active = true;
+			active = true;
 		}
 
 		public void removeBonus(L2PcInstance player)
 		{
 			// make sure the bonuses are not removed twice
-			if (!this.active)
+			if (!active)
 			{
 				return;
 			}
 
 			player.removeStatsOwner(this);
 
-			this.active = false;
+			active = false;
 		}
 
 		public void setValue(int val)
 		{
-			this.elementalValue = val;
+			elementalValue = val;
 		}
 
 		public void setElement(byte type)
 		{
-			this.elementalType = type;
+			elementalType = type;
 		}
 	}
 
 	// non static:
 	private ElementalStatBoni boni = null;
-	private byte element = NONE;
-	private int value = 0;
-
-	public byte getElement()
-	{
-		return this.element;
-	}
+	@Getter private byte element = NONE;
+	@Getter private int value = 0;
 
 	public void setElement(byte type)
 	{
-		this.element = type;
-		this.boni.setElement(type);
-	}
-
-	public int getValue()
-	{
-		return this.value;
+		element = type;
+		boni.setElement(type);
 	}
 
 	public void setValue(int val)
 	{
-		this.value = val;
-		this.boni.setValue(val);
+		value = val;
+		boni.setValue(val);
 	}
 
 	@Override
 	public String toString()
 	{
-		return getElementName(this.element) + " +" + this.value;
+		return getElementName(element) + " +" + value;
 	}
 
 	public Elementals(byte type, int value)
 	{
-		this.element = type;
+		element = type;
 		this.value = value;
-		this.boni = new ElementalStatBoni(this.element, this.value);
+		boni = new ElementalStatBoni(element, this.value);
 	}
 
 	public void applyBonus(L2PcInstance player, boolean isArmor)
 	{
-		this.boni.applyBonus(player, isArmor);
+		boni.applyBonus(player, isArmor);
 	}
 
 	public void removeBonus(L2PcInstance player)
 	{
-		this.boni.removeBonus(player);
+		boni.removeBonus(player);
 	}
 
 	public void updateBonus(L2PcInstance player, boolean isArmor)
 	{
-		this.boni.removeBonus(player);
-		this.boni.applyBonus(player, isArmor);
+		boni.removeBonus(player);
+		boni.applyBonus(player, isArmor);
 	}
 }

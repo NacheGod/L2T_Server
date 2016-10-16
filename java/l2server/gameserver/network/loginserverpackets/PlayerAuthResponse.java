@@ -16,14 +16,15 @@
 package l2server.gameserver.network.loginserverpackets;
 
 import l2server.util.network.BaseRecievePacket;
+import lombok.Getter;
 
 /**
  * @author -Wooden-
  */
 public class PlayerAuthResponse extends BaseRecievePacket
 {
-	private String account;
-	private boolean authed;
+	@Getter private String account;
+	@Getter private boolean authed;
 
 	/**
 	 * @param decrypt
@@ -32,23 +33,7 @@ public class PlayerAuthResponse extends BaseRecievePacket
 	{
 		super(decrypt);
 
-		this.account = readS();
-		this.authed = readC() != 0;
-	}
-
-	/**
-	 * @return Returns the account.
-	 */
-	public String getAccount()
-	{
-		return this.account;
-	}
-
-	/**
-	 * @return Returns the authed state.
-	 */
-	public boolean isAuthed()
-	{
-		return this.authed;
+		account = readS();
+		authed = readC() != 0;
 	}
 }

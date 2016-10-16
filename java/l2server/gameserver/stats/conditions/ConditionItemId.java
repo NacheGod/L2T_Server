@@ -24,7 +24,6 @@ import l2server.gameserver.stats.Env;
  */
 public final class ConditionItemId extends Condition
 {
-
 	private final int itemId;
 
 	/**
@@ -51,6 +50,6 @@ public final class ConditionItemId extends Condition
 		{
 			return false;
 		}
-		return env.item.getItemId() == this.itemId;
+		return env.item.getItemId() == itemId;
 	}
 }

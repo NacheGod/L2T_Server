@@ -20,6 +20,7 @@ import l2server.gameserver.datatables.MapRegionTable.TeleportWhereType;
 import l2server.gameserver.model.actor.L2Character;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.model.zone.L2ZoneType;
+import lombok.Getter;
 
 /**
  * A simple no restart zone
@@ -28,7 +29,7 @@ import l2server.gameserver.model.zone.L2ZoneType;
  */
 public class L2NoRestartZone extends L2ZoneType
 {
-	private int restartAllowedTime = 0;
+	@Getter private int restartAllowedTime = 0;
 	private boolean enabled = true;
 
 	public L2NoRestartZone(int id)
@@ -41,11 +42,11 @@ public class L2NoRestartZone extends L2ZoneType
 	{
 		if (name.equalsIgnoreCase("EnabledByDefault"))
 		{
-			this.enabled = Boolean.parseBoolean(value);
+			enabled = Boolean.parseBoolean(value);
 		}
 		else if (name.equalsIgnoreCase("restartAllowedTime"))
 		{
-			this.restartAllowedTime = Integer.parseInt(value);
+			restartAllowedTime = Integer.parseInt(value);
 		}
 		else if (name.equalsIgnoreCase("restartTime"))
 		{
@@ -68,7 +69,7 @@ public class L2NoRestartZone extends L2ZoneType
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if (!this.enabled)
+		if (!enabled)
 		{
 			return;
 		}
@@ -89,7 +90,7 @@ public class L2NoRestartZone extends L2ZoneType
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if (!this.enabled)
+		if (!enabled)
 		{
 			return;
 		}
@@ -112,14 +113,9 @@ public class L2NoRestartZone extends L2ZoneType
 		// Do nothing.
 	}
 
-	public int getRestartAllowedTime()
-	{
-		return this.restartAllowedTime;
-	}
-
 	public void setRestartAllowedTime(int time)
 	{
-		this.restartAllowedTime = time;
+		restartAllowedTime = time;
 	}
 
 	private static class TeleportTask implements Runnable
@@ -134,7 +130,7 @@ public class L2NoRestartZone extends L2ZoneType
 		@Override
 		public void run()
 		{
-			this.player.teleToLocation(TeleportWhereType.Town);
+			player.teleToLocation(TeleportWhereType.Town);
 		}
 	}
 }

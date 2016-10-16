@@ -29,13 +29,12 @@ package l2server.gameserver.network.serverpackets;
  */
 public class L2FriendSay extends L2GameServerPacket
 {
-
 	private String sender, receiver, message;
 
 	public L2FriendSay(String sender, String reciever, String message)
 	{
 		this.sender = sender;
-		this.receiver = reciever;
+		receiver = reciever;
 
 		this.message = message;
 	}
@@ -44,8 +43,8 @@ public class L2FriendSay extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeD(0); // ??
-		writeS(this.receiver);
-		writeS(this.sender);
-		writeS(this.message);
+		writeS(receiver);
+		writeS(sender);
+		writeS(message);
 	}
 }

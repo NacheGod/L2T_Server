@@ -16,35 +16,16 @@
 package l2server.gameserver.model.actor.stat;
 
 import l2server.gameserver.model.actor.L2Vehicle;
+import lombok.Getter;
+import lombok.Setter;
 
 public class VehicleStat extends CharStat
 {
-	private float moveSpeed = 0;
-	private int rotationSpeed = 0;
+	@Getter @Setter private float moveSpeed = 0;
+	@Getter @Setter private int rotationSpeed = 0;
 
 	public VehicleStat(L2Vehicle activeChar)
 	{
 		super(activeChar);
-	}
-
-	@Override
-	public float getMoveSpeed()
-	{
-		return this.moveSpeed;
-	}
-
-	public final void setMoveSpeed(float speed)
-	{
-		this.moveSpeed = speed;
-	}
-
-	public final int getRotationSpeed()
-	{
-		return this.rotationSpeed;
-	}
-
-	public final void setRotationSpeed(int speed)
-	{
-		this.rotationSpeed = speed;
 	}
 }

@@ -30,8 +30,8 @@ public class SkillCoolTime extends L2GameServerPacket
 
 	public SkillCoolTime(L2PcInstance cha)
 	{
-		this.reuseTimeStamps = cha.getReuseTimeStamps();
-		Iterator<TimeStamp> iter = this.reuseTimeStamps.iterator();
+		reuseTimeStamps = cha.getReuseTimeStamps();
+		Iterator<TimeStamp> iter = reuseTimeStamps.iterator();
 		while (iter.hasNext())
 		{
 			if (!iter.next().hasNotPassed()) // remove expired timestamps
@@ -41,18 +41,14 @@ public class SkillCoolTime extends L2GameServerPacket
 		}
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.reuseTimeStamps.size()); // list size
-		for (TimeStamp ts : this.reuseTimeStamps)
+		writeD(reuseTimeStamps.size()); // list size
+		for (TimeStamp ts : reuseTimeStamps)
 		{
 			writeD(ts.getSkillId());
 			writeD(0x00);

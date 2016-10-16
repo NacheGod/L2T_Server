@@ -30,14 +30,13 @@ import java.util.logging.Level;
  */
 public final class CharacterDelete extends L2GameClientPacket
 {
-
 	// cd
 	private int charSlot;
 
 	@Override
 	protected void readImpl()
 	{
-		this.charSlot = readD();
+		charSlot = readD();
 	}
 
 	@Override
@@ -51,12 +50,12 @@ public final class CharacterDelete extends L2GameClientPacket
 
 		if (Config.DEBUG)
 		{
-			Log.fine("deleting slot:" + this.charSlot);
+			Log.fine("deleting slot:" + charSlot);
 		}
 
 		try
 		{
-			byte answer = getClient().markToDeleteChar(this.charSlot);
+			byte answer = getClient().markToDeleteChar(charSlot);
 
 			switch (answer)
 			{

@@ -45,7 +45,6 @@ import java.util.logging.Level;
  */
 public class CursedWeaponsManager
 {
-
 	public static CursedWeaponsManager getInstance()
 	{
 		return SingletonHolder.instance;
@@ -65,7 +64,7 @@ public class CursedWeaponsManager
 	private void init()
 	{
 		Log.info("Initializing CursedWeaponsManager");
-		this.cursedWeapons = new HashMap<>();
+		cursedWeapons = new HashMap<>();
 
 		if (!Config.ALLOW_CURSED_WEAPONS)
 		{
@@ -75,7 +74,7 @@ public class CursedWeaponsManager
 		load();
 		restore();
 		controlPlayers();
-		Log.info("Loaded : " + this.cursedWeapons.size() + " cursed weapon(s).");
+		Log.info("Loaded : " + cursedWeapons.size() + " cursed weapon(s).");
 	}
 
 	// =========================================================
@@ -149,7 +148,7 @@ public class CursedWeaponsManager
 							}
 
 							// Store cursed weapon
-							this.cursedWeapons.put(id, cw);
+							cursedWeapons.put(id, cw);
 						}
 					}
 				}
@@ -163,7 +162,6 @@ public class CursedWeaponsManager
 		catch (Exception e)
 		{
 			Log.log(Level.SEVERE, "Error parsing cursed weapons file.", e);
-
 		}
 	}
 
@@ -192,7 +190,7 @@ public class CursedWeaponsManager
 				int nbKills = rset.getInt("nbKills");
 				long endTime = rset.getLong("endTime");
 
-				CursedWeapon cw = this.cursedWeapons.get(itemId);
+				CursedWeapon cw = cursedWeapons.get(itemId);
 				cw.setPlayerId(playerId);
 				cw.setPlayerKarma(playerKarma);
 				cw.setPlayerPkKills(playerPkKills);
@@ -212,7 +210,6 @@ public class CursedWeaponsManager
 		catch (Exception e)
 		{
 			Log.log(Level.WARNING, "Could not restore CursedWeapons data: " + e.getMessage(), e);
-
 		}
 		finally
 		{
@@ -241,7 +238,7 @@ public class CursedWeaponsManager
 			// then we'd better make sure that it FULLY cleans up inactive cursed weapons!
 			// Undesired effects result otherwise, such as player with no zariche but with karma
 			// or a lost-child entry in the cursedweapons table, without a corresponding one in items...
-			for (CursedWeapon cw : this.cursedWeapons.values())
+			for (CursedWeapon cw : cursedWeapons.values())
 			{
 				if (cw.isActivated())
 				{
@@ -275,12 +272,12 @@ public class CursedWeaponsManager
 
 						// Delete the skill
 						/*
-                        statement = con.prepareStatement("DELETE FROM character_skills WHERE charId=? AND skill_id=");
+						statement = con.prepareStatement("DELETE FROM character_skills WHERE charId=? AND skill_id=");
 						statement.setInt(1, playerId);
 						statement.setInt(2, cw.getSkillId());
 						if (statement.executeUpdate() != 1)
 						{
-							Logozo.warning("Error while deleting cursed weapon "+itemId+" skill from userId "+playerId);
+							Log.warning("Error while deleting cursed weapon "+itemId+" skill from userId "+playerId);
 						}
 						 */
 						// Restore the player's old karma and pk count
@@ -333,7 +330,7 @@ public class CursedWeaponsManager
 			return;
 		}
 
-		for (CursedWeapon cw : this.cursedWeapons.values())
+		for (CursedWeapon cw : cursedWeapons.values())
 		{
 			if (cw.isActive())
 			{
@@ -349,10 +346,10 @@ public class CursedWeaponsManager
 
 	public void activate(L2PcInstance player, L2ItemInstance item)
 	{
-		CursedWeapon cw = this.cursedWeapons.get(item.getItemId());
+		CursedWeapon cw = cursedWeapons.get(item.getItemId());
 		if (player.isCursedWeaponEquipped()) // cannot own 2 cursed swords
 		{
-			CursedWeapon cw2 = this.cursedWeapons.get(player.getCursedWeaponEquippedId());
+			CursedWeapon cw2 = cursedWeapons.get(player.getCursedWeaponEquippedId());
             /* TODO: give the bonus level in a more appropriate manner.
 			 *  The following code adds "_stageKills" levels.  This will also show in the char status.
 			 * I do not have enough info to know if the bonus should be shown in the pk count, or if it
@@ -376,21 +373,21 @@ public class CursedWeaponsManager
 
 	public void drop(int itemId, L2Character killer)
 	{
-		CursedWeapon cw = this.cursedWeapons.get(itemId);
+		CursedWeapon cw = cursedWeapons.get(itemId);
 
 		cw.dropIt(killer);
 	}
 
 	public void increaseKills(int itemId)
 	{
-		CursedWeapon cw = this.cursedWeapons.get(itemId);
+		CursedWeapon cw = cursedWeapons.get(itemId);
 
 		cw.increaseKills();
 	}
 
 	public int getLevel(int itemId)
 	{
-		CursedWeapon cw = this.cursedWeapons.get(itemId);
+		CursedWeapon cw = cursedWeapons.get(itemId);
 
 		return cw.getLevel();
 	}
@@ -407,7 +404,7 @@ public class CursedWeaponsManager
 			return;
 		}
 
-		for (CursedWeapon cw : this.cursedWeapons.values())
+		for (CursedWeapon cw : cursedWeapons.values())
 		{
 			if (cw.isActivated() && player.getObjectId() == cw.getPlayerId())
 			{
@@ -428,7 +425,7 @@ public class CursedWeaponsManager
 
 	public int checkOwnsWeaponId(int ownerId)
 	{
-		for (CursedWeapon cw : this.cursedWeapons.values())
+		for (CursedWeapon cw : cursedWeapons.values())
 		{
 			if (cw.isActivated() && ownerId == cw.getPlayerId())
 			{
@@ -464,7 +461,7 @@ public class CursedWeaponsManager
 
 	public void saveData()
 	{
-		for (CursedWeapon cw : this.cursedWeapons.values())
+		for (CursedWeapon cw : cursedWeapons.values())
 		{
 			cw.saveData();
 		}
@@ -473,29 +470,29 @@ public class CursedWeaponsManager
 	// =========================================================
 	public boolean isCursed(int itemId)
 	{
-		return this.cursedWeapons.containsKey(itemId);
+		return cursedWeapons.containsKey(itemId);
 	}
 
 	public Collection<CursedWeapon> getCursedWeapons()
 	{
-		return this.cursedWeapons.values();
+		return cursedWeapons.values();
 	}
 
 	public Set<Integer> getCursedWeaponsIds()
 	{
-		return this.cursedWeapons.keySet();
+		return cursedWeapons.keySet();
 	}
 
 	public CursedWeapon getCursedWeapon(int itemId)
 	{
-		return this.cursedWeapons.get(itemId);
+		return cursedWeapons.get(itemId);
 	}
 
 	public void givePassive(int itemId)
 	{
 		try
 		{
-			this.cursedWeapons.get(itemId).giveSkill();
+			cursedWeapons.get(itemId).giveSkill();
 		}
 		catch (Exception e)
 		{

@@ -31,7 +31,6 @@ import static l2server.gameserver.model.actor.L2Character.ZONE_PEACE;
  */
 public final class RequestDeleteReceivedPost extends L2GameClientPacket
 {
-
 	private static final int BATCH_LENGTH = 4; // length of the one item
 
 	int[] msgIds = null;
@@ -40,15 +39,15 @@ public final class RequestDeleteReceivedPost extends L2GameClientPacket
 	protected void readImpl()
 	{
 		int count = readD();
-		if (count <= 0 || count > Config.MAX_ITEM_IN_PACKET || count * BATCH_LENGTH != this.buf.remaining())
+		if (count <= 0 || count > Config.MAX_ITEM_IN_PACKET || count * BATCH_LENGTH != buf.remaining())
 		{
 			return;
 		}
 
-		this.msgIds = new int[count];
+		msgIds = new int[count];
 		for (int i = 0; i < count; i++)
 		{
-			this.msgIds[i] = readD();
+			msgIds[i] = readD();
 		}
 	}
 
@@ -56,7 +55,7 @@ public final class RequestDeleteReceivedPost extends L2GameClientPacket
 	public void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
-		if (activeChar == null || this.msgIds == null || !Config.ALLOW_MAIL)
+		if (activeChar == null || msgIds == null || !Config.ALLOW_MAIL)
 		{
 			return;
 		}
@@ -67,7 +66,7 @@ public final class RequestDeleteReceivedPost extends L2GameClientPacket
 			return;
 		}
 
-		for (int msgId : this.msgIds)
+		for (int msgId : msgIds)
 		{
 			Message msg = MailManager.getInstance().getMessage(msgId);
 			if (msg == null)
@@ -88,7 +87,7 @@ public final class RequestDeleteReceivedPost extends L2GameClientPacket
 
 			msg.setDeletedByReceiver();
 		}
-		activeChar.sendPacket(new ExChangePostState(true, this.msgIds, Message.DELETED));
+		activeChar.sendPacket(new ExChangePostState(true, msgIds, Message.DELETED));
 	}
 
 	@Override

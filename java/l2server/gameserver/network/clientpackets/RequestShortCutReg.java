@@ -26,7 +26,6 @@ import l2server.gameserver.network.serverpackets.ShortCutRegister;
  */
 public final class RequestShortCutReg extends L2GameClientPacket
 {
-
 	private int type;
 	private int id;
 	private int slot;
@@ -37,14 +36,14 @@ public final class RequestShortCutReg extends L2GameClientPacket
 	@Override
 	protected void readImpl()
 	{
-		this.type = readD();
+		type = readD();
 		int slot = readD();
-		this.id = readD();
-		this.lvl = readD();
-		this.characterType = readD();
+		id = readD();
+		lvl = readD();
+		characterType = readD();
 
 		this.slot = slot % 12;
-		this.page = slot / 12;
+		page = slot / 12;
 	}
 
 	@Override
@@ -56,17 +55,17 @@ public final class RequestShortCutReg extends L2GameClientPacket
 			return;
 		}
 
-		if (this.page > 10 || this.page < 0)
+		if (page > 10 || page < 0)
 		{
 			return;
 		}
 
-		switch (this.type)
+		switch (type)
 		{
 			case 0x01: // item
 			case 0x02: // skill
 			{
-				L2ShortCut sc = new L2ShortCut(this.slot, this.page, this.type, this.id, this.lvl, this.characterType);
+				L2ShortCut sc = new L2ShortCut(slot, page, type, id, lvl, characterType);
 				activeChar.registerShortCut(sc);
 				sendPacket(new ShortCutRegister(sc));
 				break;
@@ -75,14 +74,14 @@ public final class RequestShortCutReg extends L2GameClientPacket
 			case 0x04: // macro
 			case 0x05: // recipe
 			{
-				L2ShortCut sc = new L2ShortCut(this.slot, this.page, this.type, this.id, this.lvl, this.characterType);
+				L2ShortCut sc = new L2ShortCut(slot, page, type, id, lvl, characterType);
 				activeChar.registerShortCut(sc);
 				sendPacket(new ShortCutRegister(sc));
 				break;
 			}
 			case 0x06: // Teleport Bookmark
 			{
-				L2ShortCut sc = new L2ShortCut(this.slot, this.page, this.type, this.id, this.lvl, this.characterType);
+				L2ShortCut sc = new L2ShortCut(slot, page, type, id, lvl, characterType);
 				activeChar.registerShortCut(sc);
 				sendPacket(new ShortCutRegister(sc));
 				break;

@@ -21,6 +21,7 @@ import l2server.gameserver.ReloadableManager;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,42 +36,22 @@ public class BeautyTable implements Reloadable
 {
 	public class BeautyTemplate
 	{
-		private int id;
-		private Map<Integer, BeautyInfo> hairStyles = new HashMap<>();
-		private Map<Integer, BeautyInfo> faceStyles = new HashMap<>();
-		private Map<Integer, BeautyInfo> hairColors = new HashMap<>();
+		@Getter private int id;
+		@Getter private Map<Integer, BeautyInfo> hairStyles = new HashMap<>();
+		@Getter private Map<Integer, BeautyInfo> faceStyles = new HashMap<>();
+		@Getter private Map<Integer, BeautyInfo> hairColors = new HashMap<>();
 
 		public BeautyTemplate(int id)
 		{
 			this.id = id;
 		}
-
-		public int getId()
-		{
-			return this.id;
-		}
-
-		public Map<Integer, BeautyInfo> getHairStyles()
-		{
-			return this.hairStyles;
-		}
-
-		public Map<Integer, BeautyInfo> getFaceStyles()
-		{
-			return this.faceStyles;
-		}
-
-		public Map<Integer, BeautyInfo> getHairColors()
-		{
-			return this.hairColors;
-		}
 	}
 
 	public class BeautyInfo
 	{
-		private int id;
-		private int parentId;
-		private int unk;
+		@Getter private int id;
+		@Getter private int parentId;
+		@Getter private int unk;
 		private int adenaCost;
 		private int ticketCost;
 
@@ -79,33 +60,18 @@ public class BeautyTable implements Reloadable
 			this.id = id;
 			this.parentId = parentId;
 			this.unk = unk;
-			this.adenaCost = adena;
-			this.ticketCost = tickets;
-		}
-
-		public int getId()
-		{
-			return this.id;
-		}
-
-		public int getParentId()
-		{
-			return this.parentId;
-		}
-
-		public int getUnk()
-		{
-			return this.unk;
+			adenaCost = adena;
+			ticketCost = tickets;
 		}
 
 		public int getAdenaPrice()
 		{
-			return this.adenaCost;
+			return adenaCost;
 		}
 
 		public int getTicketPrice()
 		{
-			return this.ticketCost;
+			return ticketCost;
 		}
 	}
 
@@ -126,7 +92,7 @@ public class BeautyTable implements Reloadable
 		File file = new File(Config.DATAPACK_ROOT, Config.DATA_FOLDER + "beautyShop.xml");
 
 		XmlDocument doc = new XmlDocument(file);
-		this.beautyTable.clear();
+		beautyTable.clear();
 		doc.getChildren().stream().filter(n -> n.getName().equalsIgnoreCase("list")).forEachOrdered(n ->
 		{
 			BeautyTemplate template = new BeautyTemplate(0);
@@ -160,7 +126,7 @@ public class BeautyTable implements Reloadable
 				}
 			}
 
-			this.beautyTable.put(0, template);
+			beautyTable.put(0, template);
 
 			Log.info("BeautyTable: Loaded " + template.getHairStyles().size() + " hair styles, " +
 					template.getFaceStyles().size() + " face styles and " + template.getHairColors().size() +
@@ -178,7 +144,7 @@ public class BeautyTable implements Reloadable
 
 	public BeautyTemplate getTemplate(int id)
 	{
-		return this.beautyTable.get(id);
+		return beautyTable.get(id);
 	}
 
 	public static BeautyTable getInstance()

@@ -16,6 +16,7 @@
 package l2server.gameserver.model;
 
 import l2server.util.Rnd;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
@@ -24,47 +25,38 @@ import java.util.ArrayList;
  */
 public class L2DropCategory
 {
-	private float chance;
+	@Getter private float chance;
 	private ArrayList<L2DropData> drops;
-	private boolean custom = false;
+	@Getter private boolean custom = false;
 
 	public L2DropCategory(float chance)
 	{
 		this.chance = chance;
-		this.drops = new ArrayList<>();
+		drops = new ArrayList<>();
 	}
 
 	public void addDropData(L2DropData drop)
 	{
-		this.drops.add(drop);
+		drops.add(drop);
 	}
 
 	public ArrayList<L2DropData> getAllDrops()
 	{
-		return this.drops;
+		return drops;
 	}
 
 	public void clearAllDrops()
 	{
-		this.drops.clear();
+		drops.clear();
 	}
 
 	// this returns the chance for the category to be visited in order to check if
 	// drops might come from it.  Category -1 (spoil) must always be visited
 	// (but may return 0 or many drops)
-	public float getChance()
-	{
-		return this.chance;
-	}
 
 	public void setCustom()
 	{
-		this.custom = true;
-	}
-
-	public boolean isCustom()
-	{
-		return this.custom;
+		custom = true;
 	}
 
 	/**

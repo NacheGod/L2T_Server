@@ -27,7 +27,7 @@ public class ExPrivateStoreSetWholeMsg extends L2GameServerPacket
 
 	public ExPrivateStoreSetWholeMsg(L2PcInstance player, String msg)
 	{
-		this.objectId = player.getObjectId();
+		objectId = player.getObjectId();
 		this.msg = msg;
 	}
 
@@ -36,17 +36,13 @@ public class ExPrivateStoreSetWholeMsg extends L2GameServerPacket
 		this(player, player.getSellList().getTitle());
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.objectId);
-		writeS(this.msg);
+		writeD(objectId);
+		writeS(msg);
 	}
 }

@@ -15,6 +15,8 @@
 
 package l2server.loginserver.network.serverpackets;
 
+import lombok.Getter;
+
 /**
  * Fromat: d
  * d: the failure reason
@@ -63,16 +65,11 @@ public final class LoginFail extends L2LoginServerPacket
 		REASON_CERTIFICATION_DAILY_USE_EXCEEDED(0x37),
 		REASON_CERTIFICATION_UNDERWAY_TRY_AGAIN_LATER(0x38);
 
-		private final int code;
+		@Getter private final int code;
 
 		LoginFailReason(int code)
 		{
 			this.code = code;
-		}
-
-		public final int getCode()
-		{
-			return this.code;
 		}
 	}
 
@@ -89,6 +86,6 @@ public final class LoginFail extends L2LoginServerPacket
 	protected void write()
 	{
 		writeC(0x01);
-		writeC(this.reason.getCode());
+		writeC(reason.getCode());
 	}
 }

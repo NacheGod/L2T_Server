@@ -27,16 +27,12 @@ public class ExCompoundFail extends L2GameServerPacket
 		this.itemId = itemId;
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.itemId); // Remaining item id
+		writeD(itemId); // Remaining item id
 	}
 }

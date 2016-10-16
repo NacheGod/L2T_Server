@@ -23,11 +23,9 @@ import l2server.gameserver.model.entity.Castle;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
-import org.xml.sax.SAXException;
+import lombok.Getter;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -37,7 +35,6 @@ import java.util.logging.Level;
  */
 public class MerchantPriceConfigTable implements InstanceListManager
 {
-
 	public static MerchantPriceConfigTable getInstance()
 	{
 		return SingletonHolder.instance;
@@ -54,19 +51,19 @@ public class MerchantPriceConfigTable implements InstanceListManager
 
 	public MerchantPriceConfig getMerchantPriceConfig(L2Character cha)
 	{
-		for (MerchantPriceConfig mpc : this.mpcs.values())
+		for (MerchantPriceConfig mpc : mpcs.values())
 		{
 			if (cha.getWorldRegion() != null && cha.getWorldRegion().containsZone(mpc.getZoneId()))
 			{
 				return mpc;
 			}
 		}
-		return this.defaultMpc;
+		return defaultMpc;
 	}
 
 	public MerchantPriceConfig getMerchantPriceConfig(int id)
 	{
-		return this.mpcs.get(id);
+		return mpcs.get(id);
 	}
 
 	public void loadXML()
@@ -92,11 +89,11 @@ public class MerchantPriceConfigTable implements InstanceListManager
 				mpc = parseMerchantPriceConfig(subn);
 				if (mpc != null)
 				{
-					this.mpcs.put(mpc.getId(), mpc);
+					mpcs.put(mpc.getId(), mpc);
 				}
 			}
 
-			MerchantPriceConfig defaultMpc = this.getMerchantPriceConfig(defaultPriceConfigId);
+			MerchantPriceConfig defaultMpc = getMerchantPriceConfig(defaultPriceConfigId);
 			if (defaultMpc == null)
 			{
 				throw new IllegalStateException("'defaultPriceConfig' points to an non-loaded priceConfig");
@@ -154,7 +151,7 @@ public class MerchantPriceConfigTable implements InstanceListManager
 		try
 		{
 			loadXML();
-			Log.info("MerchantPriceConfigTable: Loaded " + this.mpcs.size() + " merchant price configs.");
+			Log.info("MerchantPriceConfigTable: Loaded " + mpcs.size() + " merchant price configs.");
 		}
 		catch (Exception e)
 		{
@@ -165,7 +162,7 @@ public class MerchantPriceConfigTable implements InstanceListManager
 	@Override
 	public void updateReferences()
 	{
-		for (final MerchantPriceConfig mpc : this.mpcs.values())
+		for (final MerchantPriceConfig mpc : mpcs.values())
 		{
 			mpc.updateReferences();
 		}
@@ -181,12 +178,12 @@ public class MerchantPriceConfigTable implements InstanceListManager
 	 */
 	public static final class MerchantPriceConfig
 	{
-		private final int id;
-		private final String name;
-		private final int baseTax;
+		@Getter private final int id;
+		@Getter private final String name;
+		@Getter private final int baseTax;
 		private final int castleId;
-		private Castle castle;
-		private final int zoneId;
+		@Getter private Castle castle;
+		@Getter private final int zoneId;
 
 		public MerchantPriceConfig(final int id, final String name, final int baseTax, final int castleId, final int zoneId)
 		{
@@ -198,51 +195,11 @@ public class MerchantPriceConfigTable implements InstanceListManager
 		}
 
 		/**
-		 * @return Returns the id.
-		 */
-		public int getId()
-		{
-			return this.id;
-		}
-
-		/**
-		 * @return Returns the name.
-		 */
-		public String getName()
-		{
-			return this.name;
-		}
-
-		/**
-		 * @return Returns the baseTax.
-		 */
-		public int getBaseTax()
-		{
-			return this.baseTax;
-		}
-
-		/**
 		 * @return Returns the baseTax / 100.0.
 		 */
 		public double getBaseTaxRate()
 		{
-			return this.baseTax / 100.0;
-		}
-
-		/**
-		 * @return Returns the castle.
-		 */
-		public Castle getCastle()
-		{
-			return this.castle;
-		}
-
-		/**
-		 * @return Returns the zoneId.
-		 */
-		public int getZoneId()
-		{
-			return this.zoneId;
+			return baseTax / 100.0;
 		}
 
 		public boolean hasCastle()
@@ -267,7 +224,7 @@ public class MerchantPriceConfigTable implements InstanceListManager
 
 		public void updateReferences()
 		{
-			this.castle = CastleManager.getInstance().getCastleById(this.castleId);
+			castle = CastleManager.getInstance().getCastleById(castleId);
 		}
 	}
 

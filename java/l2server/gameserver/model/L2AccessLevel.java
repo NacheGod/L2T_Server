@@ -17,6 +17,7 @@ package l2server.gameserver.model;
 
 import l2server.gameserver.datatables.AccessLevels;
 import l2server.log.Log;
+import lombok.Getter;
 
 /**
  * @author FBIagent<br>
@@ -30,7 +31,7 @@ public class L2AccessLevel
 	/**
 	 * The access level name<br>
 	 */
-	private String name = null;
+	@Getter private String name = null;
 	/**
 	 * Child access levels
 	 */
@@ -42,15 +43,15 @@ public class L2AccessLevel
 	/**
 	 * The name color for the access level<br>
 	 */
-	private int nameColor = 0;
+	@Getter private int nameColor = 0;
 	/**
 	 * The title color for the access level<br>
 	 */
-	private int titleColor = 0;
+	@Getter private int titleColor = 0;
 	/**
 	 * Flag to determine if the access level has gm access<br>
 	 */
-	private boolean isGm = false;
+	@Getter private boolean isGm = false;
 	/**
 	 * Flag for peace zone attack
 	 */
@@ -121,47 +122,7 @@ public class L2AccessLevel
 	 */
 	public int getLevel()
 	{
-		return this.accessLevel;
-	}
-
-	/**
-	 * Returns the access level name<br><br>
-	 *
-	 * @return String: access level name<br>
-	 */
-	public String getName()
-	{
-		return this.name;
-	}
-
-	/**
-	 * Returns the name color of the access level<br><br>
-	 *
-	 * @return int: the name color for the access level<br>
-	 */
-	public int getNameColor()
-	{
-		return this.nameColor;
-	}
-
-	/**
-	 * Returns the title color color of the access level<br><br>
-	 *
-	 * @return int: the title color for the access level<br>
-	 */
-	public int getTitleColor()
-	{
-		return this.titleColor;
-	}
-
-	/**
-	 * Retuns if the access level has gm access or not<br><br>
-	 *
-	 * @return boolean: true if access level have gm access, otherwise false<br>
-	 */
-	public boolean isGm()
-	{
-		return this.isGm;
+		return accessLevel;
 	}
 
 	/**
@@ -171,7 +132,7 @@ public class L2AccessLevel
 	 */
 	public boolean allowPeaceAttack()
 	{
-		return this.allowPeaceAttack;
+		return allowPeaceAttack;
 	}
 
 	/**
@@ -181,7 +142,7 @@ public class L2AccessLevel
 	 */
 	public boolean allowFixedRes()
 	{
-		return this.allowFixedRes;
+		return allowFixedRes;
 	}
 
 	/**
@@ -191,7 +152,7 @@ public class L2AccessLevel
 	 */
 	public boolean allowTransaction()
 	{
-		return this.allowTransaction;
+		return allowTransaction;
 	}
 
 	/**
@@ -201,7 +162,7 @@ public class L2AccessLevel
 	 */
 	public boolean allowAltG()
 	{
-		return this.allowAltG;
+		return allowAltG;
 	}
 
 	/**
@@ -211,7 +172,7 @@ public class L2AccessLevel
 	 */
 	public boolean canGiveDamage()
 	{
-		return this.giveDamage;
+		return giveDamage;
 	}
 
 	/**
@@ -221,7 +182,7 @@ public class L2AccessLevel
 	 */
 	public boolean canTakeAggro()
 	{
-		return this.takeAggro;
+		return takeAggro;
 	}
 
 	/**
@@ -231,7 +192,7 @@ public class L2AccessLevel
 	 */
 	public boolean canGainExp()
 	{
-		return this.gainExp;
+		return gainExp;
 	}
 
 	/**
@@ -242,15 +203,15 @@ public class L2AccessLevel
 	 */
 	public boolean hasChildAccess(L2AccessLevel accessLevel)
 	{
-		if (this.childsAccessLevel == null)
+		if (childsAccessLevel == null)
 		{
-			if (this.childs == null)
+			if (childs == null)
 			{
 				return false;
 			}
 
-			setChildAccess(this.childs);
-			for (L2AccessLevel childAccess : this.childsAccessLevel)
+			setChildAccess(childs);
+			for (L2AccessLevel childAccess : childsAccessLevel)
 			{
 				if (childAccess != null &&
 						(childAccess.getLevel() == accessLevel.getLevel() || childAccess.hasChildAccess(accessLevel)))
@@ -261,7 +222,7 @@ public class L2AccessLevel
 		}
 		else
 		{
-			for (L2AccessLevel childAccess : this.childsAccessLevel)
+			for (L2AccessLevel childAccess : childsAccessLevel)
 			{
 				if (childAccess != null &&
 						(childAccess.getLevel() == accessLevel.getLevel() || childAccess.hasChildAccess(accessLevel)))
@@ -277,7 +238,7 @@ public class L2AccessLevel
 	{
 		String[] childsSplit = childs.split(";");
 
-		this.childsAccessLevel = new L2AccessLevel[childsSplit.length];
+		childsAccessLevel = new L2AccessLevel[childsSplit.length];
 
 		for (int i = 0; i < childsSplit.length; ++i)
 		{
@@ -291,12 +252,12 @@ public class L2AccessLevel
 
 			if (accessLevelInst.hasChildAccess(this))
 			{
-				Log.warning("AccessLevel: Child access tree overlapping for " + this.name + " and " +
-						accessLevelInst.getName());
+				Log.warning(
+						"AccessLevel: Child access tree overlapping for " + name + " and " + accessLevelInst.getName());
 				continue;
 			}
 
-			this.childsAccessLevel[i] = accessLevelInst;
+			childsAccessLevel[i] = accessLevelInst;
 		}
 	}
 }

@@ -27,15 +27,14 @@ import l2server.gameserver.network.serverpackets.PledgeReceiveMemberInfo;
  */
 public final class RequestPledgeMemberInfo extends L2GameClientPacket
 {
-	@SuppressWarnings("unused")
-	private int unk1;
+	@SuppressWarnings("unused") private int unk1;
 	private String player;
 
 	@Override
 	protected void readImpl()
 	{
-		this.unk1 = readD();
-		this.player = readS();
+		unk1 = readD();
+		player = readS();
 	}
 
 	/**
@@ -43,8 +42,8 @@ public final class RequestPledgeMemberInfo extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		//Logozo.info("C5: RequestPledgeMemberInfo d:"+_unk1);
-		//Logozo.info("C5: RequestPledgeMemberInfo S:"+_player);
+		//Log.info("C5: RequestPledgeMemberInfo d:"+_unk1);
+		//Log.info("C5: RequestPledgeMemberInfo S:"+_player);
 		L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
 		{
@@ -56,7 +55,7 @@ public final class RequestPledgeMemberInfo extends L2GameClientPacket
 		{
 			return;
 		}
-		L2ClanMember member = clan.getClanMember(this.player);
+		L2ClanMember member = clan.getClanMember(player);
 		if (member == null)
 		{
 			return;

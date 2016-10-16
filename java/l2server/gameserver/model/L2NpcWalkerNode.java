@@ -16,6 +16,7 @@
 package l2server.gameserver.model;
 
 import l2server.gameserver.network.NpcStringId;
+import lombok.Getter;
 
 /**
  * @author Rayan RPG, JIV
@@ -23,15 +24,14 @@ import l2server.gameserver.network.NpcStringId;
  */
 public class L2NpcWalkerNode
 {
-	private int chatId = 0;
-	private int moveX;
-	private int moveY;
-	private int moveZ;
-	private int delay;
-	@SuppressWarnings("unused")
-	private NpcStringId npcString;
+	@Getter private int chatId = 0;
+	@Getter private int moveX;
+	@Getter private int moveY;
+	@Getter private int moveZ;
+	@Getter private int delay;
+	@SuppressWarnings("unused") private NpcStringId npcString;
 	private String chatText;
-	private boolean running;
+	@Getter private boolean running;
 
 	public L2NpcWalkerNode(int moveX, int moveY, int moveZ, int delay, String chatText, boolean running)
 	{
@@ -40,15 +40,15 @@ public class L2NpcWalkerNode
 
 	public L2NpcWalkerNode(int x, int y, int z, int delay, NpcStringId npcString, String chatText, boolean running)
 	{
-		this.moveX = x;
-		this.moveY = y;
-		this.moveZ = z;
+		moveX = x;
+		moveY = y;
+		moveZ = z;
 		this.delay = delay;
 		this.npcString = npcString;
 		this.chatText = chatText;
 		if (this.chatText.startsWith("#"))
 		{
-			this.chatId = Integer.parseInt(this.chatText.substring(1));
+			chatId = Integer.parseInt(this.chatText.substring(1));
 		}
 		else if (this.chatText.trim().isEmpty())
 		{
@@ -59,40 +59,10 @@ public class L2NpcWalkerNode
 
 	public String getChatText()
 	{
-		if (this.chatId != 0)
+		if (chatId != 0)
 		{
 			throw new IllegalStateException("Chat id is defined for walker route!");
 		}
-		return this.chatText;
-	}
-
-	public int getMoveX()
-	{
-		return this.moveX;
-	}
-
-	public int getMoveY()
-	{
-		return this.moveY;
-	}
-
-	public int getMoveZ()
-	{
-		return this.moveZ;
-	}
-
-	public int getDelay()
-	{
-		return this.delay;
-	}
-
-	public boolean getRunning()
-	{
-		return this.running;
-	}
-
-	public int getChatId()
-	{
-		return this.chatId;
+		return chatText;
 	}
 }

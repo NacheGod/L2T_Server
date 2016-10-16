@@ -43,6 +43,7 @@ import l2server.gameserver.network.serverpackets.UserInfo;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
 import l2server.log.Log;
 import l2server.util.StringUtil;
+import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,7 +71,7 @@ public class HeroesManager
 			"DELETE FROM items WHERE item_id IN (6842, 6611, 6612, 6613, 6614, 6615, 6616, 6617, 6618, 6619, 6620, 6621, 9388, 9389, 9390) AND owner_id NOT IN (SELECT charId FROM characters WHERE accesslevel > 0)";
 	private static final String DELETE_HERO = "DELETE FROM heroes WHERE charId = ?";
 
-	private static Map<Integer, HeroInfo> heroes = new HashMap<>();
+	@Getter private static Map<Integer, HeroInfo> heroes = new HashMap<>();
 	private static Map<Integer, HeroInfo> pastAndCurrentHeroes = new HashMap<>();
 
 	public static final String COUNT = "count";
@@ -160,7 +161,7 @@ public class HeroesManager
 				rset2.close();
 				statement2.close();
 
-				this.heroes.put(charId, hero);
+				heroes.put(charId, hero);
 			}
 
 			rset.close();
@@ -210,7 +211,7 @@ public class HeroesManager
 				rset2.close();
 				statement2.close();
 
-				this.pastAndCurrentHeroes.put(charId, hero);
+				pastAndCurrentHeroes.put(charId, hero);
 			}
 
 			rset.close();
@@ -229,8 +230,8 @@ public class HeroesManager
 			L2DatabaseFactory.close(con);
 		}
 
-		Log.info("Hero System: Loaded " + this.heroes.size() + " Heroes.");
-		Log.info("Hero System: Loaded " + this.pastAndCurrentHeroes.size() + " all time Heroes.");
+		Log.info("Hero System: Loaded " + heroes.size() + " Heroes.");
+		Log.info("Hero System: Loaded " + pastAndCurrentHeroes.size() + " all time Heroes.");
 	}
 
 	private String calcFightDuration(long FightTime)
@@ -465,14 +466,9 @@ public class HeroesManager
 		}
 	}
 
-	public Map<Integer, HeroInfo> getHeroes()
-	{
-		return this.heroes;
-	}
-
 	public int getHeroByClass(int classid)
 	{
-		for (HeroInfo hero : this.heroes.values())
+		for (HeroInfo hero : heroes.values())
 		{
 			if (hero.getClassId() == classid)
 			{
@@ -487,9 +483,9 @@ public class HeroesManager
 	{
 		final int perpage = 10;
 
-		if (this.heroes.containsKey(charId))
+		if (heroes.containsKey(charId))
 		{
-			HeroInfo hero = this.heroes.get(charId);
+			HeroInfo hero = heroes.get(charId);
 			NpcHtmlMessage diaryReply = new NpcHtmlMessage(5);
 			final String htmContent =
 					HtmCache.getInstance().getHtm(activeChar.getHtmlPrefix(), "olympiad/herodiary.htm");
@@ -578,9 +574,9 @@ public class HeroesManager
 	public void showHeroFights(L2PcInstance activeChar, int heroclass, int charid, int page)
 	{
 		final int perpage = 20;
-		if (this.heroes.containsKey(charid))
+		if (heroes.containsKey(charid))
 		{
-			HeroInfo hero = this.heroes.get(charid);
+			HeroInfo hero = heroes.get(charid);
 			List<FightInfo> list = hero.getFights();
 
 			NpcHtmlMessage FightReply = new NpcHtmlMessage(5);
@@ -674,9 +670,9 @@ public class HeroesManager
 	{
 		updateHeroes(true);
 
-		if (!this.heroes.isEmpty())
+		if (!heroes.isEmpty())
 		{
-			for (HeroInfo hero : this.heroes.values())
+			for (HeroInfo hero : heroes.values())
 			{
 				L2PcInstance player = L2World.getInstance().getPlayer(hero.getId());
 				if (player == null)
@@ -719,7 +715,7 @@ public class HeroesManager
 
 		if (newHeroes.isEmpty())
 		{
-			this.heroes.clear();
+			heroes.clear();
 			return;
 		}
 
@@ -730,9 +726,9 @@ public class HeroesManager
 			OlympiadNobleInfo heroNobleInfo = newHeroes.get(classId);
 			int charId = heroNobleInfo.getId();
 
-			if (this.pastAndCurrentHeroes != null && this.pastAndCurrentHeroes.containsKey(charId))
+			if (pastAndCurrentHeroes != null && pastAndCurrentHeroes.containsKey(charId))
 			{
-				HeroInfo oldHero = this.pastAndCurrentHeroes.get(charId);
+				HeroInfo oldHero = pastAndCurrentHeroes.get(charId);
 				oldHero.increaseCount();
 				oldHero.setPlayed(true);
 				oldHero.setVictories(heroNobleInfo.getVictories());
@@ -844,15 +840,15 @@ public class HeroesManager
 			{
 				PreparedStatement statement;
 
-				for (HeroInfo hero : this.heroes.values())
+				for (HeroInfo hero : heroes.values())
 				{
-					if (this.pastAndCurrentHeroes == null || !this.pastAndCurrentHeroes.containsKey(hero.getId()))
+					if (pastAndCurrentHeroes == null || !pastAndCurrentHeroes.containsKey(hero.getId()))
 					{
 						statement = con.prepareStatement(INSERT_HERO);
 						statement.setInt(1, hero.getId());
 						statement.setInt(2, hero.getClassId());
 						statement.setInt(3, hero.getCount());
-						statement.setBoolean(4, hero.getPlayed());
+						statement.setBoolean(4, hero.isPlayed());
 						statement.execute();
 
 						Connection con2 = L2DatabaseFactory.getInstance().getConnection();
@@ -892,13 +888,13 @@ public class HeroesManager
 						statement2.close();
 						con2.close();
 
-						this.pastAndCurrentHeroes.put(hero.getId(), hero);
+						pastAndCurrentHeroes.put(hero.getId(), hero);
 					}
 					else
 					{
 						statement = con.prepareStatement(UPDATE_HERO);
 						statement.setInt(1, hero.getCount());
-						statement.setBoolean(2, hero.getPlayed());
+						statement.setBoolean(2, hero.isPlayed());
 						statement.setInt(3, hero.getId());
 						statement.execute();
 					}
@@ -923,13 +919,13 @@ public class HeroesManager
 
 	public void setHeroGained(int charId)
 	{
-		if (this.heroes.containsKey(charId))
+		if (heroes.containsKey(charId))
 		{
 			DiaryEntry diaryentry = new DiaryEntry();
 			diaryentry.time = System.currentTimeMillis();
 			diaryentry.action = "Gained Hero status";
 
-			this.heroes.get(charId).addDiaryEntry(diaryentry);
+			heroes.get(charId).addDiaryEntry(diaryentry);
 			saveDiaryData(charId, ACTION_HERO_GAINED, 0);
 		}
 	}
@@ -937,13 +933,13 @@ public class HeroesManager
 	public void setRBkilled(int charId, int npcId)
 	{
 		L2NpcTemplate template = NpcTable.getInstance().getTemplate(npcId);
-		if (this.heroes.containsKey(charId) && template != null)
+		if (heroes.containsKey(charId) && template != null)
 		{
 			DiaryEntry diaryentry = new DiaryEntry();
 			diaryentry.time = System.currentTimeMillis();
 			diaryentry.action = template.getName() + " was defeated";
 
-			this.heroes.get(charId).addDiaryEntry(diaryentry);
+			heroes.get(charId).addDiaryEntry(diaryentry);
 			saveDiaryData(charId, ACTION_RAID_KILLED, npcId);
 		}
 	}
@@ -951,13 +947,13 @@ public class HeroesManager
 	public void setCastleTaken(int charId, int castleId)
 	{
 		Castle castle = CastleManager.getInstance().getCastleById(castleId);
-		if (this.heroes.containsKey(charId) && castle != null)
+		if (heroes.containsKey(charId) && castle != null)
 		{
 			DiaryEntry diaryentry = new DiaryEntry();
 			diaryentry.time = System.currentTimeMillis();
 			diaryentry.action = castle.getName() + " Castle was successfuly taken";
 
-			this.heroes.get(charId).addDiaryEntry(diaryentry);
+			heroes.get(charId).addDiaryEntry(diaryentry);
 			saveDiaryData(charId, ACTION_CASTLE_TAKEN, castleId);
 		}
 	}
@@ -992,12 +988,12 @@ public class HeroesManager
 
 	public void setHeroMessage(L2PcInstance player, String heroWords)
 	{
-		if (!this.heroes.containsKey(player.getObjectId()))
+		if (!heroes.containsKey(player.getObjectId()))
 		{
 			return;
 		}
 
-		this.heroes.get(player.getObjectId()).setMessage(heroWords);
+		heroes.get(player.getObjectId()).setMessage(heroWords);
 	}
 
 	/**
@@ -1007,7 +1003,7 @@ public class HeroesManager
 	 */
 	public void saveHeroMessage(int charId)
 	{
-		if (!this.heroes.containsKey(charId))
+		if (!heroes.containsKey(charId))
 		{
 			return;
 		}
@@ -1017,7 +1013,7 @@ public class HeroesManager
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement = con.prepareStatement("UPDATE heroes SET message=? WHERE charId=?;");
-			statement.setString(1, this.heroes.get(charId).getMessage());
+			statement.setString(1, heroes.get(charId).getMessage());
 			statement.setInt(2, charId);
 			statement.execute();
 			statement.close();
@@ -1057,7 +1053,7 @@ public class HeroesManager
 	{
 		Connection con = null;
 
-		this.heroes.remove(heroId);
+		heroes.remove(heroId);
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -1082,7 +1078,7 @@ public class HeroesManager
 	 */
 	public void shutdown()
 	{
-		for (int charId : this.heroes.keySet())
+		for (int charId : heroes.keySet())
 		{
 			saveHeroMessage(charId);
 		}

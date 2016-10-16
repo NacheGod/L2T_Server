@@ -20,7 +20,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExAlterSkillRequest extends L2GameServerPacket
 {
-
 	private int nextSkillId;
 	private int currentSkillId;
 	private int alterTime;
@@ -35,8 +34,8 @@ public class ExAlterSkillRequest extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.nextSkillId);
-		writeD(this.currentSkillId);
-		writeD(this.alterTime);
+		writeD(nextSkillId);
+		writeD(currentSkillId);
+		writeD(alterTime);
 	}
 }

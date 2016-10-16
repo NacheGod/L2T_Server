@@ -25,7 +25,6 @@ import l2server.gameserver.stats.Env;
  */
 public class ConditionPlayerWeight extends Condition
 {
-
 	private final int weight;
 
 	/**
@@ -50,7 +49,7 @@ public class ConditionPlayerWeight extends Condition
 			{
 				int weightproc =
 						((L2PcInstance) env.player).getCurrentLoad() * 100 / ((L2PcInstance) env.player).getMaxLoad();
-				return weightproc < this.weight || ((L2PcInstance) env.player).getDietMode();
+				return weightproc < weight || ((L2PcInstance) env.player).getDietMode();
 			}
 		}
 		return true;

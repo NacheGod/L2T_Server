@@ -29,6 +29,7 @@ import l2server.log.Log;
 import l2server.util.Rnd;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,22 +46,17 @@ public class LifeStoneTable
 	public static final class EnchantEffectSet
 	{
 		private final List<EnchantEffect> enchantEffects;
-		private final float chance;
+		@Getter private final float chance;
 
 		public EnchantEffectSet(List<EnchantEffect> effects, float chance)
 		{
-			this.enchantEffects = effects;
+			enchantEffects = effects;
 			this.chance = chance;
 		}
 
 		public final EnchantEffect getRandomEnchantEffect()
 		{
-			return this.enchantEffects.get(Rnd.get(this.enchantEffects.size()));
-		}
-
-		public final float getChance()
-		{
-			return this.chance;
+			return enchantEffects.get(Rnd.get(enchantEffects.size()));
 		}
 	}
 
@@ -77,7 +73,7 @@ public class LifeStoneTable
 		{
 			float random = Rnd.get(10000) / 100.0f;
 			float current = 0.0f;
-			for (EnchantEffectSet set : this.effects)
+			for (EnchantEffectSet set : effects)
 			{
 				if (random < current + set.getChance())
 				{
@@ -87,7 +83,7 @@ public class LifeStoneTable
 				current += set.getChance();
 			}
 
-			return this.effects.get(0).getRandomEnchantEffect();
+			return effects.get(0).getRandomEnchantEffect();
 		}
 	}
 
@@ -96,8 +92,8 @@ public class LifeStoneTable
 		// lifestone level to player level table
 		private static final int[] LEVELS = {46, 49, 52, 55, 58, 61, 64, 67, 70, 76, 80, 82, 84, 85, 95, 99};
 
-		private final int grade;
-		private final int level;
+		@Getter private final int grade;
+		@Getter private final int level;
 		private final Map<String, EnchantEffectGroup[]> effects = new HashMap<>();
 
 		public LifeStone(int grade, int level)
@@ -106,28 +102,18 @@ public class LifeStoneTable
 			this.level = level;
 		}
 
-		public final int getLevel()
-		{
-			return this.level;
-		}
-
-		public final int getGrade()
-		{
-			return this.grade;
-		}
-
 		public final int getPlayerLevel()
 		{
-			return LEVELS[this.level];
+			return LEVELS[level];
 		}
 
 		public final void setEffectGroup(String type, int order, EnchantEffectGroup group)
 		{
-			EnchantEffectGroup[] augments = this.effects.get(type);
+			EnchantEffectGroup[] augments = effects.get(type);
 			if (augments == null)
 			{
 				augments = new EnchantEffectGroup[2];
-				this.effects.put(type, augments);
+				effects.put(type, augments);
 			}
 
 			augments[order] = group;
@@ -135,7 +121,7 @@ public class LifeStoneTable
 
 		public final EnchantEffect getRandomEffect(String type, int order)
 		{
-			EnchantEffectGroup[] augments = this.effects.get(type);
+			EnchantEffectGroup[] augments = effects.get(type);
 			if (augments == null || augments[order] == null)
 			{
 				Log.warning("Null augment: " + type + ", " + order);
@@ -176,7 +162,7 @@ public class LifeStoneTable
 
 	public final void load()
 	{
-		this.lifeStones.clear();
+		lifeStones.clear();
 
 		// Load the skillmap
 		// Note: the skillmap data is only used when generating new augmentations
@@ -267,11 +253,11 @@ public class LifeStoneTable
 						}
 					}
 
-					this.lifeStones.put(id, lifeStone);
+					lifeStones.put(id, lifeStone);
 				}
 			}
 
-			Log.info("LifeStoneTable: Loaded " + this.lifeStones.size() + " life stones.");
+			Log.info("LifeStoneTable: Loaded " + lifeStones.size() + " life stones.");
 		}
 		catch (Exception e)
 		{
@@ -314,7 +300,7 @@ public class LifeStoneTable
 
 	public final LifeStone getLifeStone(int itemId)
 	{
-		return this.lifeStones.get(itemId);
+		return lifeStones.get(itemId);
 	}
 
 	/*
@@ -348,7 +334,6 @@ public class LifeStoneTable
 		}
 		// Count must be greater or equal of required number
 		return getGemStoneCount(grade, ls.getGrade()) <= gemStones.getCount();
-
 	}
 
 	/*
@@ -395,7 +380,6 @@ public class LifeStoneTable
 		}
 		// check for level of the lifestone
 		return player.getLevel() >= ls.getPlayerLevel();
-
 	}
 
 	/*
@@ -485,7 +469,6 @@ public class LifeStoneTable
 
 		// blacklist check
 		return item.getItem().isAugmentable();
-
 	}
 
 	/*
@@ -530,7 +513,6 @@ public class LifeStoneTable
 			return false;
 		}
 		return !(player.isEnchanting() || player.isProcessingTransaction());
-
 	}
 
 	/*

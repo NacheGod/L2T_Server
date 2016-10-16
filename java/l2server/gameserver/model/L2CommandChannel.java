@@ -20,6 +20,7 @@ import l2server.gameserver.model.actor.L2Character;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.network.SystemMessageId;
 import l2server.gameserver.network.serverpackets.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class L2CommandChannel
 {
-	private final List<L2Party> partys;
+	@Getter private final List<L2Party> partys;
 	private L2PcInstance commandLeader = null;
 	private int channelLvl;
 
@@ -39,10 +40,10 @@ public class L2CommandChannel
 	 */
 	public L2CommandChannel(L2PcInstance leader)
 	{
-		this.commandLeader = leader;
-		this.partys = new CopyOnWriteArrayList<>();
-		this.partys.add(leader.getParty());
-		this.channelLvl = leader.getParty().getLevel();
+		commandLeader = leader;
+		partys = new CopyOnWriteArrayList<>();
+		partys.add(leader.getParty());
+		channelLvl = leader.getParty().getLevel();
 		leader.getParty().setCommandChannel(this);
 		leader.getParty()
 				.broadcastToPartyMembers(SystemMessage.getSystemMessage(SystemMessageId.COMMAND_CHANNEL_FORMED));
@@ -61,10 +62,10 @@ public class L2CommandChannel
 		// Update the CCinfo for existing players
 		broadcastToChannelMembers(new ExMPCCPartyInfoUpdate(party, 1));
 
-		this.partys.add(party);
+		partys.add(party);
 		if (party.getLevel() > channelLvl)
 		{
-			this.channelLvl = party.getLevel();
+			channelLvl = party.getLevel();
 		}
 		party.setCommandChannel(this);
 		party.broadcastToPartyMembers(SystemMessage.getSystemMessage(SystemMessageId.JOINED_COMMAND_CHANNEL));
@@ -81,18 +82,18 @@ public class L2CommandChannel
 			return;
 		}
 
-		this.partys.remove(party);
-		this.channelLvl = 0;
-		for (L2Party pty : this.partys)
+		partys.remove(party);
+		channelLvl = 0;
+		for (L2Party pty : partys)
 		{
 			if (pty.getLevel() > channelLvl)
 			{
-				this.channelLvl = pty.getLevel();
+				channelLvl = pty.getLevel();
 			}
 		}
 		party.setCommandChannel(null);
 		party.broadcastToPartyMembers(new ExCloseMPCC());
-		if (this.partys.size() < 2)
+		if (partys.size() < 2)
 		{
 			broadcastToChannelMembers(SystemMessage.getSystemMessage(SystemMessageId.COMMAND_CHANNEL_DISBANDED));
 			disbandChannel();
@@ -109,9 +110,9 @@ public class L2CommandChannel
 	 */
 	public void disbandChannel()
 	{
-		if (this.partys != null)
+		if (partys != null)
 		{
-			for (L2Party party : this.partys)
+			for (L2Party party : partys)
 			{
 				if (party != null)
 				{
@@ -119,7 +120,7 @@ public class L2CommandChannel
 				}
 			}
 		}
-		this.partys.clear();
+		partys.clear();
 	}
 
 	/**
@@ -128,7 +129,7 @@ public class L2CommandChannel
 	public int getMemberCount()
 	{
 		int count = 0;
-		for (L2Party party : this.partys)
+		for (L2Party party : partys)
 		{
 			if (party != null)
 			{
@@ -143,9 +144,9 @@ public class L2CommandChannel
 	 */
 	public void broadcastToChannelMembers(L2GameServerPacket gsp)
 	{
-		if (this.partys != null && !this.partys.isEmpty())
+		if (partys != null && !partys.isEmpty())
 		{
-			for (L2Party party : this.partys)
+			for (L2Party party : partys)
 			{
 				if (party != null)
 				{
@@ -157,9 +158,9 @@ public class L2CommandChannel
 
 	public void broadcastCSToChannelMembers(CreatureSay gsp, L2PcInstance broadcaster)
 	{
-		if (this.partys != null && !this.partys.isEmpty())
+		if (partys != null && !partys.isEmpty())
 		{
-			for (L2Party party : this.partys)
+			for (L2Party party : partys)
 			{
 				if (party != null)
 				{
@@ -167,14 +168,6 @@ public class L2CommandChannel
 				}
 			}
 		}
-	}
-
-	/**
-	 * @return list of Parties in Command Channel
-	 */
-	public List<L2Party> getPartys()
-	{
-		return this.partys;
 	}
 
 	/**
@@ -195,14 +188,14 @@ public class L2CommandChannel
 	 */
 	public int getLevel()
 	{
-		return this.channelLvl;
+		return channelLvl;
 	}
 
 	/**
 	 */
 	public void setChannelLeader(L2PcInstance leader)
 	{
-		this.commandLeader = leader;
+		commandLeader = leader;
 	}
 
 	/**
@@ -210,7 +203,7 @@ public class L2CommandChannel
 	 */
 	public L2PcInstance getChannelLeader()
 	{
-		return this.commandLeader;
+		return commandLeader;
 	}
 
 	/**
@@ -228,6 +221,6 @@ public class L2CommandChannel
 
 	public final boolean isInChannel(final L2Party party)
 	{
-		return this.partys.contains(party);
+		return partys.contains(party);
 	}
 }

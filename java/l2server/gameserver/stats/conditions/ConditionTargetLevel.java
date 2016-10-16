@@ -24,7 +24,6 @@ import l2server.gameserver.stats.Env;
  */
 public class ConditionTargetLevel extends Condition
 {
-
 	private final int level;
 
 	/**
@@ -47,10 +46,10 @@ public class ConditionTargetLevel extends Condition
 		{
 			return false;
 		}
-		if (this.level < 0)
+		if (level < 0)
 		{
 			return env.target.getLevel() < -level;
 		}
-		return env.target.getLevel() >= this.level;
+		return env.target.getLevel() >= level;
 	}
 }

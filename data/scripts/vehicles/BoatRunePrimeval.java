@@ -15,9 +15,6 @@
 
 package vehicles;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import l2server.gameserver.ThreadPoolManager;
 import l2server.gameserver.instancemanager.BoatManager;
 import l2server.gameserver.model.VehiclePathPoint;
@@ -26,6 +23,9 @@ import l2server.gameserver.network.clientpackets.Say2;
 import l2server.gameserver.network.serverpackets.CreatureSay;
 import l2server.gameserver.network.serverpackets.PlaySound;
 import l2server.log.Log;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author DS
@@ -95,8 +95,9 @@ public class BoatRunePrimeval implements Runnable
 
 		RUNE_SOUND = new PlaySound(0, "itemsound.ship_arrival_departure", 1, this.boat.getObjectId(), RUNE_DOCK[0].x,
 				RUNE_DOCK[0].y, RUNE_DOCK[0].z);
-		PRIMEVAL_SOUND = new PlaySound(0, "itemsound.ship_arrival_departure", 1, this.boat.getObjectId(), PRIMEVAL_DOCK.x,
-				PRIMEVAL_DOCK.y, PRIMEVAL_DOCK.z);
+		PRIMEVAL_SOUND =
+				new PlaySound(0, "itemsound.ship_arrival_departure", 1, this.boat.getObjectId(), PRIMEVAL_DOCK.x,
+						PRIMEVAL_DOCK.y, PRIMEVAL_DOCK.z);
 	}
 
 	@Override
@@ -104,13 +105,13 @@ public class BoatRunePrimeval implements Runnable
 	{
 		try
 		{
-			switch (this.cycle)
+			switch (cycle)
 			{
 				case 0:
 					BoatManager.getInstance().dockShip(BoatManager.RUNE_HARBOR, false);
 					BoatManager.getInstance().broadcastPackets(RUNE_DOCK[0], PRIMEVAL_DOCK, LEAVING_RUNE, RUNE_SOUND);
-					this.boat.payForRide(8925, 1, 34513, -38009, -3640);
-					this.boat.executePath(RUNE_TO_PRIMEVAL);
+					boat.payForRide(8925, 1, 34513, -38009, -3640);
+					boat.executePath(RUNE_TO_PRIMEVAL);
 					break;
 				case 1:
 					BoatManager.getInstance()
@@ -121,27 +122,27 @@ public class BoatRunePrimeval implements Runnable
 				case 2:
 					BoatManager.getInstance()
 							.broadcastPackets(PRIMEVAL_DOCK, RUNE_DOCK[0], LEAVING_PRIMEVAL, PRIMEVAL_SOUND);
-					this.boat.payForRide(8924, 1, 10447, -24982, -3664);
-					this.boat.executePath(PRIMEVAL_TO_RUNE);
+					boat.payForRide(8924, 1, 10447, -24982, -3664);
+					boat.executePath(PRIMEVAL_TO_RUNE);
 					break;
 				case 3:
 					if (BoatManager.getInstance().dockBusy(BoatManager.RUNE_HARBOR))
 					{
-						if (this.shoutCount == 0)
+						if (shoutCount == 0)
 						{
 							BoatManager.getInstance().broadcastPacket(RUNE_DOCK[0], PRIMEVAL_DOCK, BUSY_RUNE);
 						}
 
-						this.shoutCount++;
-						if (this.shoutCount > 35)
+						shoutCount++;
+						if (shoutCount > 35)
 						{
-							this.shoutCount = 0;
+							shoutCount = 0;
 						}
 
 						ThreadPoolManager.getInstance().scheduleGeneral(this, 5000);
 						return;
 					}
-					this.boat.executePath(RUNE_DOCK);
+					boat.executePath(RUNE_DOCK);
 					break;
 				case 4:
 					BoatManager.getInstance().dockShip(BoatManager.RUNE_HARBOR, true);
@@ -151,11 +152,11 @@ public class BoatRunePrimeval implements Runnable
 					ThreadPoolManager.getInstance().scheduleGeneral(this, 180000);
 					break;
 			}
-			this.shoutCount = 0;
-			this.cycle++;
-			if (this.cycle > 4)
+			shoutCount = 0;
+			cycle++;
+			if (cycle > 4)
 			{
-				this.cycle = 0;
+				cycle = 0;
 			}
 		}
 		catch (Exception e)

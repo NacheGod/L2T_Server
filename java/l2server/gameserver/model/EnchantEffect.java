@@ -18,6 +18,7 @@ package l2server.gameserver.model;
 import l2server.gameserver.datatables.SkillTable;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.stats.funcs.Func;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,9 @@ import java.util.List;
  */
 public class EnchantEffect
 {
-	private final int id;
-	private final int rarity;
-	private final int slot;
+	@Getter private final int id;
+	@Getter private final int rarity;
+	@Getter private final int slot;
 
 	private int skillId = 0;
 	private int skillLevel = 0;
@@ -50,38 +51,23 @@ public class EnchantEffect
 
 	public void addFunc(Func func)
 	{
-		this.funcs.add(func);
-	}
-
-	public int getId()
-	{
-		return this.id;
-	}
-
-	public int getRarity()
-	{
-		return this.rarity;
-	}
-
-	public int getSlot()
-	{
-		return this.slot;
+		funcs.add(func);
 	}
 
 	public L2Skill getSkill()
 	{
-		if (this.skillId == 0)
+		if (skillId == 0)
 		{
 			return null;
 		}
 
-		return SkillTable.getInstance().getInfo(this.skillId, this.skillLevel);
+		return SkillTable.getInstance().getInfo(skillId, skillLevel);
 	}
 
 	public void applyBonus(L2PcInstance player)
 	{
 		player.removeStatsOwner(this);
-		for (Func f : this.funcs)
+		for (Func f : funcs)
 		{
 			player.addStatFunc(f);
 		}

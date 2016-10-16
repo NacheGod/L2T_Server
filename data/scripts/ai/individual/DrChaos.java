@@ -33,7 +33,6 @@ import l2server.gameserver.network.serverpackets.SpecialCamera;
  */
 public class DrChaos extends Quest
 {
-
 	private static final int DOCTER_CHAOS = 32033;
 	private static final int STRANGE_MACHINE = 32032;
 	private static final int CHAOS_GOLEM = 25512;
@@ -44,7 +43,7 @@ public class DrChaos extends Quest
 		super(questId, name, descr);
 
 		addFirstTalkId(32033);
-		this.IsGolemSpawned = false;
+		IsGolemSpawned = false;
 	}
 
 	public L2Npc findTemplate(int npcId)
@@ -96,10 +95,10 @@ public class DrChaos extends Quest
 		{
 			player.teleToLocation(94832, -112624, -3304);
 			npc.teleToLocation(-113091, -243942, -15536);
-			if (!this.IsGolemSpawned)
+			if (!IsGolemSpawned)
 			{
 				L2Npc golem = addSpawn(CHAOS_GOLEM, 94640, -112496, -3336, 0, false, 0);
-				this.IsGolemSpawned = true;
+				IsGolemSpawned = true;
 				startQuestTimer("6", 1000, golem, player);
 				player.sendPacket(new PlaySound(1, "Rm03_A", 0, 0, 0, 0, 0));
 			}
@@ -117,7 +116,7 @@ public class DrChaos extends Quest
 		if (npc.getNpcId() == DOCTER_CHAOS)
 		{
 			npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(96323, -110914, -3328, 0));
-			this.startQuestTimer("1", 3000, npc, player);
+			startQuestTimer("1", 3000, npc, player);
 		}
 		return "";
 	}

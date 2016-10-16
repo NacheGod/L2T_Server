@@ -26,7 +26,6 @@ import java.util.Map;
 
 public class GlobalVariablesManager
 {
-
 	private static final String LOAD_VAR = "SELECT var,value FROM global_variables";
 	private static final String SAVE_VAR =
 			"INSERT INTO global_variables (var,value) VALUES (?,?) ON DUPLICATE KEY UPDATE value=?";
@@ -35,7 +34,7 @@ public class GlobalVariablesManager
 
 	private GlobalVariablesManager()
 	{
-		this.variablesMap = new HashMap<>();
+		variablesMap = new HashMap<>();
 
 		loadVars();
 	}
@@ -57,7 +56,7 @@ public class GlobalVariablesManager
 				var = rset.getString(1);
 				value = rset.getString(2);
 
-				this.variablesMap.put(var, value);
+				variablesMap.put(var, value);
 			}
 			rset.close();
 			statement.close();
@@ -81,11 +80,11 @@ public class GlobalVariablesManager
 			con = L2DatabaseFactory.getInstance().getConnection();
 			statement = con.prepareStatement(SAVE_VAR);
 
-			for (String var : this.variablesMap.keySet())
+			for (String var : variablesMap.keySet())
 			{
 				statement.setString(1, var);
-				statement.setString(2, this.variablesMap.get(var));
-				statement.setString(3, this.variablesMap.get(var));
+				statement.setString(2, variablesMap.get(var));
+				statement.setString(3, variablesMap.get(var));
 				statement.execute();
 			}
 			statement.close();
@@ -103,17 +102,17 @@ public class GlobalVariablesManager
 
 	public void storeVariable(String var, String value)
 	{
-		this.variablesMap.put(var, value);
+		variablesMap.put(var, value);
 	}
 
 	public boolean isVariableStored(String var)
 	{
-		return this.variablesMap.containsKey(var);
+		return variablesMap.containsKey(var);
 	}
 
 	public String getStoredVariable(String var)
 	{
-		return this.variablesMap.get(var);
+		return variablesMap.get(var);
 	}
 
 	public static GlobalVariablesManager getInstance()

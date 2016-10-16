@@ -15,6 +15,8 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * This class describes a RecipeList componant (1 line of the recipe : Item-Quantity needed).<BR><BR>
  */
@@ -23,12 +25,12 @@ public class L2RecipeInstance
 	/**
 	 * The Identifier of the item needed in the L2RecipeInstance
 	 */
-	private int itemId;
+	@Getter private int itemId;
 
 	/**
 	 * The item quantity needed in the L2RecipeInstance
 	 */
-	private int quantity;
+	@Getter private int quantity;
 
 	/**
 	 * Constructor of L2RecipeInstance (create a new line in a RecipeList).<BR><BR>
@@ -37,21 +39,5 @@ public class L2RecipeInstance
 	{
 		this.itemId = itemId;
 		this.quantity = quantity;
-	}
-
-	/**
-	 * Return the Identifier of the L2RecipeInstance Item needed.<BR><BR>
-	 */
-	public int getItemId()
-	{
-		return this.itemId;
-	}
-
-	/**
-	 * Return the Item quantity needed of the L2RecipeInstance.<BR><BR>
-	 */
-	public int getQuantity()
-	{
-		return this.quantity;
 	}
 }

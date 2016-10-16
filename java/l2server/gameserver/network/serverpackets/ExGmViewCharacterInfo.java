@@ -36,7 +36,7 @@ public final class ExGmViewCharacterInfo extends L2GameServerPacket
 
 	public ExGmViewCharacterInfo(L2PcInstance player)
 	{
-		this.objectId = player.getObjectId();
+		objectId = player.getObjectId();
 
 		ByteBuffer buffer = ByteBuffer.allocate(500).order(ByteOrder.LITTLE_ENDIAN);
 
@@ -210,7 +210,7 @@ public final class ExGmViewCharacterInfo extends L2GameServerPacket
 		// Clan
 		String title = player.getTitle() != null ? player.getTitle() : "";
 
-		if (player.getAppearance().getInvisible() && player.isGM())
+		if (player.getAppearance().isInvisible() && player.isGM())
 		{
 			title = "Invisible";
 		}
@@ -286,8 +286,8 @@ public final class ExGmViewCharacterInfo extends L2GameServerPacket
 
 		int size = buffer.position();
 		buffer.position(0);
-		this.data = new byte[size];
-		buffer.get(this.data, 0, size);
+		data = new byte[size];
+		buffer.get(data, 0, size);
 	}
 
 	@Override
@@ -295,8 +295,8 @@ public final class ExGmViewCharacterInfo extends L2GameServerPacket
 	{
 		//writeH(0x155);
 
-		writeD(this.objectId);
+		writeD(objectId);
 		writeD(0);
-		writeB(this.data);
+		writeB(data);
 	}
 }

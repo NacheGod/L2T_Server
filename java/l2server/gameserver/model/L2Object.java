@@ -31,6 +31,7 @@ import l2server.gameserver.network.serverpackets.ActionFailed;
 import l2server.gameserver.network.serverpackets.ExSendUIEvent;
 import l2server.gameserver.network.serverpackets.ExSendUIEventRemove;
 import l2server.gameserver.network.serverpackets.L2GameServerPacket;
+import lombok.Getter;
 
 /**
  * Mother class of all objects in the world wich ones is it possible
@@ -47,12 +48,12 @@ public abstract class L2Object
 	// =========================================================
 	// Data Field
 	private boolean isVisible; // Object visibility
-	private ObjectKnownList knownList;
+	@Getter private ObjectKnownList knownList;
 	private String name;
 	private int objectId; // Object identifier
 	private ObjectPoly poly;
-	private ObjectPosition position;
-	private int instanceId = 0;
+	@Getter private ObjectPosition position;
+	@Getter private int instanceId = 0;
 
 	private InstanceType instanceType = null;
 
@@ -187,7 +188,7 @@ public abstract class L2Object
 		L2MiniGameManagerInstance(L2MerchantInstance),
 		L2CloneInstance(L2SummonInstance);
 
-		private final InstanceType parent;
+		@Getter private final InstanceType parent;
 		private final long typeL;
 		private final long typeH;
 		private final long maskL;
@@ -200,40 +201,35 @@ public abstract class L2Object
 			final int high = ordinal() - (Long.SIZE - 1);
 			if (high < 0)
 			{
-				this.typeL = 1L << ordinal();
-				this.typeH = 0;
+				typeL = 1L << ordinal();
+				typeH = 0;
 			}
 			else
 			{
-				this.typeL = 0;
-				this.typeH = 1L << high;
+				typeL = 0;
+				typeH = 1L << high;
 			}
 
-			if (this.typeL < 0 || this.typeH < 0)
+			if (typeL < 0 || typeH < 0)
 			{
 				throw new Error("Too many instance types, failed to load " + name());
 			}
 
 			if (parent != null)
 			{
-				this.maskL = this.typeL | parent.maskL;
-				this.maskH = this.typeH | parent.maskH;
+				maskL = typeL | parent.maskL;
+				maskH = typeH | parent.maskH;
 			}
 			else
 			{
-				this.maskL = this.typeL;
-				this.maskH = this.typeH;
+				maskL = typeL;
+				maskH = typeH;
 			}
-		}
-
-		public final InstanceType getParent()
-		{
-			return this.parent;
 		}
 
 		public final boolean isType(InstanceType it)
 		{
-			return (this.maskL & it.typeL) > 0 || (this.maskH & it.typeH) > 0;
+			return (maskL & it.typeL) > 0 || (maskH & it.typeH) > 0;
 		}
 
 		public final boolean isTypes(InstanceType... it)
@@ -328,17 +324,8 @@ public abstract class L2Object
 
 	public final int getX()
 	{
-		assert getPosition().getWorldRegion() != null || this.isVisible;
+		assert getPosition().getWorldRegion() != null || isVisible;
 		return getPosition().getX();
-	}
-
-	/**
-	 * @return The id of the instance zone the object is in - id 0 is global
-	 * since everything like dropped items, mobs, players can be in a instanciated area, it must be in l2object
-	 */
-	public int getInstanceId()
-	{
-		return instanceId;
 	}
 
 	/**
@@ -412,11 +399,10 @@ public abstract class L2Object
 		this.instanceId = instanceId;
 
 		// If we change it for visible objects, me must clear & revalidate knownlists
-		if (this.isVisible && this.knownList != null)
+		if (isVisible && knownList != null)
 		{
 			if (this instanceof L2PcInstance)
 			{
-
 				// We don't want some ugly looking disappear/appear effects, so don't update
 				// the knownlist here, but players usually enter instancezones through teleporting
 				// and the teleport will do the revalidation for us.
@@ -431,13 +417,13 @@ public abstract class L2Object
 
 	public final int getY()
 	{
-		assert getPosition().getWorldRegion() != null || this.isVisible;
+		assert getPosition().getWorldRegion() != null || isVisible;
 		return getPosition().getY();
 	}
 
 	public final int getZ()
 	{
-		assert getPosition().getWorldRegion() != null || this.isVisible;
+		assert getPosition().getWorldRegion() != null || isVisible;
 		return getPosition().getZ();
 	}
 
@@ -466,7 +452,7 @@ public abstract class L2Object
 
 		synchronized (this)
 		{
-			this.isVisible = false;
+			isVisible = false;
 			getPosition().setWorldRegion(null);
 		}
 
@@ -481,7 +467,7 @@ public abstract class L2Object
 	{
 		L2World.getInstance().removeObject(this);
 		IdFactory.getInstance().releaseId(getObjectId());
-		this.objectId = IdFactory.getInstance().getNextId();
+		objectId = IdFactory.getInstance().getNextId();
 	}
 
 	/**
@@ -508,7 +494,7 @@ public abstract class L2Object
 		synchronized (this)
 		{
 			// Set the x,y,z position of the L2Object spawn and update its _worldregion
-			this.isVisible = true;
+			isVisible = true;
 			getPosition().setWorldRegion(L2World.getInstance().getRegion(getPosition().getWorldPosition()));
 
 			// Add the L2Object spawn in the this.allobjects of L2World
@@ -533,7 +519,7 @@ public abstract class L2Object
 		synchronized (this)
 		{
 			// Set the x,y,z position of the L2Object spawn and update its _worldregion
-			this.isVisible = true;
+			isVisible = true;
 
 			if (x > L2World.MAP_MAX_X)
 			{
@@ -614,16 +600,11 @@ public abstract class L2Object
 
 	public final void setIsVisible(boolean value)
 	{
-		this.isVisible = value;
-		if (!this.isVisible)
+		isVisible = value;
+		if (!isVisible)
 		{
 			getPosition().setWorldRegion(null);
 		}
-	}
-
-	public ObjectKnownList getKnownList()
-	{
-		return this.knownList;
 	}
 
 	/**
@@ -634,41 +615,36 @@ public abstract class L2Object
 	 */
 	public void initKnownList()
 	{
-		this.knownList = new ObjectKnownList(this);
+		knownList = new ObjectKnownList(this);
 	}
 
 	public final void setKnownList(ObjectKnownList value)
 	{
-		this.knownList = value;
+		knownList = value;
 	}
 
 	public final String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public void setName(String value)
 	{
-		this.name = value;
+		name = value;
 	}
 
 	public final int getObjectId()
 	{
-		return this.objectId;
+		return objectId;
 	}
 
 	public final ObjectPoly getPoly()
 	{
-		if (this.poly == null)
+		if (poly == null)
 		{
-			this.poly = new ObjectPoly(this);
+			poly = new ObjectPoly(this);
 		}
-		return this.poly;
-	}
-
-	public ObjectPosition getPosition()
-	{
-		return this.position;
+		return poly;
 	}
 
 	/**
@@ -679,12 +655,12 @@ public abstract class L2Object
 	 */
 	public void initPosition()
 	{
-		this.position = new ObjectPosition(this);
+		position = new ObjectPosition(this);
 	}
 
 	public final void setObjectPosition(ObjectPosition value)
 	{
-		this.position = value;
+		position = value;
 	}
 
 	/**
@@ -716,7 +692,6 @@ public abstract class L2Object
 	 */
 	public void sendInfo(L2PcInstance activeChar)
 	{
-
 	}
 
 	@Override

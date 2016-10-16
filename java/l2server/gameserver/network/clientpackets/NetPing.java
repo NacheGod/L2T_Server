@@ -7,13 +7,12 @@ import l2server.log.Log;
  */
 public class NetPing extends L2GameClientPacket
 {
-	@SuppressWarnings("unused")
-	private int pingID;
+	@SuppressWarnings("unused") private int pingID;
 
 	@Override
 	public void readImpl()
 	{
-		this.pingID = readD();
+		pingID = readD();
 		readD(); // unk2
 		readD(); // unk1
 	}

@@ -38,13 +38,13 @@ public class TopicBBSManager extends BaseBBSManager
 
 	protected TopicBBSManager()
 	{
-		this.table = new ArrayList<>();
-		this.maxId = new ConcurrentHashMap<>();
+		table = new ArrayList<>();
+		maxId = new ConcurrentHashMap<>();
 	}
 
 	public void addTopic(Topic tt)
 	{
-		this.table.add(tt);
+		table.add(tt);
 	}
 
 	/**
@@ -52,17 +52,17 @@ public class TopicBBSManager extends BaseBBSManager
 	 */
 	public void delTopic(Topic topic)
 	{
-		this.table.remove(topic);
+		table.remove(topic);
 	}
 
 	public void setMaxID(int id, Forum f)
 	{
-		this.maxId.put(f, id);
+		maxId.put(f, id);
 	}
 
 	public int getMaxID(Forum f)
 	{
-		Integer i = this.maxId.get(f);
+		Integer i = maxId.get(f);
 		if (i == null)
 		{
 			return 0;
@@ -72,7 +72,7 @@ public class TopicBBSManager extends BaseBBSManager
 
 	public Topic getTopicByID(int idf)
 	{
-		for (Topic t : this.table)
+		for (Topic t : table)
 		{
 			if (t.getID() == idf)
 			{
@@ -355,8 +355,8 @@ public class TopicBBSManager extends BaseBBSManager
 		}
 		else
 		{
-			StringUtil.append(html, "<td><button action=\"bypass this.bbstopics;read;", String.valueOf(forum.getID()), ";",
-					String.valueOf(index - 1),
+			StringUtil.append(html, "<td><button action=\"bypass this.bbstopics;read;", String.valueOf(forum.getID()),
+					";", String.valueOf(index - 1),
 					"\" back=\"l2ui_ch3.prev1_down\" fore=\"l2ui_ch3.prev1\" width=16 height=16 ></td>");
 		}
 
@@ -374,8 +374,9 @@ public class TopicBBSManager extends BaseBBSManager
 			}
 			else
 			{
-				StringUtil.append(html, "<td><a action=\"bypass this.bbstopics;read;", String.valueOf(forum.getID()), ";",
-						String.valueOf(i), "\"> ", String.valueOf(i), " </a></td>");
+				StringUtil
+						.append(html, "<td><a action=\"bypass this.bbstopics;read;", String.valueOf(forum.getID()), ";",
+								String.valueOf(i), "\"> ", String.valueOf(i), " </a></td>");
 			}
 		}
 		if (index == nbp)
@@ -385,8 +386,8 @@ public class TopicBBSManager extends BaseBBSManager
 		}
 		else
 		{
-			StringUtil.append(html, "<td><button action=\"bypass this.bbstopics;read;", String.valueOf(forum.getID()), ";",
-					String.valueOf(index + 1),
+			StringUtil.append(html, "<td><button action=\"bypass this.bbstopics;read;", String.valueOf(forum.getID()),
+					";", String.valueOf(index + 1),
 					"\" back=\"l2ui_ch3.next1_down\" fore=\"l2ui_ch3.next1\" width=16 height=16 ></td>");
 		}
 

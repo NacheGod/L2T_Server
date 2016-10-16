@@ -15,6 +15,8 @@
 
 package l2server.gameserver.templates.skills;
 
+import lombok.Getter;
+
 /**
  * @author Pere
  */
@@ -53,15 +55,10 @@ public enum L2EffectType
 	BLOCK_HIDE(0x0000000020000000L),
 	BLOCK_TALISMANS(0x0000000040000000L);
 
-	private long mask;
+	@Getter private long mask;
 
 	L2EffectType(long mask)
 	{
 		this.mask = mask;
-	}
-
-	public long getMask()
-	{
-		return this.mask;
 	}
 }

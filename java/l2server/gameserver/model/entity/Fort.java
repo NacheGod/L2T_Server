@@ -36,6 +36,8 @@ import l2server.gameserver.network.serverpackets.PlaySound;
 import l2server.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.log.Log;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,9 +65,9 @@ public class Fort
 	private int state = 0;
 	private int castleId = 0;
 	private int blood = 0;
-	private int supplyLvL = 0;
+	@Getter private int supplyLvL = 0;
 	private HashMap<Integer, FortFunction> function;
-	private ArrayList<L2Skill> residentialSkills = new ArrayList<>();
+	@Getter private ArrayList<L2Skill> residentialSkills = new ArrayList<>();
 	private ScheduledFuture<?>[] fortUpdater = new ScheduledFuture<?>[2];
 	private boolean isSuspiciousMerchantSpawned = false;
 
@@ -84,11 +86,11 @@ public class Fort
 
 	public class FortFunction
 	{
-		private int type;
-		private int lvl;
+		@Getter private int type;
+		@Getter @Setter private int lvl;
 		protected int fee;
 		protected int tempFee;
-		private long rate;
+		@Getter private long rate;
 		private long endDate;
 		protected boolean inDebt;
 		public boolean cwh;
@@ -97,51 +99,31 @@ public class Fort
 		{
 			this.type = type;
 			this.lvl = lvl;
-			this.fee = lease;
-			this.tempFee = tempLease;
+			fee = lease;
+			tempFee = tempLease;
 			this.rate = rate;
-			this.endDate = time;
+			endDate = time;
 			initializeTask(cwh);
-		}
-
-		public int getType()
-		{
-			return this.type;
-		}
-
-		public int getLvl()
-		{
-			return this.lvl;
 		}
 
 		public int getLease()
 		{
-			return this.fee;
-		}
-
-		public long getRate()
-		{
-			return this.rate;
+			return fee;
 		}
 
 		public long getEndTime()
 		{
-			return this.endDate;
-		}
-
-		public void setLvl(int lvl)
-		{
-			this.lvl = lvl;
+			return endDate;
 		}
 
 		public void setLease(int lease)
 		{
-			this.fee = lease;
+			fee = lease;
 		}
 
 		public void setEndTime(long time)
 		{
-			this.endDate = time;
+			endDate = time;
 		}
 
 		private void initializeTask(boolean cwh)
@@ -151,9 +133,9 @@ public class Fort
 				return;
 			}
 			long currentTime = System.currentTimeMillis();
-			if (this.endDate > currentTime)
+			if (endDate > currentTime)
 			{
-				ThreadPoolManager.getInstance().scheduleGeneral(new FunctionTask(cwh), this.endDate - currentTime);
+				ThreadPoolManager.getInstance().scheduleGeneral(new FunctionTask(cwh), endDate - currentTime);
 			}
 			else
 			{
@@ -177,17 +159,17 @@ public class Fort
 					{
 						return;
 					}
-					if (getOwnerClan().getWarehouse().getAdena() >= FortFunction.this.fee || !FortFunction.this.cwh)
+					if (getOwnerClan().getWarehouse().getAdena() >= fee || !cwh)
 					{
 						int fee = FortFunction.this.fee;
 						if (getEndTime() == -1)
 						{
-							fee = FortFunction.this.tempFee;
+							fee = tempFee;
 						}
 
 						setEndTime(System.currentTimeMillis() + getRate());
 						dbSave();
-						if (FortFunction.this.cwh)
+						if (cwh)
 						{
 							getOwnerClan().getWarehouse().destroyItemByItemId("CS_function_fee", 57, fee, null, null);
 							if (Config.DEBUG)
@@ -245,15 +227,15 @@ public class Fort
 	// Constructor
 	public Fort(int id, String name, int type, int flagPoleId)
 	{
-		this.fortId = id;
+		fortId = id;
 		this.name = name;
-		this.fortType = type;
-		this.flagPole = StaticObjects.getInstance().getObject(flagPoleId);
+		fortType = type;
+		flagPole = StaticObjects.getInstance().getObject(flagPoleId);
 
 		loadDbData();
 
-		this.function = new HashMap<>();
-		this.residentialSkills = ResidentialSkillTable.getInstance().getSkills(this.fortId);
+		function = new HashMap<>();
+		residentialSkills = ResidentialSkillTable.getInstance().getSkills(fortId);
 		if (getOwnerClan() != null)
 		{
 			setVisibleFlag(true);
@@ -278,7 +260,7 @@ public class Fort
 			PreparedStatement statement;
 
 			statement = con.prepareStatement("INSERT IGNORE INTO fort (id) VALUES (?)");
-			statement.setInt(1, this.fortId);
+			statement.setInt(1, fortId);
 			statement.execute();
 			statement.close();
 		}
@@ -297,9 +279,9 @@ public class Fort
 	 */
 	public FortFunction getFunction(int type)
 	{
-		if (this.function.get(type) != null)
+		if (function.get(type) != null)
 		{
-			return this.function.get(type);
+			return function.get(type);
 		}
 		return null;
 	}
@@ -310,7 +292,7 @@ public class Fort
 
 		public ScheduleSpecialEnvoysDeSpawn(Fort pFort)
 		{
-			this.fortInst = pFort;
+			fortInst = pFort;
 		}
 
 		@Override
@@ -319,17 +301,16 @@ public class Fort
 			try
 			{
 				// if state not decided, change state to indenpendent
-				if (this.fortInst.getFortState() == 0)
+				if (fortInst.getFortState() == 0)
 				{
-					this.fortInst.setFortState(1, 0);
+					fortInst.setFortState(1, 0);
 				}
-				this.fortInst.despawnSpecialEnvoys();
+				fortInst.despawnSpecialEnvoys();
 			}
 			catch (Exception e)
 			{
-				Log.log(Level.WARNING,
-						"Exception: ScheduleSpecialEnvoysSpawn() for Fort " + this.fortInst.getName() + ": " +
-								e.getMessage(), e);
+				Log.log(Level.WARNING, "Exception: ScheduleSpecialEnvoysSpawn() for Fort " + fortInst.getName() + ": " +
+						e.getMessage(), e);
 			}
 		}
 	}
@@ -365,34 +346,34 @@ public class Fort
 
 	public L2SiegeZone getZone()
 	{
-		if (this.zone == null)
+		if (zone == null)
 		{
 			for (L2SiegeZone zone : ZoneManager.getInstance().getAllZones(L2SiegeZone.class))
 			{
-				if (zone.getSiegeObjectId() == this.fortId)
+				if (zone.getSiegeObjectId() == fortId)
 				{
 					this.zone = zone;
 					break;
 				}
 			}
 		}
-		return this.zone;
+		return zone;
 	}
 
 	public L2FortZone getFortZone()
 	{
-		if (this.fortZone == null)
+		if (fortZone == null)
 		{
 			for (L2FortZone zone : ZoneManager.getInstance().getAllZones(L2FortZone.class))
 			{
-				if (zone.getFortId() == this.fortId)
+				if (zone.getFortId() == fortId)
 				{
-					this.fortZone = zone;
+					fortZone = zone;
 					break;
 				}
 			}
 		}
-		return this.fortZone;
+		return fortZone;
 	}
 
 	/**
@@ -538,20 +519,20 @@ public class Fort
 
 	public void setBloodOathReward(int val)
 	{
-		this.blood = val;
+		blood = val;
 	}
 
 	public int getBloodOathReward()
 	{
-		return this.blood;
+		return blood;
 	}
 
 	public void raiseSupplyLvL()
 	{
-		this.supplyLvL++;
-		if (this.supplyLvL > Config.FS_MAX_SUPPLY_LEVEL)
+		supplyLvL++;
+		if (supplyLvL > Config.FS_MAX_SUPPLY_LEVEL)
 		{
-			this.supplyLvL = Config.FS_MAX_SUPPLY_LEVEL;
+			supplyLvL = Config.FS_MAX_SUPPLY_LEVEL;
 		}
 	}
 
@@ -559,13 +540,8 @@ public class Fort
 	{
 		if (val <= Config.FS_MAX_SUPPLY_LEVEL)
 		{
-			this.supplyLvL = val;
+			supplyLvL = val;
 		}
-	}
-
-	public int getSupplyLvL()
-	{
-		return this.supplyLvL;
 	}
 
 	public void saveFortVariables()
@@ -577,9 +553,9 @@ public class Fort
 			PreparedStatement statement;
 
 			statement = con.prepareStatement("UPDATE fort SET blood=?, supplyLvL=? WHERE id = ?");
-			statement.setInt(1, this.blood);
-			statement.setInt(2, this.supplyLvL);
-			statement.setInt(3, this.fortId);
+			statement.setInt(1, blood);
+			statement.setInt(2, supplyLvL);
+			statement.setInt(3, fortId);
 			statement.execute();
 			statement.close();
 		}
@@ -610,9 +586,9 @@ public class Fort
 	 */
 	public void resetDoors()
 	{
-		for (L2DoorInstance door : this.doors)
+		for (L2DoorInstance door : doors)
 		{
-			if (door.getOpen())
+			if (door.isOpen())
 			{
 				door.closeMe();
 			}
@@ -642,21 +618,21 @@ public class Fort
 
 			statement = con.prepareStatement(
 					"SELECT siegeDate, lastOwnedTime, owner, state, castleId, blood, supplyLvl FROM fort WHERE id = ?");
-			statement.setInt(1, this.fortId);
+			statement.setInt(1, fortId);
 			rs = statement.executeQuery();
 			int ownerId = 0;
 
 			if (rs.next())
 			{
-				this.siegeDate = Calendar.getInstance();
-				this.lastOwnedTime = Calendar.getInstance();
-				this.siegeDate.setTimeInMillis(rs.getLong("siegeDate"));
-				this.lastOwnedTime.setTimeInMillis(rs.getLong("lastOwnedTime"));
+				siegeDate = Calendar.getInstance();
+				lastOwnedTime = Calendar.getInstance();
+				siegeDate.setTimeInMillis(rs.getLong("siegeDate"));
+				lastOwnedTime.setTimeInMillis(rs.getLong("lastOwnedTime"));
 				ownerId = rs.getInt("owner");
-				this.state = rs.getInt("state");
-				this.castleId = rs.getInt("castleId");
-				this.blood = rs.getInt("blood");
-				this.supplyLvL = rs.getInt("supplyLvL");
+				state = rs.getInt("state");
+				castleId = rs.getInt("castleId");
+				blood = rs.getInt("blood");
+				supplyLvL = rs.getInt("supplyLvL");
 			}
 
 			rs.close();
@@ -665,10 +641,10 @@ public class Fort
 			if (ownerId > 0)
 			{
 				L2Clan clan = ClanTable.getInstance().getClan(ownerId); // Try to find clan instance
-				clan.setHasFort(this.fortId);
+				clan.setHasFort(fortId);
 				setOwnerClan(clan);
 				int runCount = getOwnedTime() / (Config.FS_UPDATE_FRQ * 60);
-				long initial = System.currentTimeMillis() - this.lastOwnedTime.getTimeInMillis();
+				long initial = System.currentTimeMillis() - lastOwnedTime.getTimeInMillis();
 				while (initial > Config.FS_UPDATE_FRQ * 60000L)
 				{
 					initial -= Config.FS_UPDATE_FRQ * 60000L;
@@ -676,19 +652,19 @@ public class Fort
 				initial = Config.FS_UPDATE_FRQ * 60000L - initial;
 				if (Config.FS_MAX_OWN_TIME <= 0 || getOwnedTime() < Config.FS_MAX_OWN_TIME * 3600)
 				{
-					this.fortUpdater[0] = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(
+					fortUpdater[0] = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(
 							new FortUpdater(this, clan, runCount, UpdaterType.PERIODIC_UPDATE), initial,
 							Config.FS_UPDATE_FRQ * 60000L); // Schedule owner tasks to start running
 					if (Config.FS_MAX_OWN_TIME > 0)
 					{
-						this.fortUpdater[1] = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(
+						fortUpdater[1] = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(
 								new FortUpdater(this, clan, runCount, UpdaterType.MAX_OWN_TIME), 3600000,
 								3600000); // Schedule owner tasks to remove owener
 					}
 				}
 				else
 				{
-					this.fortUpdater[1] = ThreadPoolManager.getInstance()
+					fortUpdater[1] = ThreadPoolManager.getInstance()
 							.scheduleGeneral(new FortUpdater(this, clan, 0, UpdaterType.MAX_OWN_TIME),
 									60000); // Schedule owner tasks to remove owner
 				}
@@ -720,11 +696,11 @@ public class Fort
 			ResultSet rs;
 			con = L2DatabaseFactory.getInstance().getConnection();
 			statement = con.prepareStatement("SELECT * FROM fort_functions WHERE fort_id = ?");
-			statement.setInt(1, this.fortId);
+			statement.setInt(1, fortId);
 			rs = statement.executeQuery();
 			while (rs.next())
 			{
-				this.function.put(rs.getInt("type"),
+				function.put(rs.getInt("type"),
 						new FortFunction(rs.getInt("type"), rs.getInt("lvl"), rs.getInt("lease"), 0, rs.getLong("rate"),
 								rs.getLong("endTime"), true));
 			}
@@ -745,14 +721,14 @@ public class Fort
 	 */
 	public void removeFunction(int functionType)
 	{
-		this.function.remove(functionType);
+		function.remove(functionType);
 		Connection con = null;
 		try
 		{
 			PreparedStatement statement;
 			con = L2DatabaseFactory.getInstance().getConnection();
 			statement = con.prepareStatement("DELETE FROM fort_functions WHERE fort_id=? AND type=?");
-			statement.setInt(1, this.fortId);
+			statement.setInt(1, fortId);
 			statement.setInt(2, functionType);
 			statement.execute();
 			statement.close();
@@ -772,7 +748,7 @@ public class Fort
 	 */
 	private void removeAllFunctions()
 	{
-		HashMap<Integer, FortFunction> toIterate = new HashMap<>(this.function);
+		HashMap<Integer, FortFunction> toIterate = new HashMap<>(function);
 		for (int id : toIterate.keySet())
 		{
 			removeFunction(id);
@@ -800,7 +776,7 @@ public class Fort
 		}
 		if (addNew)
 		{
-			this.function.put(type, new FortFunction(type, lvl, lease, 0, rate, 0, false));
+			function.put(type, new FortFunction(type, lvl, lease, 0, rate, 0, false));
 		}
 		else
 		{
@@ -810,21 +786,21 @@ public class Fort
 			}
 			else
 			{
-				int diffLease = lease - this.function.get(type).getLease();
+				int diffLease = lease - function.get(type).getLease();
 				if (Config.DEBUG)
 				{
 					Log.warning("Called Fort.updateFunctions diffLease : " + diffLease);
 				}
 				if (diffLease > 0)
 				{
-					this.function.remove(type);
-					this.function.put(type, new FortFunction(type, lvl, lease, 0, rate, -1, false));
+					function.remove(type);
+					function.put(type, new FortFunction(type, lvl, lease, 0, rate, -1, false));
 				}
 				else
 				{
-					this.function.get(type).setLease(lease);
-					this.function.get(type).setLvl(lvl);
-					this.function.get(type).dbSave();
+					function.get(type).setLease(lease);
+					function.get(type).setLvl(lvl);
+					function.get(type).dbSave();
 				}
 			}
 		}
@@ -841,9 +817,9 @@ public class Fort
 	{
 		for (L2DoorInstance door : DoorTable.getInstance().getDoors())
 		{
-			if (door.getFort() != null && door.getFort().fortId == this.fortId)
+			if (door.getFort() != null && door.getFort().fortId == fortId)
 			{
-				this.doors.add(door);
+				doors.add(door);
 			}
 		}
 	}
@@ -855,11 +831,11 @@ public class Fort
 		if (clan != null)
 		{
 			clanId = clan.getClanId();
-			this.lastOwnedTime.setTimeInMillis(System.currentTimeMillis());
+			lastOwnedTime.setTimeInMillis(System.currentTimeMillis());
 		}
 		else
 		{
-			this.lastOwnedTime.setTimeInMillis(0);
+			lastOwnedTime.setTimeInMillis(0);
 		}
 
 		Connection con = null;
@@ -871,11 +847,11 @@ public class Fort
 			statement = con.prepareStatement(
 					"UPDATE fort SET owner=?,lastOwnedTime=?,state=?,castleId=?,blood=? WHERE id = ?");
 			statement.setInt(1, clanId);
-			statement.setLong(2, this.lastOwnedTime.getTimeInMillis());
+			statement.setLong(2, lastOwnedTime.getTimeInMillis());
 			statement.setInt(3, 0);
 			statement.setInt(4, 0);
 			statement.setInt(5, getBloodOathReward());
-			statement.setInt(6, this.fortId);
+			statement.setInt(6, fortId);
 			statement.execute();
 			statement.close();
 
@@ -883,11 +859,11 @@ public class Fort
 			// Announce to clan memebers
 			if (clan != null)
 			{
-				clan.setHasFort(this.fortId); // Set has fort flag for new owner
+				clan.setHasFort(fortId); // Set has fort flag for new owner
 				SystemMessage sm;
 				sm = SystemMessage.getSystemMessage(SystemMessageId.S1_CLAN_IS_VICTORIOUS_IN_THE_FORTRESS_BATTLE_OF_S2);
 				sm.addString(clan.getName());
-				sm.addFortId(this.fortId);
+				sm.addFortId(fortId);
 				Collection<L2PcInstance> pls = L2World.getInstance().getAllPlayers().values();
 				for (L2PcInstance player : pls)
 				{
@@ -895,37 +871,37 @@ public class Fort
 				}
 				clan.broadcastToOnlineMembers(new PledgeShowInfoUpdate(clan));
 				clan.broadcastToOnlineMembers(new PlaySound(1, "Siege_Victory", 0, 0, 0, 0, 0));
-				if (this.fortUpdater[0] != null)
+				if (fortUpdater[0] != null)
 				{
-					this.fortUpdater[0].cancel(false);
+					fortUpdater[0].cancel(false);
 				}
-				if (this.fortUpdater[1] != null)
+				if (fortUpdater[1] != null)
 				{
-					this.fortUpdater[1].cancel(false);
+					fortUpdater[1].cancel(false);
 				}
-				this.fortUpdater[0] = ThreadPoolManager.getInstance()
+				fortUpdater[0] = ThreadPoolManager.getInstance()
 						.scheduleGeneralAtFixedRate(new FortUpdater(this, clan, 0, UpdaterType.PERIODIC_UPDATE),
 								Config.FS_UPDATE_FRQ * 60000L,
 								Config.FS_UPDATE_FRQ * 60000L); // Schedule owner tasks to start running
 				if (Config.FS_MAX_OWN_TIME > 0)
 				{
-					this.fortUpdater[1] = ThreadPoolManager.getInstance()
+					fortUpdater[1] = ThreadPoolManager.getInstance()
 							.scheduleGeneralAtFixedRate(new FortUpdater(this, clan, 0, UpdaterType.MAX_OWN_TIME),
 									3600000, 3600000); // Schedule owner tasks to remove owener
 				}
 			}
 			else
 			{
-				if (this.fortUpdater[0] != null)
+				if (fortUpdater[0] != null)
 				{
-					this.fortUpdater[0].cancel(false);
+					fortUpdater[0].cancel(false);
 				}
-				this.fortUpdater[0] = null;
-				if (this.fortUpdater[1] != null)
+				fortUpdater[0] = null;
+				if (fortUpdater[1] != null)
 				{
-					this.fortUpdater[1].cancel(false);
+					fortUpdater[1].cancel(false);
 				}
-				this.fortUpdater[1] = null;
+				fortUpdater[1] = null;
 			}
 		}
 		catch (Exception e)
@@ -940,18 +916,18 @@ public class Fort
 
 	public final int getFortId()
 	{
-		return this.fortId;
+		return fortId;
 	}
 
 	public final L2Clan getOwnerClan()
 	{
-		return this.fortOwner;
+		return fortOwner;
 	}
 
 	public final void setOwnerClan(L2Clan clan)
 	{
 		setVisibleFlag(clan != null);
-		this.fortOwner = clan;
+		fortOwner = clan;
 	}
 
 	public final L2DoorInstance getDoor(int doorId)
@@ -973,26 +949,26 @@ public class Fort
 
 	public final List<L2DoorInstance> getDoors()
 	{
-		return this.doors;
+		return doors;
 	}
 
 	public final L2StaticObjectInstance getFlagPole()
 	{
-		return this.flagPole;
+		return flagPole;
 	}
 
 	public final FortSiege getSiege()
 	{
-		if (this.siege == null)
+		if (siege == null)
 		{
-			this.siege = new FortSiege(this);
+			siege = new FortSiege(this);
 		}
-		return this.siege;
+		return siege;
 	}
 
 	public final Calendar getSiegeDate()
 	{
-		return this.siegeDate;
+		return siegeDate;
 	}
 
 	public final void setSiegeDate(Calendar siegeDate)
@@ -1002,38 +978,38 @@ public class Fort
 
 	public final int getOwnedTime()
 	{
-		if (this.lastOwnedTime.getTimeInMillis() == 0)
+		if (lastOwnedTime.getTimeInMillis() == 0)
 		{
 			return 0;
 		}
 
-		return (int) ((System.currentTimeMillis() - this.lastOwnedTime.getTimeInMillis()) / 1000);
+		return (int) ((System.currentTimeMillis() - lastOwnedTime.getTimeInMillis()) / 1000);
 	}
 
 	public final int getTimeTillRebelArmy()
 	{
-		if (this.lastOwnedTime.getTimeInMillis() == 0)
+		if (lastOwnedTime.getTimeInMillis() == 0)
 		{
 			return 0;
 		}
 
 		return (int) (
-				(this.lastOwnedTime.getTimeInMillis() + Config.FS_MAX_OWN_TIME * 3600000L - System.currentTimeMillis()) /
+				(lastOwnedTime.getTimeInMillis() + Config.FS_MAX_OWN_TIME * 3600000L - System.currentTimeMillis()) /
 						1000L);
 	}
 
 	public final long getTimeTillNextFortUpdate()
 	{
-		if (this.fortUpdater[0] == null)
+		if (fortUpdater[0] == null)
 		{
 			return 0;
 		}
-		return this.fortUpdater[0].getDelay(TimeUnit.SECONDS);
+		return fortUpdater[0].getDelay(TimeUnit.SECONDS);
 	}
 
 	public final String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public void updateClansReputation(L2Clan owner, boolean removePoints)
@@ -1067,7 +1043,7 @@ public class Fort
 		{
 			try
 			{
-				this.f.engrave(this.clan);
+				f.engrave(clan);
 			}
 			catch (Exception e)
 			{
@@ -1084,7 +1060,7 @@ public class Fort
 	 */
 	public final int getFortState()
 	{
-		return this.state;
+		return state;
 	}
 
 	/**
@@ -1102,7 +1078,7 @@ public class Fort
 			statement = con.prepareStatement("UPDATE fort SET state=?,castleId=? WHERE id = ?");
 			statement.setInt(1, getFortState());
 			statement.setInt(2, getCastleId());
-			statement.setInt(3, this.fortId);
+			statement.setInt(3, fortId);
 			statement.execute();
 			statement.close();
 		}
@@ -1121,7 +1097,7 @@ public class Fort
 	 */
 	public final int getCastleId()
 	{
-		return this.castleId;
+		return castleId;
 	}
 
 	/**
@@ -1131,17 +1107,17 @@ public class Fort
 	 */
 	public final int getFortType()
 	{
-		return this.fortType;
+		return fortType;
 	}
 
 	public final int addEnvoyCastleId(int npcId, int castleId)
 	{
-		return this.envoyCastles.put(npcId, castleId);
+		return envoyCastles.put(npcId, castleId);
 	}
 
 	public final int getCastleIdFromEnvoy(int npcId)
 	{
-		return this.envoyCastles.get(npcId);
+		return envoyCastles.get(npcId);
 	}
 
 	/**
@@ -1154,13 +1130,13 @@ public class Fort
 
 	public void spawnSuspiciousMerchant()
 	{
-		if (this.isSuspiciousMerchantSpawned)
+		if (isSuspiciousMerchantSpawned)
 		{
 			return;
 		}
 
-		this.isSuspiciousMerchantSpawned = true;
-		List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(this.name + "_suspicious_merchant");
+		isSuspiciousMerchantSpawned = true;
+		List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(name + "_suspicious_merchant");
 		for (L2Spawn spawnDat : spawns)
 		{
 			spawnDat.doSpawn();
@@ -1170,13 +1146,13 @@ public class Fort
 
 	public void despawnSuspiciousMerchant()
 	{
-		if (!this.isSuspiciousMerchantSpawned)
+		if (!isSuspiciousMerchantSpawned)
 		{
 			return;
 		}
 
-		this.isSuspiciousMerchantSpawned = false;
-		List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(this.name + "_suspicious_merchant");
+		isSuspiciousMerchantSpawned = false;
+		List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(name + "_suspicious_merchant");
 		for (L2Spawn spawnDat : spawns)
 		{
 			spawnDat.stopRespawn();
@@ -1186,22 +1162,22 @@ public class Fort
 
 	public void spawnNpcCommanders()
 	{
-		SpawnTable.getInstance().spawnSpecificTable(this.name + "_npc_commanders");
+		SpawnTable.getInstance().spawnSpecificTable(name + "_npc_commanders");
 	}
 
 	public void despawnNpcCommanders()
 	{
-		SpawnTable.getInstance().despawnSpecificTable(this.name + "_npc_commanders");
+		SpawnTable.getInstance().despawnSpecificTable(name + "_npc_commanders");
 	}
 
 	public void spawnSpecialEnvoys()
 	{
-		SpawnTable.getInstance().spawnSpecificTable(this.name + "_envoys");
+		SpawnTable.getInstance().spawnSpecificTable(name + "_envoys");
 	}
 
 	public void despawnSpecialEnvoys()
 	{
-		SpawnTable.getInstance().despawnSpecificTable(this.name + "_envoys");
+		SpawnTable.getInstance().despawnSpecificTable(name + "_envoys");
 	}
 
 	/**
@@ -1211,7 +1187,7 @@ public class Fort
 	{
 		try
 		{
-			List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(this.name + "_siege_guards");
+			List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(name + "_siege_guards");
 			for (L2Spawn spawnDat : spawns)
 			{
 				spawnDat.doSpawn();
@@ -1238,7 +1214,7 @@ public class Fort
 	{
 		try
 		{
-			List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(this.name + "_siege_guards");
+			List<L2Spawn> spawns = SpawnTable.getInstance().getSpecificSpawns(name + "_siege_guards");
 			for (L2Spawn spawnDat : spawns)
 			{
 				spawnDat.stopRespawn();
@@ -1254,16 +1230,11 @@ public class Fort
 		}
 	}
 
-	public ArrayList<L2Skill> getResidentialSkills()
-	{
-		return this.residentialSkills;
-	}
-
 	public void giveResidentialSkills(L2PcInstance player)
 	{
-		if (this.residentialSkills != null && !this.residentialSkills.isEmpty())
+		if (residentialSkills != null && !residentialSkills.isEmpty())
 		{
-			for (L2Skill sk : this.residentialSkills)
+			for (L2Skill sk : residentialSkills)
 			{
 				player.addSkill(sk, false);
 			}
@@ -1272,9 +1243,9 @@ public class Fort
 
 	public void removeResidentialSkills(L2PcInstance player)
 	{
-		if (this.residentialSkills != null && !this.residentialSkills.isEmpty())
+		if (residentialSkills != null && !residentialSkills.isEmpty())
 		{
-			for (L2Skill sk : this.residentialSkills)
+			for (L2Skill sk : residentialSkills)
 			{
 				player.removeSkill(sk, false, true);
 			}
@@ -1283,11 +1254,11 @@ public class Fort
 
 	public List<L2Spawn> getCommanderSpawns()
 	{
-		return SpawnTable.getInstance().getSpecificSpawns(this.name + "_defending_commanders");
+		return SpawnTable.getInstance().getSpecificSpawns(name + "_defending_commanders");
 	}
 
 	public List<CombatFlag> getFlags()
 	{
-		return this.flagList;
+		return flagList;
 	}
 }

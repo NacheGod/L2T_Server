@@ -21,7 +21,6 @@ import java.util.List;
 
 public class ShowBoard extends L2GameServerPacket
 {
-
 	private StringBuilder htmlCode;
 
 	public ShowBoard(String htmlCode, String id)
@@ -31,10 +30,10 @@ public class ShowBoard extends L2GameServerPacket
 
 	public ShowBoard(List<String> arg)
 	{
-		this.htmlCode = StringUtil.startAppend(500, "1002\u0008");
+		htmlCode = StringUtil.startAppend(500, "1002\u0008");
 		for (String str : arg)
 		{
-			StringUtil.append(this.htmlCode, str, " \u0008");
+			StringUtil.append(htmlCode, str, " \u0008");
 		}
 	}
 
@@ -50,9 +49,9 @@ public class ShowBoard extends L2GameServerPacket
 		writeS("bypass _bbsmail"); // mail
 		writeS("bypass _bbsfriends"); // friends
 		writeS("bypass bbs_add_fav"); // add fav.
-		if (this.htmlCode.length() < 8192)
+		if (htmlCode.length() < 8192)
 		{
-			writeS(this.htmlCode.toString());
+			writeS(htmlCode.toString());
 		}
 		else
 		{

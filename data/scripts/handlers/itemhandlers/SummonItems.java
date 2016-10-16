@@ -19,9 +19,6 @@
 
 package handlers.itemhandlers;
 
-import java.util.Collection;
-import java.util.logging.Level;
-
 import l2server.gameserver.ThreadPoolManager;
 import l2server.gameserver.datatables.NpcTable;
 import l2server.gameserver.datatables.SummonItemsData;
@@ -37,14 +34,13 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.model.actor.instance.L2PetInstance;
 import l2server.gameserver.model.actor.instance.L2XmassTreeInstance;
 import l2server.gameserver.network.SystemMessageId;
-import l2server.gameserver.network.serverpackets.MagicSkillLaunched;
-import l2server.gameserver.network.serverpackets.MagicSkillUse;
-import l2server.gameserver.network.serverpackets.PetItemList;
-import l2server.gameserver.network.serverpackets.SetupGauge;
-import l2server.gameserver.network.serverpackets.SystemMessage;
+import l2server.gameserver.network.serverpackets.*;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
 import l2server.gameserver.util.Broadcast;
 import l2server.log.Log;
+
+import java.util.Collection;
+import java.util.logging.Level;
 
 public class SummonItems implements IItemHandler
 {
@@ -215,13 +211,13 @@ public class SummonItems implements IItemHandler
 		{
 			try
 			{
-				if (this.petSummon.getCurrentFed() <= 0)
+				if (petSummon.getCurrentFed() <= 0)
 				{
-					this.petSummon.unSummon(this.activeChar);
+					petSummon.unSummon(activeChar);
 				}
 				else
 				{
-					this.petSummon.startFeed();
+					petSummon.startFeed();
 				}
 			}
 			catch (Exception e)
@@ -250,24 +246,24 @@ public class SummonItems implements IItemHandler
 		{
 			try
 			{
-				this.activeChar.sendPacket(new MagicSkillLaunched(this.activeChar, 2046, 1));
-				this.activeChar.setIsCastingNow(false);
+				activeChar.sendPacket(new MagicSkillLaunched(activeChar, 2046, 1));
+				activeChar.setIsCastingNow(false);
 
 				// check for summon item validity
-				if (this.item == null || this.item.getOwnerId() != this.activeChar.getObjectId() ||
-						this.item.getLocation() != L2ItemInstance.ItemLocation.INVENTORY)
+				if (item == null || item.getOwnerId() != activeChar.getObjectId() ||
+						item.getLocation() != L2ItemInstance.ItemLocation.INVENTORY)
 				{
 					return;
 				}
 
-				final L2PetInstance petSummon = L2PetInstance.spawnPet(this.npcTemplate, this.activeChar, this.item);
+				final L2PetInstance petSummon = L2PetInstance.spawnPet(npcTemplate, activeChar, item);
 				if (petSummon == null)
 				{
 					return;
 				}
 
 				petSummon.setShowSummonAnimation(true);
-				petSummon.setTitle(this.activeChar.getName());
+				petSummon.setTitle(activeChar.getName());
 
 				if (!petSummon.isRespawned())
 				{
@@ -284,18 +280,18 @@ public class SummonItems implements IItemHandler
 					petSummon.store();
 				}
 
-				this.activeChar.setPet(petSummon);
+				activeChar.setPet(petSummon);
 
 				//JIV remove - done on spawn
 				//L2World.getInstance().storeObject(petSummon);
-				petSummon.spawnMe(this.activeChar.getX() + 50, this.activeChar.getY() + 100, this.activeChar.getZ());
+				petSummon.spawnMe(activeChar.getX() + 50, activeChar.getY() + 100, activeChar.getZ());
 				petSummon.startFeed();
-				this.item.setEnchantLevel(petSummon.getLevel());
+				item.setEnchantLevel(petSummon.getLevel());
 
 				if (petSummon.getCurrentFed() <= 0)
 				{
 					ThreadPoolManager.getInstance()
-							.scheduleGeneral(new PetSummonFeedWait(this.activeChar, petSummon), 60000);
+							.scheduleGeneral(new PetSummonFeedWait(activeChar, petSummon), 60000);
 				}
 				else
 				{

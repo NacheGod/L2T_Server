@@ -17,7 +17,6 @@ package l2server.gameserver.network.serverpackets;
 
 public class EnchantResult extends L2GameServerPacket
 {
-
 	private int result;
 	private int crystal;
 	private int count;
@@ -34,9 +33,9 @@ public class EnchantResult extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.result);
-		writeD(this.crystal);
-		writeQ(this.count);
-		writeD(this.enchantLevel);
+		writeD(result);
+		writeD(crystal);
+		writeQ(count);
+		writeD(enchantLevel);
 	}
 }

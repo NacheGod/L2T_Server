@@ -29,6 +29,7 @@ import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.gameserver.templates.StatsSet;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
 import l2server.log.Log;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +47,14 @@ public final class OlympiadGameTask implements Runnable
 	public static final int[] BATTLE_START_TIME_SECOND = {10, 5, 4, 3, 2, 1, 0};
 	public static final int[] TELEPORT_TO_TOWN = {40, 30, 20, 10, 5, 4, 3, 2, 1, 0};
 
-	private final L2OlympiadStadiumZone zone;
+	@Getter private final L2OlympiadStadiumZone zone;
 	private AbstractOlympiadGame game;
 	private GameState state = GameState.IDLE;
 	private boolean needAnnounce = false;
 	private int countDown = 0;
 
-	private final List<L2DoorInstance> doors;
-	private final List<L2Spawn> buffers;
+	@Getter private final List<L2DoorInstance> doors;
+	@Getter private final List<L2Spawn> buffers;
 
 	private enum GameState
 	{
@@ -76,16 +77,16 @@ public final class OlympiadGameTask implements Runnable
 		zone.registerTask(this, id);
 		InstanceManager.getInstance().createInstance(id + Olympiad.BASE_INSTANCE_ID);
 		Instance instance = InstanceManager.getInstance().getInstance(id + Olympiad.BASE_INSTANCE_ID);
-		this.buffers = new ArrayList<>(2);
-		this.doors = new ArrayList<>(2);
+		buffers = new ArrayList<>(2);
+		doors = new ArrayList<>(2);
 
 		StatsSet set = new StatsSet();
 		int door1Id = 17100001 + id % 4 * 100;
 		int door2Id = 17100002 + id % 4 * 100;
 		instance.addDoor(door1Id, set);
 		instance.addDoor(door2Id, set);
-		this.doors.add(instance.getDoor(door1Id));
-		this.doors.add(instance.getDoor(door2Id));
+		doors.add(instance.getDoor(door1Id));
+		doors.add(instance.getDoor(door2Id));
 
 		try
 		{
@@ -102,7 +103,7 @@ public final class OlympiadGameTask implements Runnable
 			bufferSpawn.doSpawn();
 
 			SpawnTable.getInstance().addNewSpawn(bufferSpawn, false);
-			this.buffers.add(0, bufferSpawn);
+			buffers.add(0, bufferSpawn);
 
 			bufferSpawn = new L2Spawn(tmpl);
 
@@ -116,7 +117,7 @@ public final class OlympiadGameTask implements Runnable
 			bufferSpawn.doSpawn();
 
 			SpawnTable.getInstance().addNewSpawn(bufferSpawn, false);
-			this.buffers.add(1, bufferSpawn);
+			buffers.add(1, bufferSpawn);
 		}
 		catch (Exception e)
 		{
@@ -126,29 +127,29 @@ public final class OlympiadGameTask implements Runnable
 
 	public final boolean isRunning()
 	{
-		return this.state != GameState.IDLE;
+		return state != GameState.IDLE;
 	}
 
 	public final boolean isGameStarted()
 	{
-		return this.state.ordinal() >= GameState.GAME_STARTED.ordinal() && this.state.ordinal() <= GameState.CLEANUP.ordinal();
+		return state.ordinal() >= GameState.GAME_STARTED.ordinal() && state.ordinal() <= GameState.CLEANUP.ordinal();
 	}
 
 	public final boolean isBattleStarted()
 	{
-		return this.state == GameState.BATTLE_IN_PROGRESS;
+		return state == GameState.BATTLE_IN_PROGRESS;
 	}
 
 	public final boolean isBattleFinished()
 	{
-		return this.state == GameState.TELEPORT_TO_TOWN;
+		return state == GameState.TELEPORT_TO_TOWN;
 	}
 
 	public final boolean needAnnounce()
 	{
-		if (this.needAnnounce)
+		if (needAnnounce)
 		{
-			this.needAnnounce = false;
+			needAnnounce = false;
 			return true;
 		}
 		else
@@ -157,27 +158,22 @@ public final class OlympiadGameTask implements Runnable
 		}
 	}
 
-	public final L2OlympiadStadiumZone getZone()
-	{
-		return this.zone;
-	}
-
 	public final AbstractOlympiadGame getGame()
 	{
-		return this.game;
+		return game;
 	}
 
 	public final void attachGame(AbstractOlympiadGame game)
 	{
-		if (game != null && this.state != GameState.IDLE)
+		if (game != null && state != GameState.IDLE)
 		{
-			Log.log(Level.WARNING, "Attempt to overwrite non-finished game in state " + this.state);
+			Log.log(Level.WARNING, "Attempt to overwrite non-finished game in state " + state);
 			return;
 		}
 
 		this.game = game;
-		this.state = GameState.BEGIN;
-		this.needAnnounce = false;
+		state = GameState.BEGIN;
+		needAnnounce = false;
 		ThreadPoolManager.getInstance().executeTask(this);
 	}
 
@@ -187,30 +183,30 @@ public final class OlympiadGameTask implements Runnable
 		try
 		{
 			int delay = 1; // schedule next call after 1s
-			switch (this.state)
+			switch (state)
 			{
 				// Game created
 				case BEGIN:
 				{
-					this.state = GameState.TELEPORT_TO_ARENA;
-					this.countDown = Config.ALT_OLY_WAIT_TIME;
+					state = GameState.TELEPORT_TO_ARENA;
+					countDown = Config.ALT_OLY_WAIT_TIME;
 					break;
 				}
 				// Teleport to arena countdown
 				case TELEPORT_TO_ARENA:
 				{
-					if (this.countDown > 0)
+					if (countDown > 0)
 					{
 						SystemMessage sm = SystemMessage
 								.getSystemMessage(SystemMessageId.YOU_WILL_ENTER_THE_OLYMPIAD_STADIUM_IN_S1_SECOND_S);
-						sm.addNumber(this.countDown);
-						this.game.broadcastPacketToParticipants(sm);
+						sm.addNumber(countDown);
+						game.broadcastPacketToParticipants(sm);
 					}
 
 					delay = getDelay(TELEPORT_TO_ARENA);
-					if (this.countDown <= 0)
+					if (countDown <= 0)
 					{
-						this.state = GameState.GAME_STARTED;
+						state = GameState.GAME_STARTED;
 					}
 					break;
 				}
@@ -219,33 +215,33 @@ public final class OlympiadGameTask implements Runnable
 				{
 					if (!startGame())
 					{
-						this.state = GameState.GAME_STOPPED;
+						state = GameState.GAME_STOPPED;
 						break;
 					}
 
-					this.state = GameState.BATTLE_COUNTDOWN_FIRST;
-					this.countDown = BATTLE_START_TIME_FIRST[0];
+					state = GameState.BATTLE_COUNTDOWN_FIRST;
+					countDown = BATTLE_START_TIME_FIRST[0];
 					delay = 5;
 					break;
 				}
 				// Battle start countdown, first part (60-10)
 				case BATTLE_COUNTDOWN_FIRST:
 				{
-					if (this.countDown > 0)
+					if (countDown > 0)
 					{
 						SystemMessage sm =
 								SystemMessage.getSystemMessage(SystemMessageId.THE_GAME_WILL_START_IN_S1_SECOND_S);
-						sm.addNumber(this.countDown);
-						this.game.broadcastPacket(sm, this.zone);
+						sm.addNumber(countDown);
+						game.broadcastPacket(sm, zone);
 					}
 
 					delay = getDelay(BATTLE_START_TIME_FIRST);
-					if (this.countDown <= 0)
+					if (countDown <= 0)
 					{
 						openingDoors();
 
-						this.state = GameState.BATTLE_COUNTDOWN_SECOND;
-						this.countDown = BATTLE_START_TIME_SECOND[0];
+						state = GameState.BATTLE_COUNTDOWN_SECOND;
+						countDown = BATTLE_START_TIME_SECOND[0];
 						delay = getDelay(BATTLE_START_TIME_SECOND);
 					}
 
@@ -254,18 +250,18 @@ public final class OlympiadGameTask implements Runnable
 				// Battle start countdown, second part (10-0)
 				case BATTLE_COUNTDOWN_SECOND:
 				{
-					if (this.countDown > 0)
+					if (countDown > 0)
 					{
 						SystemMessage sm =
 								SystemMessage.getSystemMessage(SystemMessageId.THE_GAME_WILL_START_IN_S1_SECOND_S);
-						sm.addNumber(this.countDown);
-						this.game.broadcastPacket(sm, this.zone);
+						sm.addNumber(countDown);
+						game.broadcastPacket(sm, zone);
 					}
 
 					delay = getDelay(BATTLE_START_TIME_SECOND);
-					if (this.countDown <= 0)
+					if (countDown <= 0)
 					{
-						this.state = GameState.BATTLE_STARTED;
+						state = GameState.BATTLE_STARTED;
 					}
 
 					break;
@@ -273,11 +269,11 @@ public final class OlympiadGameTask implements Runnable
 				// Beginning of the battle
 				case BATTLE_STARTED:
 				{
-					this.countDown = 0;
-					this.state = GameState.BATTLE_IN_PROGRESS; // set state first, used in zone update
+					countDown = 0;
+					state = GameState.BATTLE_IN_PROGRESS; // set state first, used in zone update
 					if (!startBattle())
 					{
-						this.state = GameState.GAME_STOPPED;
+						state = GameState.GAME_STOPPED;
 					}
 
 					break;
@@ -285,10 +281,10 @@ public final class OlympiadGameTask implements Runnable
 				// Checks during battle
 				case BATTLE_IN_PROGRESS:
 				{
-					this.countDown += 1000;
-					if (checkBattle() || this.countDown > Config.ALT_OLY_BATTLE)
+					countDown += 1000;
+					if (checkBattle() || countDown > Config.ALT_OLY_BATTLE)
 					{
-						this.state = GameState.GAME_STOPPED;
+						state = GameState.GAME_STOPPED;
 					}
 
 					break;
@@ -296,8 +292,8 @@ public final class OlympiadGameTask implements Runnable
 				// End of the battle
 				case GAME_STOPPED:
 				{
-					this.state = GameState.TELEPORT_TO_TOWN;
-					this.countDown = TELEPORT_TO_TOWN[0];
+					state = GameState.TELEPORT_TO_TOWN;
+					countDown = TELEPORT_TO_TOWN[0];
 					stopGame();
 					delay = getDelay(TELEPORT_TO_TOWN);
 					break;
@@ -305,18 +301,18 @@ public final class OlympiadGameTask implements Runnable
 				// Teleport to town countdown
 				case TELEPORT_TO_TOWN:
 				{
-					if (this.countDown > 0)
+					if (countDown > 0)
 					{
 						SystemMessage sm =
 								SystemMessage.getSystemMessage(SystemMessageId.YOU_WILL_BE_MOVED_TO_TOWN_IN_S1_SECONDS);
-						sm.addNumber(this.countDown);
-						this.game.broadcastPacketToParticipants(sm);
+						sm.addNumber(countDown);
+						game.broadcastPacketToParticipants(sm);
 					}
 
 					delay = getDelay(TELEPORT_TO_TOWN);
-					if (this.countDown <= 0)
+					if (countDown <= 0)
 					{
-						this.state = GameState.CLEANUP;
+						state = GameState.CLEANUP;
 					}
 
 					break;
@@ -325,8 +321,8 @@ public final class OlympiadGameTask implements Runnable
 				case CLEANUP:
 				{
 					cleanupGame();
-					this.state = GameState.IDLE;
-					this.game = null;
+					state = GameState.IDLE;
+					game = null;
 					return;
 				}
 			}
@@ -334,7 +330,7 @@ public final class OlympiadGameTask implements Runnable
 		}
 		catch (Exception e)
 		{
-			switch (this.state)
+			switch (state)
 			{
 				case GAME_STOPPED:
 				case TELEPORT_TO_TOWN:
@@ -342,14 +338,14 @@ public final class OlympiadGameTask implements Runnable
 				case IDLE:
 				{
 					Log.log(Level.WARNING, "Unable to return players back in town, exception: " + e.getMessage());
-					this.state = GameState.IDLE;
-					this.game = null;
+					state = GameState.IDLE;
+					game = null;
 					return;
 				}
 			}
 
-			Log.log(Level.WARNING, "Exception in " + this.state + ", trying to port players back: " + e.getMessage(), e);
-			this.state = GameState.GAME_STOPPED;
+			Log.log(Level.WARNING, "Exception in " + state + ", trying to port players back: " + e.getMessage(), e);
+			state = GameState.GAME_STOPPED;
 			ThreadPoolManager.getInstance().scheduleGeneral(this, 1000);
 		}
 	}
@@ -360,17 +356,17 @@ public final class OlympiadGameTask implements Runnable
 		for (int i = 0; i < times.length - 1; i++)
 		{
 			time = times[i];
-			if (time >= this.countDown)
+			if (time >= countDown)
 			{
 				continue;
 			}
 
-			final int delay = this.countDown - time;
-			this.countDown = time;
+			final int delay = countDown - time;
+			countDown = time;
 			return delay;
 		}
 		// should not happens
-		this.countDown = -1;
+		countDown = -1;
 		return 1;
 	}
 
@@ -383,24 +379,24 @@ public final class OlympiadGameTask implements Runnable
 		try
 		{
 			// Checking for opponents and teleporting to arena
-			if (this.game.checkDefaulted())
+			if (game.checkDefaulted())
 			{
 				return false;
 			}
 
 			closeDoors();
-			if (this.game.needBuffers())
+			if (game.needBuffers())
 			{
 				spawnBuffers();
 			}
 
-			if (!this.game.portPlayersToArena(this.zone.getSpawns()))
+			if (!game.portPlayersToArena(zone.getSpawns()))
 			{
 				return false;
 			}
 
-			this.game.removals();
-			this.needAnnounce = true;
+			game.removals();
+			needAnnounce = true;
 			OlympiadGameManager.getInstance().startBattle(); // inform manager
 			return true;
 		}
@@ -418,7 +414,7 @@ public final class OlympiadGameTask implements Runnable
 	{
 		try
 		{
-			this.game.resetDamage();
+			game.resetDamage();
 			openDoors();
 		}
 		catch (Exception e)
@@ -435,17 +431,17 @@ public final class OlympiadGameTask implements Runnable
 	{
 		try
 		{
-			if (this.game.needBuffers())
+			if (game.needBuffers())
 			{
 				deleteBuffers();
 			}
 
-			if (this.game.checkBattleStatus() && this.game.makeCompetitionStart())
+			if (game.checkBattleStatus() && game.makeCompetitionStart())
 			{
 				// game successfully started
-				this.game.broadcastOlympiadInfo(this.zone);
-				this.game.broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.STARTS_THE_GAME), this.zone);
-				this.zone.updateZoneStatusForCharactersInside(this.game.getGameId());
+				game.broadcastOlympiadInfo(zone);
+				game.broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.STARTS_THE_GAME), zone);
+				zone.updateZoneStatusForCharactersInside(game.getGameId());
 				return true;
 			}
 		}
@@ -463,7 +459,7 @@ public final class OlympiadGameTask implements Runnable
 	{
 		try
 		{
-			return this.game.haveWinner();
+			return game.haveWinner();
 		}
 		catch (Exception e)
 		{
@@ -480,7 +476,7 @@ public final class OlympiadGameTask implements Runnable
 	{
 		try
 		{
-			this.game.validateWinner(this.zone);
+			game.validateWinner(zone);
 		}
 		catch (Exception e)
 		{
@@ -489,7 +485,7 @@ public final class OlympiadGameTask implements Runnable
 
 		try
 		{
-			this.zone.updateZoneStatusForCharactersInside(this.game.getGameId());
+			zone.updateZoneStatusForCharactersInside(game.getGameId());
 		}
 		catch (Exception e)
 		{
@@ -498,7 +494,7 @@ public final class OlympiadGameTask implements Runnable
 
 		try
 		{
-			this.game.cleanEffects();
+			game.cleanEffects();
 		}
 		catch (Exception e)
 		{
@@ -513,7 +509,7 @@ public final class OlympiadGameTask implements Runnable
 	{
 		try
 		{
-			this.game.playersStatusBack();
+			game.playersStatusBack();
 		}
 		catch (Exception e)
 		{
@@ -522,7 +518,7 @@ public final class OlympiadGameTask implements Runnable
 
 		try
 		{
-			this.game.portPlayersBack();
+			game.portPlayersBack();
 		}
 		catch (Exception e)
 		{
@@ -531,7 +527,7 @@ public final class OlympiadGameTask implements Runnable
 
 		try
 		{
-			this.game.clearPlayers();
+			game.clearPlayers();
 		}
 		catch (Exception e)
 		{
@@ -550,9 +546,9 @@ public final class OlympiadGameTask implements Runnable
 
 	public void openDoors()
 	{
-		for (L2DoorInstance door : this.doors)
+		for (L2DoorInstance door : doors)
 		{
-			if (door != null && !door.getOpen())
+			if (door != null && !door.isOpen())
 			{
 				door.openMe();
 			}
@@ -561,9 +557,9 @@ public final class OlympiadGameTask implements Runnable
 
 	public void closeDoors()
 	{
-		for (L2DoorInstance door : this.doors)
+		for (L2DoorInstance door : doors)
 		{
-			if (door != null && door.getOpen())
+			if (door != null && door.isOpen())
 			{
 				door.closeMe();
 			}
@@ -572,7 +568,7 @@ public final class OlympiadGameTask implements Runnable
 
 	public void spawnBuffers()
 	{
-		for (L2Spawn spawn : this.buffers)
+		for (L2Spawn spawn : buffers)
 		{
 			spawn.startRespawn();
 			spawn.doSpawn();
@@ -582,22 +578,12 @@ public final class OlympiadGameTask implements Runnable
 
 	public void deleteBuffers()
 	{
-		for (L2Spawn spawn : this.buffers)
+		for (L2Spawn spawn : buffers)
 		{
 			if (spawn.getNpc() != null && spawn.getNpc().isVisible())
 			{
 				spawn.getNpc().deleteMe();
 			}
 		}
-	}
-
-	public List<L2DoorInstance> getDoors()
-	{
-		return this.doors;
-	}
-
-	public List<L2Spawn> getBuffers()
-	{
-		return this.buffers;
 	}
 }

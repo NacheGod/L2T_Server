@@ -17,13 +17,14 @@ package l2server.gameserver.model.itemcontainer;
 
 import l2server.gameserver.model.L2ItemInstance.ItemLocation;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
+import lombok.Getter;
 
 /**
  * @author Erlandys
  */
 public class PcAuction extends ItemContainer
 {
-	private L2PcInstance owner;
+	@Getter private L2PcInstance owner;
 
 	public PcAuction(L2PcInstance owner)
 	{
@@ -37,12 +38,6 @@ public class PcAuction extends ItemContainer
 	}
 
 	@Override
-	public L2PcInstance getOwner()
-	{
-		return this.owner;
-	}
-
-	@Override
 	public ItemLocation getBaseLocation()
 	{
 		return ItemLocation.AUCTION;
@@ -51,6 +46,6 @@ public class PcAuction extends ItemContainer
 	@Override
 	public boolean validateCapacity(long slots)
 	{
-		return this.items.size() + slots <= 10;
+		return items.size() + slots <= 10;
 	}
 }

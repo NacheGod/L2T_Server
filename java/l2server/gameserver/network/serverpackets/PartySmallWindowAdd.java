@@ -25,7 +25,6 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public final class PartySmallWindowAdd extends L2GameServerPacket
 {
-
 	private final L2PcInstance member;
 	private final int leaderId;
 	private final int distribution;
@@ -33,28 +32,28 @@ public final class PartySmallWindowAdd extends L2GameServerPacket
 	public PartySmallWindowAdd(L2PcInstance member, L2Party party)
 	{
 		this.member = member;
-		this.leaderId = party.getPartyLeaderOID();
-		this.distribution = party.getLootDistribution();
+		leaderId = party.getPartyLeaderOID();
+		distribution = party.getLootDistribution();
 	}
 
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.leaderId); // c3
-		writeD(this.distribution);//writeD(0x04); ?? //c3
-		writeD(this.member.getObjectId());
-		writeS(this.member.getName());
-		writeD((int) this.member.getCurrentCp()); //c4
-		writeD(this.member.getMaxCp()); //c4
-		writeD((int) this.member.getCurrentHp());
-		writeD(this.member.getMaxVisibleHp());
-		writeD((int) this.member.getCurrentMp());
-		writeD(this.member.getMaxMp());
-		writeD(this.member.getVitalityPoints());
-		writeC(this.member.getLevel());
-		writeH(this.member.getCurrentClass().getId());
+		writeD(leaderId); // c3
+		writeD(distribution);//writeD(0x04); ?? //c3
+		writeD(member.getObjectId());
+		writeS(member.getName());
+		writeD((int) member.getCurrentCp()); //c4
+		writeD(member.getMaxCp()); //c4
+		writeD((int) member.getCurrentHp());
+		writeD(member.getMaxVisibleHp());
+		writeD((int) member.getCurrentMp());
+		writeD(member.getMaxMp());
+		writeD(member.getVitalityPoints());
+		writeC(member.getLevel());
+		writeH(member.getCurrentClass().getId());
 		/*writeD(this.member.getVitalityPoints());
-        writeC(0x01); // ???
+		writeC(0x01); // ???
 		writeC(this.member.getRace().ordinal());
 		writeC(PartySearchManager.getInstance().getWannaToChangeThisPlayer(this.member.getObjectId()) ? 0x01 : 0x00); // GoD unknown
 		writeD(this.member.getSummons().size() + (this.member.getPet() != null ? 1 : 0));

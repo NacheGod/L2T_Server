@@ -20,14 +20,13 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExLoadStatHotLink extends L2GameServerPacket
 {
-
 	private int pid1;
 	private int pid2;
 
 	public ExLoadStatHotLink(int pid1)
 	{
 		this.pid1 = pid1;
-		this.pid2 = 0;
+		pid2 = 0;
 	}
 
 	/* (non-Javadoc)
@@ -44,10 +43,10 @@ public class ExLoadStatHotLink extends L2GameServerPacket
 		//Map<Integer, Long> lastMap = MuseumManager.getInstance().getRanking(this.pid1, this.pid2, true);
 		//Map<Integer, Long> overallMap = MuseumManager.getInstance().getRanking(this.pid1, this.pid2, false);
 
-		writeD(this.pid1);
-		writeD(this.pid2);
+		writeD(pid1);
+		writeD(pid2);
 		/*writeD(lastMap.size() < 5 ? lastMap.size() : 5);
-        int position = 1;
+		int position = 1;
 		for (Integer key : lastMap.keySet())
 		{
 			writeH(position);

@@ -15,6 +15,9 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * This class ...
  *
@@ -22,53 +25,21 @@ package l2server.gameserver.model;
  */
 public class L2TeleportLocation
 {
-	private int teleId;
-	private int locX;
-	private int locY;
-	private int locZ;
-	private int price;
+	@Getter private int teleId;
+	@Getter @Setter private int locX;
+	@Getter @Setter private int locY;
+	@Getter @Setter private int locZ;
+	@Getter @Setter private int price;
 	private boolean forNoble;
-	private int itemId;
-	private String description;
+	@Getter private int itemId;
+	@Getter @Setter private String description;
 
 	/**
 	 * @param id
 	 */
 	public void setTeleId(int id)
 	{
-		this.teleId = id;
-	}
-
-	/**
-	 * @param locX
-	 */
-	public void setLocX(int locX)
-	{
-		this.locX = locX;
-	}
-
-	/**
-	 * @param locY
-	 */
-	public void setLocY(int locY)
-	{
-		this.locY = locY;
-	}
-
-	/**
-	 * @param locZ
-	 */
-	public void setLocZ(int locZ)
-	{
-		this.locZ = locZ;
-	}
-
-	/**
-	 * @param price
-	 */
-	public void setPrice(int price)
-	{
-		this.price = price;
+		teleId = id;
 	}
 
 	/**
@@ -76,7 +47,7 @@ public class L2TeleportLocation
 	 */
 	public void setIsForNoble(boolean val)
 	{
-		this.forNoble = val;
+		forNoble = val;
 	}
 
 	/**
@@ -84,47 +55,7 @@ public class L2TeleportLocation
 	 */
 	public void setItemId(int val)
 	{
-		this.itemId = val;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getTeleId()
-	{
-		return this.teleId;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getLocX()
-	{
-		return this.locX;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getLocY()
-	{
-		return this.locY;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getLocZ()
-	{
-		return this.locZ;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getPrice()
-	{
-		return this.price;
+		itemId = val;
 	}
 
 	/**
@@ -132,24 +63,6 @@ public class L2TeleportLocation
 	 */
 	public boolean getIsForNoble()
 	{
-		return this.forNoble;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getItemId()
-	{
-		return this.itemId;
-	}
-
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-	public String getDescription()
-	{
-		return this.description;
+		return forNoble;
 	}
 }

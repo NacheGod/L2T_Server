@@ -27,10 +27,11 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.model.actor.instance.L2TrapInstance;
 import l2server.gameserver.templates.StatsSet;
 import l2server.gameserver.templates.chars.L2NpcTemplate;
+import lombok.Getter;
 
 public class L2SkillTrap extends L2SkillSummon
 {
-	private int triggerSkillId = 0;
+	@Getter private int triggerSkillId = 0;
 	private int triggerSkillLvl = 0;
 	private int trapNpcId = 0;
 	protected L2Spawn trapSpawn;
@@ -41,14 +42,9 @@ public class L2SkillTrap extends L2SkillSummon
 	public L2SkillTrap(StatsSet set)
 	{
 		super(set);
-		this.triggerSkillId = set.getInteger("triggerSkillId");
-		this.triggerSkillLvl = set.getInteger("triggerSkillLvl");
-		this.trapNpcId = set.getInteger("trapNpcId");
-	}
-
-	public int getTriggerSkillId()
-	{
-		return this.triggerSkillId;
+		triggerSkillId = set.getInteger("triggerSkillId");
+		triggerSkillLvl = set.getInteger("triggerSkillLvl");
+		trapNpcId = set.getInteger("trapNpcId");
 	}
 
 	/**
@@ -62,7 +58,7 @@ public class L2SkillTrap extends L2SkillSummon
 			return;
 		}
 
-		if (this.trapNpcId == 0)
+		if (trapNpcId == 0)
 		{
 			return;
 		}
@@ -79,7 +75,7 @@ public class L2SkillTrap extends L2SkillSummon
 			return;
 		}
 
-		if (this.triggerSkillId == 0 || this.triggerSkillLvl == 0)
+		if (triggerSkillId == 0 || triggerSkillLvl == 0)
 		{
 			return;
 		}
@@ -90,14 +86,14 @@ public class L2SkillTrap extends L2SkillSummon
 			trap.unSummon();
 		}
 
-		L2Skill skill = SkillTable.getInstance().getInfo(this.triggerSkillId, this.triggerSkillLvl);
+		L2Skill skill = SkillTable.getInstance().getInfo(triggerSkillId, triggerSkillLvl);
 
 		if (skill == null)
 		{
 			return;
 		}
 
-		L2NpcTemplate TrapTemplate = NpcTable.getInstance().getTemplate(this.trapNpcId);
+		L2NpcTemplate TrapTemplate = NpcTable.getInstance().getTemplate(trapNpcId);
 		trap = new L2TrapInstance(IdFactory.getInstance().getNextId(), TrapTemplate, activeChar, getTotalLifeTime(),
 				skill);
 		trap.setCurrentHp(trap.getMaxHp());

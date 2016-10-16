@@ -29,13 +29,12 @@ import l2server.log.Log;
 
 public final class RequestPetUseItem extends L2GameClientPacket
 {
-
 	private int objectId;
 
 	@Override
 	protected void readImpl()
 	{
-		this.objectId = readD();
+		objectId = readD();
 		//TODO: implement me properly
 		//readQ();
 		//readD();
@@ -61,7 +60,7 @@ public final class RequestPetUseItem extends L2GameClientPacket
 			return;
 		}
 
-		final L2ItemInstance item = pet.getInventory().getItemByObjectId(this.objectId);
+		final L2ItemInstance item = pet.getInventory().getItemByObjectId(objectId);
 		if (item == null)
 		{
 			return;
@@ -77,7 +76,7 @@ public final class RequestPetUseItem extends L2GameClientPacket
 
 		if (Config.DEBUG)
 		{
-			Log.finest(activeChar.getObjectId() + ": pet use item " + this.objectId);
+			Log.finest(activeChar.getObjectId() + ": pet use item " + objectId);
 		}
 
 		if (!item.isEquipped())
@@ -126,7 +125,6 @@ public final class RequestPetUseItem extends L2GameClientPacket
 		{
 			activeChar.sendPacket(SystemMessageId.PET_CANNOT_USE_ITEM);
 		}
-
 	}
 
 	private void useItem(L2PetInstance pet, L2ItemInstance item, L2PcInstance activeChar)

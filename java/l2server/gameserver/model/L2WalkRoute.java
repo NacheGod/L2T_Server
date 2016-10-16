@@ -15,6 +15,8 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
 /**
@@ -22,66 +24,55 @@ import java.util.List;
  */
 public class L2WalkRoute
 {
-	private final int id;
+	@Getter private final int id;
 	private final List<L2NpcWalkerNode> nodeList; // List of nodes
 	private final boolean repeatWalk; // Does repeat walk, after arriving into last point in list, or not
 	private boolean stopAfterCycle; // Make only one cycle or endlessly
-	private final byte repeatType;
+	@Getter private final byte repeatType;
 	// Repeat style: 0 - go back, 1 - go to first point (circle style), 2 - teleport to first point (conveyor style), 3 - random walking between points
 	private boolean debug;
 
 	public L2WalkRoute(int id, List<L2NpcWalkerNode> route, boolean repeat, boolean once, byte repeatType)
 	{
-
 		this.id = id;
-		this.nodeList = route;
+		nodeList = route;
 		this.repeatType = repeatType;
-		this.repeatWalk = (this.repeatType >= 0 && this.repeatType <= 2) && repeat;
-		this.debug = false;
-	}
-
-	public int getId()
-	{
-		return this.id;
+		repeatWalk = (this.repeatType >= 0 && this.repeatType <= 2) && repeat;
+		debug = false;
 	}
 
 	public List<L2NpcWalkerNode> getNodeList()
 	{
-		return this.nodeList;
+		return nodeList;
 	}
 
 	public L2NpcWalkerNode getLastNode()
 	{
-		return this.nodeList.get(this.nodeList.size() - 1);
+		return nodeList.get(nodeList.size() - 1);
 	}
 
 	public boolean repeatWalk()
 	{
-		return this.repeatWalk;
+		return repeatWalk;
 	}
 
 	public boolean doOnce()
 	{
-		return this.stopAfterCycle;
-	}
-
-	public byte getRepeatType()
-	{
-		return this.repeatType;
+		return stopAfterCycle;
 	}
 
 	public int getNodesCount()
 	{
-		return this.nodeList.size();
+		return nodeList.size();
 	}
 
 	public void setDebug(boolean val)
 	{
-		this.debug = val;
+		debug = val;
 	}
 
 	public boolean debug()
 	{
-		return this.debug;
+		return debug;
 	}
 }

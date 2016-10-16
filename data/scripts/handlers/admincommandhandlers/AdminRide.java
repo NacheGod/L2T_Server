@@ -44,7 +44,6 @@ public class AdminRide implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(String command, L2PcInstance activeChar)
 	{
-
 		if (command.startsWith("admin_ride"))
 		{
 			if (activeChar.isMounted() || activeChar.getPet() != null)
@@ -54,15 +53,15 @@ public class AdminRide implements IAdminCommandHandler
 			}
 			if (command.startsWith("admin_ride_wyvern"))
 			{
-				this.petRideId = 12621;
+				petRideId = 12621;
 			}
 			else if (command.startsWith("admin_ride_strider"))
 			{
-				this.petRideId = 12526;
+				petRideId = 12526;
 			}
 			else if (command.startsWith("admin_ride_wolf"))
 			{
-				this.petRideId = 16041;
+				petRideId = 16041;
 			}
 			else if (command.startsWith("admin_ride_horse")) // handled using transformation
 			{
@@ -99,7 +98,7 @@ public class AdminRide implements IAdminCommandHandler
 				return false;
 			}
 
-			activeChar.mount(this.petRideId, 0, false);
+			activeChar.mount(petRideId, 0, false);
 
 			return false;
 		}

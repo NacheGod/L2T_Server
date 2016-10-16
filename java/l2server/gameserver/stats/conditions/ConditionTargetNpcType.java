@@ -23,7 +23,6 @@ import l2server.gameserver.stats.Env;
  */
 public class ConditionTargetNpcType extends Condition
 {
-
 	private final InstanceType[] npcType;
 
 	/**
@@ -33,7 +32,7 @@ public class ConditionTargetNpcType extends Condition
 	 */
 	public ConditionTargetNpcType(InstanceType[] type)
 	{
-		this.npcType = type;
+		npcType = type;
 	}
 
 	/* (non-Javadoc)
@@ -47,6 +46,6 @@ public class ConditionTargetNpcType extends Condition
 			return false;
 		}
 
-		return env.target.getInstanceType().isTypes(this.npcType);
+		return env.target.getInstanceType().isTypes(npcType);
 	}
 }

@@ -15,8 +15,6 @@
 
 package handlers.usercommandhandlers;
 
-import java.util.logging.Level;
-
 import l2server.Config;
 import l2server.gameserver.ThreadPoolManager;
 import l2server.gameserver.TimeController;
@@ -32,6 +30,8 @@ import l2server.gameserver.network.serverpackets.MagicSkillUse;
 import l2server.gameserver.network.serverpackets.SetupGauge;
 import l2server.gameserver.util.Broadcast;
 import l2server.log.Log;
+
+import java.util.logging.Level;
 
 /**
  *
@@ -152,18 +152,18 @@ public class Escape implements IUserCommandHandler
 		@Override
 		public void run()
 		{
-			if (this.activeChar.isDead())
+			if (activeChar.isDead())
 			{
 				return;
 			}
 
-			this.activeChar.enableAllSkills();
-			this.activeChar.setIsCastingNow(false);
-			this.activeChar.setInstanceId(0);
+			activeChar.enableAllSkills();
+			activeChar.setIsCastingNow(false);
+			activeChar.setInstanceId(0);
 
 			try
 			{
-				this.activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+				activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
 			catch (Exception e)
 			{

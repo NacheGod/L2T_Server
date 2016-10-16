@@ -33,7 +33,6 @@ import java.io.File;
  */
 public class TeleportLocationTable implements Reloadable
 {
-
 	private TIntObjectHashMap<L2TeleportLocation> teleports;
 
 	public static TeleportLocationTable getInstance()
@@ -51,7 +50,7 @@ public class TeleportLocationTable implements Reloadable
 	@Override
 	public boolean reload()
 	{
-		this.teleports = new TIntObjectHashMap<>();
+		teleports = new TIntObjectHashMap<>();
 		boolean success = true;
 
 		File file = new File(Config.DATAPACK_ROOT, Config.DATA_FOLDER + "teleports.xml");
@@ -81,13 +80,13 @@ public class TeleportLocationTable implements Reloadable
 						teleport.setIsForNoble(d.getBool("fornoble", false));
 						teleport.setItemId(d.getInt("itemId", 57));
 
-						this.teleports.put(teleport.getTeleId(), teleport);
+						teleports.put(teleport.getTeleId(), teleport);
 					}
 				}
 			}
 		}
 
-		Log.info("TeleportLocationTable: Loaded " + this.teleports.size() + " Teleport Location Templates.");
+		Log.info("TeleportLocationTable: Loaded " + teleports.size() + " Teleport Location Templates.");
 
 		return success;
 	}
@@ -107,7 +106,7 @@ public class TeleportLocationTable implements Reloadable
 	 */
 	public L2TeleportLocation getTemplate(int id)
 	{
-		return this.teleports.get(id);
+		return teleports.get(id);
 	}
 
 	@SuppressWarnings("synthetic-access")

@@ -28,6 +28,8 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +51,7 @@ public class DesireTable
 
 	static class DesireValue
 	{
-		private float value;
+		@Getter private float value;
 
 		DesireValue()
 		{
@@ -58,17 +60,12 @@ public class DesireTable
 
 		DesireValue(Float pValue)
 		{
-			this.value = pValue;
+			value = pValue;
 		}
 
 		public void addValue(float pValue)
 		{
-			this.value += pValue;
-		}
-
-		public float getValue()
-		{
-			return this.value;
+			value += pValue;
 		}
 	}
 
@@ -78,17 +75,17 @@ public class DesireTable
 
 		public Desires(DesireType... desireList)
 		{
-			this.desireTable = new HashMap<>();
+			desireTable = new HashMap<>();
 
 			for (DesireType desire : desireList)
 			{
-				this.desireTable.put(desire, new DesireValue());
+				desireTable.put(desire, new DesireValue());
 			}
 		}
 
 		public DesireValue getDesireValue(DesireType type)
 		{
-			return this.desireTable.get(type);
+			return desireTable.get(type);
 		}
 
 		public void addValue(DesireType type, float value)
@@ -102,12 +99,12 @@ public class DesireTable
 
 		public void createDesire(DesireType type)
 		{
-			this.desireTable.put(type, new DesireValue());
+			desireTable.put(type, new DesireValue());
 		}
 
 		public void deleteDesire(DesireType type)
 		{
-			this.desireTable.remove(type);
+			desireTable.remove(type);
 		}
 	}
 
@@ -117,19 +114,19 @@ public class DesireTable
 
 	public DesireTable(DesireType... desireList)
 	{
-		this.desireTypes = desireList;
-		this.objectDesireTable = new HashMap<>();
-		this.generalDesires = new Desires(this.desireTypes);
+		desireTypes = desireList;
+		objectDesireTable = new HashMap<>();
+		generalDesires = new Desires(desireTypes);
 	}
 
 	public float getDesireValue(DesireType type)
 	{
-		return this.generalDesires.getDesireValue(type).getValue();
+		return generalDesires.getDesireValue(type).getValue();
 	}
 
 	public float getDesireValue(L2Object object, DesireType type)
 	{
-		Desires desireList = this.objectDesireTable.get(object);
+		Desires desireList = objectDesireTable.get(object);
 		if (desireList == null)
 		{
 			return 0f;
@@ -139,12 +136,12 @@ public class DesireTable
 
 	public void addDesireValue(DesireType type, float value)
 	{
-		this.generalDesires.addValue(type, value);
+		generalDesires.addValue(type, value);
 	}
 
 	public void addDesireValue(L2Object object, DesireType type, float value)
 	{
-		Desires desireList = this.objectDesireTable.get(object);
+		Desires desireList = objectDesireTable.get(object);
 		if (desireList != null)
 		{
 			desireList.addValue(type, value);
@@ -153,17 +150,17 @@ public class DesireTable
 
 	public void createDesire(DesireType type)
 	{
-		this.generalDesires.createDesire(type);
+		generalDesires.createDesire(type);
 	}
 
 	public void deleteDesire(DesireType type)
 	{
-		this.generalDesires.deleteDesire(type);
+		generalDesires.deleteDesire(type);
 	}
 
 	public void createDesire(L2Object object, DesireType type)
 	{
-		Desires desireList = this.objectDesireTable.get(object);
+		Desires desireList = objectDesireTable.get(object);
 		if (desireList != null)
 		{
 			desireList.createDesire(type);
@@ -172,7 +169,7 @@ public class DesireTable
 
 	public void deleteDesire(L2Object object, DesireType type)
 	{
-		Desires desireList = this.objectDesireTable.get(object);
+		Desires desireList = objectDesireTable.get(object);
 		if (desireList != null)
 		{
 			desireList.deleteDesire(type);
@@ -191,7 +188,7 @@ public class DesireTable
 	{
 		if (object != null)
 		{
-			this.objectDesireTable.put(object, new Desires(desireList));
+			objectDesireTable.put(object, new Desires(desireList));
 		}
 	}
 }

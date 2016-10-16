@@ -15,19 +15,18 @@
 
 package ai.group_template;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import l2server.gameserver.model.actor.L2Attackable;
 import l2server.gameserver.model.actor.L2Npc;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Angel spawns...when one of the angels in the keys dies, the other angel will spawn.
  */
 public class PolymorphingAngel extends L2AttackableAIScript
 {
-
 	private static final Map<Integer, Integer> ANGELSPAWNS = new HashMap<Integer, Integer>();
 
 	static
@@ -43,7 +42,7 @@ public class PolymorphingAngel extends L2AttackableAIScript
 	{
 		super(questId, name, descr);
 		int[] temp = {20830, 21067, 21062, 20831, 21070};
-		this.registerMobs(temp, QuestEventType.ON_KILL);
+		registerMobs(temp, QuestEventType.ON_KILL);
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class PolymorphingAngel extends L2AttackableAIScript
 		int npcId = npc.getNpcId();
 		if (ANGELSPAWNS.containsKey(npcId))
 		{
-			L2Attackable newNpc = (L2Attackable) this.addSpawn(ANGELSPAWNS.get(npcId), npc);
+			L2Attackable newNpc = (L2Attackable) addSpawn(ANGELSPAWNS.get(npcId), npc);
 			newNpc.setRunning();
 		}
 		return super.onKill(npc, killer, isPet);

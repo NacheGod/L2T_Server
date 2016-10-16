@@ -48,6 +48,7 @@ import l2server.gameserver.util.MinionList;
 import l2server.log.Log;
 import l2server.util.Rnd;
 import l2server.util.Util;
+import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -63,7 +64,6 @@ import java.util.logging.Level;
  */
 public class Quest extends ManagedScript
 {
-
 	/**
 	 * HashMap containing events from String value of the event
 	 */
@@ -76,9 +76,9 @@ public class Quest extends ManagedScript
 	private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
 
 	private final int questId;
-	private final String name;
-	private final String descr;
-	private final byte initialState = State.CREATED;
+	@Getter private final String name;
+	@Getter private final String descr;
+	@Getter private final byte initialState = State.CREATED;
 	protected boolean onEnterWorld = false;
 	// NOTE: questItemIds will be overridden by child classes.  Ideally, it should be
 	// protected instead of public.  However, quest scripts written in Jython will
@@ -121,7 +121,7 @@ public class Quest extends ManagedScript
 		}
 		else
 		{
-			this.allEventsS.put(name, this);
+			allEventsS.put(name, this);
 		}
 		init_LoadGlobalData();
 	}
@@ -133,7 +133,6 @@ public class Quest extends ManagedScript
 	 */
 	protected void init_LoadGlobalData()
 	{
-
 	}
 
 	/**
@@ -144,7 +143,6 @@ public class Quest extends ManagedScript
 	 */
 	public void saveGlobalData()
 	{
-
 	}
 
 	public enum TrapAction
@@ -204,9 +202,8 @@ public class Quest extends ManagedScript
 
 		public boolean isMultipleRegistrationAllowed()
 		{
-			return this.allowMultipleRegistration;
+			return allowMultipleRegistration;
 		}
-
 	}
 
 	/**
@@ -216,7 +213,7 @@ public class Quest extends ManagedScript
 	 */
 	public int getQuestIntId()
 	{
-		return this.questId;
+		return questId;
 	}
 
 	/**
@@ -228,36 +225,6 @@ public class Quest extends ManagedScript
 	public QuestState newQuestState(L2PcInstance player)
 	{
 		return new QuestState(this, player, getInitialState());
-	}
-
-	/**
-	 * Return initial state of the quest
-	 *
-	 * @return State
-	 */
-	public byte getInitialState()
-	{
-		return this.initialState;
-	}
-
-	/**
-	 * Return name of the quest
-	 *
-	 * @return String
-	 */
-	public String getName()
-	{
-		return this.name;
-	}
-
-	/**
-	 * Return description of the quest
-	 *
-	 * @return String
-	 */
-	public String getDescr()
-	{
-		return this.descr;
 	}
 
 	/**
@@ -296,7 +263,7 @@ public class Quest extends ManagedScript
 		{
 			timers = new CopyOnWriteArrayList<>();
 			timers.add(new QuestTimer(this, name, time, npc, player, repeating));
-			this.allEventTimers.put(name, timers);
+			allEventTimers.put(name, timers);
 		}
 		// a timer with this name exists, but may not be for the same set of npc and player
 		else
@@ -307,12 +274,12 @@ public class Quest extends ManagedScript
 			{
 				try
 				{
-					this.rwLock.writeLock().lock();
+					rwLock.writeLock().lock();
 					timers.add(new QuestTimer(this, name, time, npc, player, repeating));
 				}
 				finally
 				{
-					this.rwLock.writeLock().unlock();
+					rwLock.writeLock().unlock();
 				}
 			}
 		}
@@ -328,7 +295,7 @@ public class Quest extends ManagedScript
 		}
 		try
 		{
-			this.rwLock.readLock().lock();
+			rwLock.readLock().lock();
 			for (QuestTimer timer : qt)
 			{
 				if (timer != null)
@@ -342,14 +309,14 @@ public class Quest extends ManagedScript
 		}
 		finally
 		{
-			this.rwLock.readLock().unlock();
+			rwLock.readLock().unlock();
 		}
 		return null;
 	}
 
 	private List<QuestTimer> getQuestTimers(String name)
 	{
-		return this.allEventTimers.get(name);
+		return allEventTimers.get(name);
 	}
 
 	public void cancelQuestTimers(String name)
@@ -361,7 +328,7 @@ public class Quest extends ManagedScript
 		}
 		try
 		{
-			this.rwLock.writeLock().lock();
+			rwLock.writeLock().lock();
 			for (QuestTimer timer : timers)
 			{
 				if (timer != null)
@@ -372,7 +339,7 @@ public class Quest extends ManagedScript
 		}
 		finally
 		{
-			this.rwLock.writeLock().unlock();
+			rwLock.writeLock().unlock();
 		}
 	}
 
@@ -399,12 +366,12 @@ public class Quest extends ManagedScript
 		}
 		try
 		{
-			this.rwLock.writeLock().lock();
+			rwLock.writeLock().lock();
 			timers.remove(timer);
 		}
 		finally
 		{
-			this.rwLock.writeLock().unlock();
+			rwLock.writeLock().unlock();
 		}
 	}
 
@@ -680,13 +647,13 @@ public class Quest extends ManagedScript
 			String res = null;
 			try
 			{
-				res = onSkillSee(this.npc, this.caster, this.skill, this.targets, this.isPet);
+				res = onSkillSee(npc, caster, skill, targets, isPet);
 			}
 			catch (Exception e)
 			{
-				showError(this.caster, e);
+				showError(caster, e);
 			}
-			showResult(this.caster, res);
+			showResult(caster, res);
 		}
 	}
 
@@ -729,13 +696,13 @@ public class Quest extends ManagedScript
 			String res = null;
 			try
 			{
-				res = onAggroRangeEnter(this.npc, this.pc, this.isPet);
+				res = onAggroRangeEnter(npc, pc, isPet);
 			}
 			catch (Exception e)
 			{
-				showError(this.pc, e);
+				showError(pc, e);
 			}
-			showResult(this.pc, res);
+			showResult(pc, res);
 		}
 	}
 
@@ -1119,7 +1086,6 @@ public class Quest extends ManagedScript
 	 */
 	public static void playerEnter(L2PcInstance player)
 	{
-
 		Connection con = null;
 		try
 		{
@@ -1138,7 +1104,6 @@ public class Quest extends ManagedScript
 			ResultSet rs = statement.executeQuery();
 			while (rs.next())
 			{
-
 				// Get ID of the quest and ID of its state
 				String questId = rs.getString("name");
 				String statename = rs.getString("value");
@@ -1926,7 +1891,7 @@ public class Quest extends ManagedScript
 	{
 		boolean questwindow = true;
 		if (fileName.endsWith(".html") ||
-				player.getQuestState(this.name) != null && player.getQuestState(this.name).getState() >= State.STARTED)
+				player.getQuestState(name) != null && player.getQuestState(name).getState() >= State.STARTED)
 		{
 			questwindow = false;
 		}
@@ -2142,14 +2107,14 @@ public class Quest extends ManagedScript
 		// if timers ought to be restarted, the quest can take care of it
 		// with its code (example: save global data indicating what timer must
 		// be restarted).
-		for (List<QuestTimer> timers : this.allEventTimers.values())
+		for (List<QuestTimer> timers : allEventTimers.values())
 		{
 			for (QuestTimer timer : timers)
 			{
 				timer.cancel();
 			}
 		}
-		this.allEventTimers.clear();
+		allEventTimers.clear();
 		if (removeFromList)
 		{
 			return QuestManager.getInstance().removeQuest(this);
@@ -2168,12 +2133,12 @@ public class Quest extends ManagedScript
 
 	public void setOnEnterWorld(boolean val)
 	{
-		this.onEnterWorld = val;
+		onEnterWorld = val;
 	}
 
 	public boolean getOnEnterWorld()
 	{
-		return this.onEnterWorld;
+		return onEnterWorld;
 	}
 
 	public int getOnKillDelay(int npcId)

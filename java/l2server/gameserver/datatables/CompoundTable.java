@@ -21,6 +21,7 @@ import l2server.gameserver.ReloadableManager;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,10 +37,10 @@ public class CompoundTable implements Reloadable
 {
 	public class Combination
 	{
-		private final int item1;
-		private final int item2;
-		private final int result;
-		private final int chance;
+		@Getter private final int item1;
+		@Getter private final int item2;
+		@Getter private final int result;
+		@Getter private final int chance;
 
 		public Combination(int item1, int item2, int result, int chance)
 		{
@@ -47,26 +48,6 @@ public class CompoundTable implements Reloadable
 			this.item2 = item2;
 			this.result = result;
 			this.chance = chance;
-		}
-
-		public int getItem1()
-		{
-			return this.item1;
-		}
-
-		public int getItem2()
-		{
-			return this.item2;
-		}
-
-		public int getResult()
-		{
-			return this.result;
-		}
-
-		public int getChance()
-		{
-			return this.chance;
 		}
 	}
 
@@ -89,7 +70,7 @@ public class CompoundTable implements Reloadable
 		}
 
 		XmlDocument doc = new XmlDocument(file);
-		this.combinations.clear();
+		combinations.clear();
 
 		for (XmlNode d : doc.getFirstChild().getChildren())
 		{
@@ -99,13 +80,13 @@ public class CompoundTable implements Reloadable
 				int item2 = d.getInt("item2");
 				int result = d.getInt("result");
 				int chance = d.getInt("chance");
-				this.combinations.put(getHash(item1, item2), new Combination(item2, item2, result, chance));
-				this.combinable.add(item1);
-				this.combinable.add(item2);
+				combinations.put(getHash(item1, item2), new Combination(item2, item2, result, chance));
+				combinable.add(item1);
+				combinable.add(item2);
 			}
 		}
 
-		Log.info("CompoundTable: Loaded " + this.combinations.size() + " combinations.");
+		Log.info("CompoundTable: Loaded " + combinations.size() + " combinations.");
 		return true;
 	}
 
@@ -117,12 +98,12 @@ public class CompoundTable implements Reloadable
 
 	public Combination getCombination(int item1, int item2)
 	{
-		return this.combinations.get(getHash(item1, item2));
+		return combinations.get(getHash(item1, item2));
 	}
 
 	public boolean isCombinable(int itemId)
 	{
-		return this.combinable.contains(itemId);
+		return combinable.contains(itemId);
 	}
 
 	private int getHash(int item1, int item2)

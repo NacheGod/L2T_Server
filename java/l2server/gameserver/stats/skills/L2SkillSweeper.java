@@ -19,14 +19,15 @@ import l2server.gameserver.model.L2Object;
 import l2server.gameserver.model.L2Skill;
 import l2server.gameserver.model.actor.L2Character;
 import l2server.gameserver.templates.StatsSet;
+import lombok.Getter;
 
 /**
  * @author JIV
  */
 public class L2SkillSweeper extends L2Skill
 {
-	private boolean absorbHp;
-	private int absorbAbs;
+	@Getter private boolean absorbHp;
+	@Getter private int absorbAbs;
 
 	/**
 	 * @param set
@@ -34,23 +35,13 @@ public class L2SkillSweeper extends L2Skill
 	public L2SkillSweeper(StatsSet set)
 	{
 		super(set);
-		this.absorbHp = set.getBool("absorbHp", true);
-		this.absorbAbs = set.getInteger("absorbAbs", -1);
+		absorbHp = set.getBool("absorbHp", true);
+		absorbAbs = set.getInteger("absorbAbs", -1);
 	}
 
 	@Override
 	public void useSkill(L2Character caster, L2Object[] targets)
 	{
 		// not used
-	}
-
-	public boolean isAbsorbHp()
-	{
-		return this.absorbHp;
-	}
-
-	public int getAbsorbAbs()
-	{
-		return this.absorbAbs;
 	}
 }

@@ -15,15 +15,17 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+
 /**
  * @author -Nemesiss-
  */
 public class L2SummonItem
 {
-	private final int itemId;
-	private final int npcId;
-	private final byte type;
-	private final int despawnDelay;
+	@Getter private final int itemId;
+	@Getter private final int npcId;
+	@Getter private final byte type;
+	@Getter private final int despawnDelay;
 
 	public L2SummonItem(int itemId, int npcId, byte type, int despawnDelay)
 	{
@@ -33,28 +35,8 @@ public class L2SummonItem
 		this.despawnDelay = despawnDelay;
 	}
 
-	public int getItemId()
-	{
-		return this.itemId;
-	}
-
-	public int getNpcId()
-	{
-		return this.npcId;
-	}
-
-	public byte getType()
-	{
-		return this.type;
-	}
-
 	public boolean isPetSummon()
 	{
-		return this.type == 1 || this.type == 2;
-	}
-
-	public int getDespawnDelay()
-	{
-		return this.despawnDelay;
+		return type == 1 || type == 2;
 	}
 }

@@ -27,7 +27,6 @@ import l2server.gameserver.util.Util;
  */
 public class ConditionTargetRace extends Condition
 {
-
 	private final Race[] races;
 
 	/**
@@ -47,6 +46,6 @@ public class ConditionTargetRace extends Condition
 		{
 			return false;
 		}
-		return Util.contains(this.races, env.target.getActingPlayer().getRace());
+		return Util.contains(races, env.target.getActingPlayer().getRace());
 	}
 }

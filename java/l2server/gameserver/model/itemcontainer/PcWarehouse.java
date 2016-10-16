@@ -17,12 +17,13 @@ package l2server.gameserver.model.itemcontainer;
 
 import l2server.gameserver.model.L2ItemInstance.ItemLocation;
 import l2server.gameserver.model.actor.instance.L2PcInstance;
+import lombok.Getter;
 
 public class PcWarehouse extends Warehouse
 {
 	//
 
-	private L2PcInstance owner;
+	@Getter private L2PcInstance owner;
 
 	public PcWarehouse(L2PcInstance owner)
 	{
@@ -33,12 +34,6 @@ public class PcWarehouse extends Warehouse
 	public String getName()
 	{
 		return "Warehouse";
-	}
-
-	@Override
-	public L2PcInstance getOwner()
-	{
-		return this.owner;
 	}
 
 	@Override
@@ -64,6 +59,6 @@ public class PcWarehouse extends Warehouse
 	@Override
 	public boolean validateCapacity(long slots)
 	{
-		return this.items.size() + slots <= this.owner.getWareHouseLimit();
+		return items.size() + slots <= owner.getWareHouseLimit();
 	}
 }

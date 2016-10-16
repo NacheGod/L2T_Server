@@ -17,6 +17,7 @@ package l2server.loginserver.network.clientpackets;
 
 import l2server.loginserver.network.serverpackets.LoginFail.LoginFailReason;
 import l2server.loginserver.network.serverpackets.ServerList;
+import lombok.Getter;
 
 /**
  * Format: ddc
@@ -28,14 +29,14 @@ public class RequestServerList extends L2LoginClientPacket
 {
 	private int skey1;
 	private int skey2;
-	private int data3;
+	@Getter private int data3;
 
 	/**
 	 * @return
 	 */
 	public int getSessionKey1()
 	{
-		return this.skey1;
+		return skey1;
 	}
 
 	/**
@@ -43,15 +44,7 @@ public class RequestServerList extends L2LoginClientPacket
 	 */
 	public int getSessionKey2()
 	{
-		return this.skey2;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getData3()
-	{
-		return this.data3;
+		return skey2;
 	}
 
 	@Override
@@ -59,8 +52,8 @@ public class RequestServerList extends L2LoginClientPacket
 	{
 		if (super.buf.remaining() >= 8)
 		{
-			this.skey1 = readD(); // loginOk 1
-			this.skey2 = readD(); // loginOk 2
+			skey1 = readD(); // loginOk 1
+			skey2 = readD(); // loginOk 2
 			return true;
 		}
 		else
@@ -74,7 +67,7 @@ public class RequestServerList extends L2LoginClientPacket
 	@Override
 	public void run()
 	{
-		if (getClient().getSessionKey().checkLoginPair(this.skey1, this.skey2))
+		if (getClient().getSessionKey().checkLoginPair(skey1, skey2))
 		{
 			getClient().sendPacket(new ServerList(getClient()));
 		}

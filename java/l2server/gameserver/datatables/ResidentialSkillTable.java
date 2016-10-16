@@ -17,7 +17,6 @@ import java.util.ArrayList;
  */
 public class ResidentialSkillTable
 {
-
 	private static ResidentialSkillTable instance = null;
 	private static TIntObjectHashMap<ArrayList<L2Skill>> list;
 
@@ -28,7 +27,7 @@ public class ResidentialSkillTable
 
 	private void load()
 	{
-		this.list = new TIntObjectHashMap<>();
+		list = new TIntObjectHashMap<>();
 
 		if (Config.IS_CLASSIC)
 		{
@@ -58,29 +57,29 @@ public class ResidentialSkillTable
 							continue;
 						}
 
-						if (!this.list.containsKey(entityId))
+						if (!list.containsKey(entityId))
 						{
 							ArrayList<L2Skill> aux = new ArrayList<>();
 							aux.add(sk);
-							this.list.put(entityId, aux);
+							list.put(entityId, aux);
 						}
 						else
 						{
-							this.list.get(entityId).add(sk);
+							list.get(entityId).add(sk);
 						}
 					}
 				}
 			}
 		}
 
-		Log.info("ResidentialSkillTable: Loaded " + this.list.size() + " entities with associated skills.");
+		Log.info("ResidentialSkillTable: Loaded " + list.size() + " entities with associated skills.");
 	}
 
 	public ArrayList<L2Skill> getSkills(int entityId)
 	{
-		if (this.list.containsKey(entityId))
+		if (list.containsKey(entityId))
 		{
-			return this.list.get(entityId);
+			return list.get(entityId);
 		}
 
 		return null;

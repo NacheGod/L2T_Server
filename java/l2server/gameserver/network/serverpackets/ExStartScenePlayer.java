@@ -21,17 +21,16 @@ package l2server.gameserver.network.serverpackets;
 
 public class ExStartScenePlayer extends L2GameServerPacket
 {
-
 	private int movieId;
 
 	public ExStartScenePlayer(int id)
 	{
-		this.movieId = id;
+		movieId = id;
 	}
 
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.movieId);
+		writeD(movieId);
 	}
 }

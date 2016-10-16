@@ -23,13 +23,12 @@ import l2server.gameserver.network.serverpackets.ExResponseCommissionInfo;
  */
 public final class RequestCommissionInfo extends L2GameClientPacket
 {
-
 	int itemOID;
 
 	@Override
 	protected void readImpl()
 	{
-		this.itemOID = readD();
+		itemOID = readD();
 	}
 
 	@Override
@@ -40,6 +39,6 @@ public final class RequestCommissionInfo extends L2GameClientPacket
 		{
 			return;
 		}
-		player.sendPacket(new ExResponseCommissionInfo(player, this.itemOID, true));
+		player.sendPacket(new ExResponseCommissionInfo(player, itemOID, true));
 	}
 }

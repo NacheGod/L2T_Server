@@ -20,7 +20,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class Ex2ndPasswordAck extends L2GameServerPacket
 {
-
 	int response;
 
 	public static int SUCCESS = 0x00;
@@ -35,7 +34,7 @@ public class Ex2ndPasswordAck extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0x00);
-		if (this.response == WRONG_PATTERN)
+		if (response == WRONG_PATTERN)
 		{
 			writeD(0x01);
 		}

@@ -35,18 +35,14 @@ public class ExBrBuffEventState extends L2GameServerPacket
 	}
 
 	/* (non-Javadoc)
-	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-	 */
-
-	/* (non-Javadoc)
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.type);
-		writeD(this.value);
-		writeD(this.state);
-		writeD(this.endtime);
+		writeD(type);
+		writeD(value);
+		writeD(state);
+		writeD(endtime);
 	}
 }

@@ -22,23 +22,14 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public class ExResponseCommissionList extends L2GameServerPacket
 {
-
-	@SuppressWarnings("unused")
-	private L2PcInstance player;
-	@SuppressWarnings("unused")
-	private long category;
-	@SuppressWarnings("unused")
-	private int type;
-	@SuppressWarnings("unused")
-	private int grade;
-	@SuppressWarnings("unused")
-	private String search;
-	@SuppressWarnings("unused")
-	private boolean yourAuction;
-	@SuppressWarnings("unused")
-	private int yourAuctionsSize = 0;
-	@SuppressWarnings("unused")
-	private int categories[][] = {
+	@SuppressWarnings("unused") private L2PcInstance player;
+	@SuppressWarnings("unused") private long category;
+	@SuppressWarnings("unused") private int type;
+	@SuppressWarnings("unused") private int grade;
+	@SuppressWarnings("unused") private String search;
+	@SuppressWarnings("unused") private boolean yourAuction;
+	@SuppressWarnings("unused") private int yourAuctionsSize = 0;
+	@SuppressWarnings("unused") private int categories[][] = {
 			{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18},
 			{19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 			{29, 30, 31, 32, 33, 34},
@@ -53,21 +44,21 @@ public class ExResponseCommissionList extends L2GameServerPacket
 		this.category = category;
 		this.type = type;
 		this.grade = grade;
-		this.search = searchName;
-		this.yourAuction = false;
+		search = searchName;
+		yourAuction = false;
 	}
 
 	public ExResponseCommissionList(L2PcInstance player)
 	{
 		this.player = player;
-		this.yourAuction = true;
+		yourAuction = true;
 	}
 
 	@Override
 	protected void writeImpl()
 	{
 		/*writeC(0xFE);
-        writeH(0xF7);
+		writeH(0xF7);
 		if (this.yourAuction)
 		{
 			writeD(this.yourAuctionsSize <= 0 ? -2 : 0x02);

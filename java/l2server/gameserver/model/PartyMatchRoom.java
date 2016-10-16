@@ -20,6 +20,8 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.network.SystemMessageId;
 import l2server.gameserver.network.serverpackets.ExManagePartyRoomMember;
 import l2server.gameserver.network.serverpackets.SystemMessage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +31,12 @@ import java.util.List;
  */
 public class PartyMatchRoom
 {
-	private int id;
-	private String title;
+	@Getter private int id;
+	@Getter @Setter private String title;
 	private int loot;
-	private int location;
-	private int minlvl;
-	private int maxlvl;
+	@Getter private int location;
+	@Getter private int minLvl;
+	@Getter private int maxLvl;
 	private int maxmem;
 	private final List<L2PcInstance> members = new ArrayList<>();
 
@@ -43,37 +45,37 @@ public class PartyMatchRoom
 		this.id = id;
 		this.title = title;
 		this.loot = loot;
-		this.location = TownManager.getClosestLocation(owner);
-		this.minlvl = minlvl;
-		this.maxlvl = maxlvl;
+		location = TownManager.getClosestLocation(owner);
+		this.minLvl = minlvl;
+		this.maxLvl = maxlvl;
 		this.maxmem = maxmem;
-		this.members.add(owner);
+		members.add(owner);
 	}
 
 	public List<L2PcInstance> getPartyMembers()
 	{
-		return this.members;
+		return members;
 	}
 
 	public void addMember(L2PcInstance player)
 	{
-		this.members.add(player);
+		members.add(player);
 	}
 
 	public void deleteMember(L2PcInstance player)
 	{
 		if (player != getOwner())
 		{
-			this.members.remove(player);
+			members.remove(player);
 			notifyMembersAboutExit(player);
 		}
-		else if (this.members.size() == 1)
+		else if (members.size() == 1)
 		{
-			PartyMatchRoomList.getInstance().deleteRoom(this.id);
+			PartyMatchRoomList.getInstance().deleteRoom(id);
 		}
 		else
 		{
-			changeLeader(this.members.get(1));
+			changeLeader(members.get(1));
 			deleteMember(player);
 		}
 	}
@@ -92,13 +94,13 @@ public class PartyMatchRoom
 	public void changeLeader(L2PcInstance newLeader)
 	{
 		// Get current leader
-		L2PcInstance oldLeader = this.members.get(0);
+		L2PcInstance oldLeader = members.get(0);
 		// Remove new leader
-		this.members.remove(newLeader);
+		members.remove(newLeader);
 		// Move him to first position
-		this.members.set(0, newLeader);
+		members.set(0, newLeader);
 		// Add old leader as normal member
-		this.members.add(oldLeader);
+		members.add(oldLeader);
 		// Broadcast change
 		for (L2PcInstance member : getPartyMembers())
 		{
@@ -108,66 +110,39 @@ public class PartyMatchRoom
 		}
 	}
 
-	public int getId()
-	{
-		return this.id;
-	}
-
 	public int getLootType()
 	{
-		return this.loot;
-	}
-
-	public int getMinLvl()
-	{
-		return this.minlvl;
-	}
-
-	public int getMaxLvl()
-	{
-		return this.maxlvl;
-	}
-
-	public int getLocation()
-	{
-		return this.location;
+		return loot;
 	}
 
 	public int getMembers()
 	{
-		return this.members.size();
+		return members.size();
 	}
 
 	public int getMaxMembers()
 	{
-		return this.maxmem;
-	}
-
-	public String getTitle()
-	{
-		return this.title;
+		return maxmem;
 	}
 
 	public L2PcInstance getOwner()
 	{
-		return this.members.get(0);
+		return members.get(0);
 	}
-
-	/* SET  */
 
 	public void setMinLvl(int minlvl)
 	{
-		this.minlvl = minlvl;
+		this.minLvl = minlvl;
 	}
 
 	public void setMaxLvl(int maxlvl)
 	{
-		this.maxlvl = maxlvl;
+		this.maxLvl = maxlvl;
 	}
 
 	public void setLocation(int loc)
 	{
-		this.location = loc;
+		location = loc;
 	}
 
 	public void setLootType(int loot)
@@ -178,10 +153,5 @@ public class PartyMatchRoom
 	public void setMaxMembers(int maxmem)
 	{
 		this.maxmem = maxmem;
-	}
-
-	public void setTitle(String title)
-	{
-		this.title = title;
 	}
 }

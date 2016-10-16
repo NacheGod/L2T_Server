@@ -19,6 +19,7 @@ import l2server.gameserver.templates.chars.L2NpcTemplate;
 import l2server.gameserver.util.Util;
 import l2server.log.Log;
 import l2server.util.Rnd;
+import lombok.Setter;
 
 /**
  * @author Pere
@@ -112,11 +113,11 @@ public class HiddenChests
 
 				chestSpawn.getNpc().setName(name);
 
-				this.specialChestTasks[i] =
+				specialChestTasks[i] =
 						new HiddenChestsTask(i, System.currentTimeMillis() + 3600000L * 5 + Rnd.get(3600000 * 3));
-				ThreadPoolManager.getInstance().executeTask(this.specialChestTasks[i]);
+				ThreadPoolManager.getInstance().executeTask(specialChestTasks[i]);
 
-				this.specialChestSpawns[i] = chestSpawn;
+				specialChestSpawns[i] = chestSpawn;
 			}
 		}
 		catch (Exception e)
@@ -141,7 +142,7 @@ public class HiddenChests
 		}
 
 		int index = 0;
-		for (L2Spawn scs : this.specialChestSpawns)
+		for (L2Spawn scs : specialChestSpawns)
 		{
 			if (scs != null && scs.getNpc() != null && scs.getNpc() == chest)
 			{
@@ -150,7 +151,7 @@ public class HiddenChests
 			index++;
 		}
 
-		if (index >= this.specialChestSpawns.length)
+		if (index >= specialChestSpawns.length)
 		{
 			Log.warning("ERROR: NPC " + chest.getObjectId() + " is not in the chest spawns list.");
 			chest.deleteMe();
@@ -158,11 +159,11 @@ public class HiddenChests
 			return;
 		}
 
-		final int respawnTime = this.specialChestSpawns[index].getRespawnDelay() / 1000;
+		final int respawnTime = specialChestSpawns[index].getRespawnDelay() / 1000;
 		chest.deleteMe();
-		this.specialChestSpawns[index].stopRespawn();
-		SpawnTable.getInstance().deleteSpawn(this.specialChestSpawns[index], false);
-		this.specialChestSpawns[index] = null;
+		specialChestSpawns[index].stopRespawn();
+		SpawnTable.getInstance().deleteSpawn(specialChestSpawns[index], false);
+		specialChestSpawns[index] = null;
 
 		final int fIndex = index;
 
@@ -170,7 +171,6 @@ public class HiddenChests
 		{
 			try
 			{
-
 				L2Spawn chestSpawn = new L2Spawn(tmpl);
 				int x = 0;
 				int y = 0;
@@ -236,7 +236,7 @@ public class HiddenChests
 
 				chestSpawn.getNpc().setName(name);
 
-				this.specialChestTasks[fIndex].setStartTime(System.currentTimeMillis() + 3600000L * 5);
+				specialChestTasks[fIndex].setStartTime(System.currentTimeMillis() + 3600000L * 5);
 
 				if (delayed)
 				{
@@ -244,7 +244,7 @@ public class HiddenChests
 							" has respawned! Use .treasure for hints to find it.");
 				}
 
-				this.specialChestSpawns[fIndex] = chestSpawn;
+				specialChestSpawns[fIndex] = chestSpawn;
 			}
 			catch (Exception e)
 			{
@@ -265,7 +265,7 @@ public class HiddenChests
 		boolean someChest = false;
 		for (int i = 0; i < SPECIAL_CHEST_COUNT; i++)
 		{
-			L2Spawn chest = this.specialChestSpawns[i];
+			L2Spawn chest = specialChestSpawns[i];
 			if (chest == null)
 			{
 				continue;
@@ -330,16 +330,11 @@ public class HiddenChests
 	class HiddenChestsTask implements Runnable
 	{
 		private int index;
-		private long startTime;
+		@Setter private long startTime;
 
 		public HiddenChestsTask(int index, long startTime)
 		{
 			this.index = index;
-			this.startTime = startTime;
-		}
-
-		public void setStartTime(long startTime)
-		{
 			this.startTime = startTime;
 		}
 
@@ -349,11 +344,11 @@ public class HiddenChests
 		@Override
 		public void run()
 		{
-			long delay = this.startTime - System.currentTimeMillis();
+			long delay = startTime - System.currentTimeMillis();
 
-			if (delay < 1000 && specialChestSpawns[this.index] != null)
+			if (delay < 1000 && specialChestSpawns[index] != null)
 			{
-				moveChest(specialChestSpawns[this.index].getNpc(), false);
+				moveChest(specialChestSpawns[index].getNpc(), false);
 				ThreadPoolManager.getInstance().scheduleGeneral(this, System.currentTimeMillis() + 3600000L * 6);
 			}
 			else
@@ -377,25 +372,23 @@ public class HiddenChests
 		@Override
 		public void run()
 		{
-			if (this.player.isCastingNow())
+			if (player.isCastingNow())
 			{
-				this.player.sendPacket(new MagicSkillLaunched(this.player, 11030, 1));
-				this.player.setIsCastingNow(false);
+				player.sendPacket(new MagicSkillLaunched(player, 11030, 1));
+				player.setIsCastingNow(false);
 
-				if (this.player.getTarget() == this.chest && !this.chest.isDead() &&
-						Util.checkIfInRange(1000, this.player, this.chest, true))
+				if (player.getTarget() == chest && !chest.isDead() && Util.checkIfInRange(1000, player, chest, true))
 				{
-					String name = this.player.getName();
-					if (this.player.getActingPlayer() != null)
+					String name = player.getName();
+					if (player.getActingPlayer() != null)
 					{
-						name = this.player.getActingPlayer().getName();
+						name = player.getActingPlayer().getName();
 					}
 					Announcements.getInstance().announceToAll(name + " has opened a treasure chest!");
-					this.chest.reduceCurrentHp(this.chest.getMaxHp() + 1, this.player, null);
+					chest.reduceCurrentHp(chest.getMaxHp() + 1, player, null);
 
 					ThreadPoolManager.getInstance()
-							.scheduleGeneral(() -> HiddenChests.getInstance().moveChest(this.chest, !this.player.isGM()),
-									5000L);
+							.scheduleGeneral(() -> HiddenChests.getInstance().moveChest(chest, !player.isGM()), 5000L);
 				}
 			}
 		}

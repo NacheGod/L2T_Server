@@ -30,6 +30,7 @@ import l2server.gameserver.network.serverpackets.StatusUpdate;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.gameserver.util.Util;
 import l2server.log.Log;
+import lombok.Getter;
 
 /**
  * This class ...
@@ -41,7 +42,6 @@ import l2server.log.Log;
  */
 public final class SendWareHouseWithDrawList extends L2GameClientPacket
 {
-
 	private static final int BATCH_LENGTH = 12; // length of the one item
 
 	private WarehouseItem items[] = null;
@@ -50,29 +50,29 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 	protected void readImpl()
 	{
 		final int count = readD();
-		if (count <= 0 || count > Config.MAX_ITEM_IN_PACKET || count * BATCH_LENGTH != this.buf.remaining())
+		if (count <= 0 || count > Config.MAX_ITEM_IN_PACKET || count * BATCH_LENGTH != buf.remaining())
 		{
 			return;
 		}
 
-		this.items = new WarehouseItem[count];
+		items = new WarehouseItem[count];
 		for (int i = 0; i < count; i++)
 		{
 			int objId = readD();
 			long cnt = readQ();
 			if (objId < 1 || cnt < 0)
 			{
-				this.items = null;
+				items = null;
 				return;
 			}
-			this.items[i] = new WarehouseItem(objId, cnt);
+			items[i] = new WarehouseItem(objId, cnt);
 		}
 	}
 
 	@Override
 	protected void runImpl()
 	{
-		if (this.items == null)
+		if (items == null)
 		{
 			return;
 		}
@@ -148,7 +148,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 		int weight = 0;
 		int slots = 0;
 
-		for (WarehouseItem i : this.items)
+		for (WarehouseItem i : items)
 		{
 			// Calculate needed slots
 			L2ItemInstance item = warehouse.getItemByObjectId(i.getObjectId());
@@ -187,7 +187,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 
 		// Proceed to the transfer
 		InventoryUpdate playerIU = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
-		for (WarehouseItem i : this.items)
+		for (WarehouseItem i : items)
 		{
 			L2ItemInstance oldItem = warehouse.getItemByObjectId(i.getObjectId());
 			if (oldItem == null || oldItem.getCount() < i.getCount())
@@ -235,23 +235,13 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 
 	private static class WarehouseItem
 	{
-		private final int objectId;
-		private final long count;
+		@Getter private final int objectId;
+		@Getter private final long count;
 
 		public WarehouseItem(int id, long num)
 		{
-			this.objectId = id;
-			this.count = num;
-		}
-
-		public int getObjectId()
-		{
-			return this.objectId;
-		}
-
-		public long getCount()
-		{
-			return this.count;
+			objectId = id;
+			count = num;
 		}
 	}
 }

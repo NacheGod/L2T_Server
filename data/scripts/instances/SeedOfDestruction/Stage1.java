@@ -15,16 +15,6 @@
 
 package instances.SeedOfDestruction;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-
 import gnu.trove.TIntObjectHashMap;
 import l2server.Config;
 import l2server.gameserver.GeoData;
@@ -32,13 +22,8 @@ import l2server.gameserver.ai.CtrlIntention;
 import l2server.gameserver.instancemanager.GraciaSeedsManager;
 import l2server.gameserver.instancemanager.InstanceManager;
 import l2server.gameserver.instancemanager.InstanceManager.InstanceWorld;
-import l2server.gameserver.model.L2CharPosition;
-import l2server.gameserver.model.L2CommandChannel;
+import l2server.gameserver.model.*;
 import l2server.gameserver.model.L2Object.InstanceType;
-import l2server.gameserver.model.L2Party;
-import l2server.gameserver.model.L2Skill;
-import l2server.gameserver.model.L2Territory;
-import l2server.gameserver.model.L2World;
 import l2server.gameserver.model.actor.L2Attackable;
 import l2server.gameserver.model.actor.L2Character;
 import l2server.gameserver.model.actor.L2Npc;
@@ -57,6 +42,12 @@ import l2server.log.Log;
 import l2server.util.Rnd;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 
 /**
  * TODO:
@@ -215,9 +206,9 @@ public class Stage1 extends Quest
 									continue;
 								}
 								int flag = d.getInt("flag");
-								if (!this.spawnList.contains(flag))
+								if (!spawnList.contains(flag))
 								{
-									this.spawnList.put(flag, new ArrayList<SODSpawn>());
+									spawnList.put(flag, new ArrayList<SODSpawn>());
 								}
 
 								for (XmlNode cd : d.getChildren())
@@ -266,9 +257,9 @@ public class Stage1 extends Quest
 										spw.isNeededNextFlag = cd.getBool("mustKill", false);
 										if (spw.isNeededNextFlag)
 										{
-											this.mustKillMobsId.add(npcId);
+											mustKillMobsId.add(npcId);
 										}
-										this.spawnList.get(flag).add(spw);
+										spawnList.get(flag).add(spw);
 										spawnCount++;
 									}
 									else if (cd.getName().equalsIgnoreCase("zone"))
@@ -298,9 +289,9 @@ public class Stage1 extends Quest
 										spw.isNeededNextFlag = cd.getBool("mustKill", false);
 										if (spw.isNeededNextFlag)
 										{
-											this.mustKillMobsId.add(npcId);
+											mustKillMobsId.add(npcId);
 										}
-										this.spawnList.get(flag).add(spw);
+										spawnList.get(flag).add(spw);
 										spawnCount++;
 									}
 								}
@@ -364,7 +355,7 @@ public class Stage1 extends Quest
 									}
 								}
 
-								this.spawnZoneList.put(id, ter);
+								spawnZoneList.put(id, ter);
 							}
 						}
 					}
@@ -378,7 +369,7 @@ public class Stage1 extends Quest
 		if (Config.DEBUG)
 		{
 			Log.info("[Seed of Destruction] Loaded " + spawnCount + " spawns data.");
-			Log.info("[Seed of Destruction] Loaded " + this.spawnZoneList.size() + " spawn zones data.");
+			Log.info("[Seed of Destruction] Loaded " + spawnZoneList.size() + " spawn zones data.");
 		}
 	}
 
@@ -399,7 +390,7 @@ public class Stage1 extends Quest
 		{
 			if (door.getDoorId() == doorId)
 			{
-				if (door.getOpen())
+				if (door.isOpen())
 				{
 					door.closeMe();
 				}
@@ -545,15 +536,15 @@ public class Stage1 extends Quest
 		{
 			try
 			{
-				for (SODSpawn spw : this.spawnList.get(flag))
+				for (SODSpawn spw : spawnList.get(flag))
 				{
 					if (spw.isZone)
 					{
 						for (int i = 0; i < spw.count; i++)
 						{
-							if (this.spawnZoneList.contains(spw.zone))
+							if (spawnZoneList.contains(spw.zone))
 							{
-								int[] point = this.spawnZoneList.get(spw.zone).getRandomPoint();
+								int[] point = spawnZoneList.get(spw.zone).getRandomPoint();
 								spawn(world, spw.npcId, point[0], point[1], GeoData.getInstance()
 												.getSpawnHeight(point[0], point[1], point[2], point[3], null), Rnd.get(65535),
 										spw.isNeededNextFlag);
@@ -1062,7 +1053,7 @@ public class Stage1 extends Quest
 		{
 			addTrapActionId(i);
 		}
-		for (int mobId : this.mustKillMobsId)
+		for (int mobId : mustKillMobsId)
 		{
 			addKillId(mobId);
 		}

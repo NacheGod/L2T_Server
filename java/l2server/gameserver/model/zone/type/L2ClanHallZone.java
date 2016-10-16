@@ -23,6 +23,7 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
 import l2server.gameserver.model.entity.ClanHall;
 import l2server.gameserver.model.zone.L2SpawnZone;
 import l2server.gameserver.network.serverpackets.AgitDecoInfo;
+import lombok.Getter;
 
 /**
  * A clan hall zone
@@ -31,7 +32,7 @@ import l2server.gameserver.network.serverpackets.AgitDecoInfo;
  */
 public class L2ClanHallZone extends L2SpawnZone
 {
-	private int clanHallId;
+	@Getter private int clanHallId;
 
 	public L2ClanHallZone(int id)
 	{
@@ -43,9 +44,9 @@ public class L2ClanHallZone extends L2SpawnZone
 	{
 		if (name.equals("clanHallId"))
 		{
-			this.clanHallId = Integer.parseInt(value);
+			clanHallId = Integer.parseInt(value);
 			// Register self to the correct clan hall
-			ClanHall ch = ClanHallManager.getInstance().getClanHallById(this.clanHallId);
+			ClanHall ch = ClanHallManager.getInstance().getClanHallById(clanHallId);
 			if (ch != null)
 			{
 				ch.setZone(this);
@@ -65,7 +66,7 @@ public class L2ClanHallZone extends L2SpawnZone
 			// Set as in clan hall
 			character.setInsideZone(L2Character.ZONE_CLANHALL, true);
 
-			ClanHall clanHall = ClanHallManager.getInstance().getClanHallById(this.clanHallId);
+			ClanHall clanHall = ClanHallManager.getInstance().getClanHallById(clanHallId);
 			if (clanHall == null)
 			{
 				return;
@@ -109,7 +110,7 @@ public class L2ClanHallZone extends L2SpawnZone
 	 */
 	public void banishForeigners(int owningClanId)
 	{
-		for (L2Character temp : this.characterList.values())
+		for (L2Character temp : characterList.values())
 		{
 			if (!(temp instanceof L2PcInstance))
 			{
@@ -122,13 +123,5 @@ public class L2ClanHallZone extends L2SpawnZone
 
 			temp.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 		}
-	}
-
-	/**
-	 * @return the clanHallId
-	 */
-	public int getClanHallId()
-	{
-		return this.clanHallId;
 	}
 }

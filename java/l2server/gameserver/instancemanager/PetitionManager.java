@@ -27,6 +27,8 @@ import l2server.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2server.gameserver.network.serverpackets.SystemMessage;
 import l2server.log.Log;
 import l2server.util.StringUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,7 +40,6 @@ import java.util.*;
  */
 public final class PetitionManager
 {
-
 	private Map<Integer, Petition> pendingPetitions;
 	private Map<Integer, Petition> completedPetitions;
 
@@ -75,41 +76,41 @@ public final class PetitionManager
 
 	private class Petition
 	{
-		private long submitTime = System.currentTimeMillis();
+		@Getter private long submitTime = System.currentTimeMillis();
 
-		private int id;
+		@Getter private int id;
 		private PetitionType type;
-		private PetitionState state = PetitionState.Pending;
-		private String content;
+		@Getter @Setter private PetitionState state = PetitionState.Pending;
+		@Getter private String content;
 
 		private List<CreatureSay> messageLog = new ArrayList<>();
 
-		private L2PcInstance petitioner;
-		private L2PcInstance responder;
+		@Getter private L2PcInstance petitioner;
+		@Getter private L2PcInstance responder;
 
 		public Petition(L2PcInstance petitioner, String petitionText, int petitionType)
 		{
 			petitionType--;
-			this.id = IdFactory.getInstance().getNextId();
+			id = IdFactory.getInstance().getNextId();
 			if (petitionType >= PetitionType.values().length)
 			{
 				Log.warning(
 						"PetitionManager:Petition : invalid petition type (received type was +1) : " + petitionType);
 			}
-			this.type = PetitionType.values()[petitionType];
-			this.content = petitionText;
+			type = PetitionType.values()[petitionType];
+			content = petitionText;
 
 			this.petitioner = petitioner;
 		}
 
 		protected boolean addLogMessage(CreatureSay cs)
 		{
-			return this.messageLog.add(cs);
+			return messageLog.add(cs);
 		}
 
 		protected List<CreatureSay> getLogMessages()
 		{
-			return this.messageLog;
+			return messageLog;
 		}
 
 		public boolean endPetitionConsultation(PetitionState endState)
@@ -150,39 +151,9 @@ public final class PetitionManager
 			return getPendingPetitions().remove(getId()) != null;
 		}
 
-		public String getContent()
-		{
-			return this.content;
-		}
-
-		public int getId()
-		{
-			return this.id;
-		}
-
-		public L2PcInstance getPetitioner()
-		{
-			return this.petitioner;
-		}
-
-		public L2PcInstance getResponder()
-		{
-			return this.responder;
-		}
-
-		public long getSubmitTime()
-		{
-			return this.submitTime;
-		}
-
-		public PetitionState getState()
-		{
-			return this.state;
-		}
-
 		public String getTypeAsString()
 		{
-			return this.type.toString().replace("_", " ");
+			return type.toString().replace("_", " ");
 		}
 
 		public void sendPetitionerPacket(L2GameServerPacket responsePacket)
@@ -210,11 +181,6 @@ public final class PetitionManager
 			getResponder().sendPacket(responsePacket);
 		}
 
-		public void setState(PetitionState state)
-		{
-			this.state = state;
-		}
-
 		public void setResponder(L2PcInstance respondingAdmin)
 		{
 			if (getResponder() != null)
@@ -222,15 +188,15 @@ public final class PetitionManager
 				return;
 			}
 
-			this.responder = respondingAdmin;
+			responder = respondingAdmin;
 		}
 	}
 
 	private PetitionManager()
 	{
 		Log.info("Initializing PetitionManager");
-		this.pendingPetitions = new HashMap<>();
-		this.completedPetitions = new HashMap<>();
+		pendingPetitions = new HashMap<>();
+		completedPetitions = new HashMap<>();
 	}
 
 	public void clearCompletedPetitions()
@@ -352,12 +318,12 @@ public final class PetitionManager
 
 	protected Map<Integer, Petition> getCompletedPetitions()
 	{
-		return this.completedPetitions;
+		return completedPetitions;
 	}
 
 	protected Map<Integer, Petition> getPendingPetitions()
 	{
-		return this.pendingPetitions;
+		return pendingPetitions;
 	}
 
 	public int getPendingPetitionCount()

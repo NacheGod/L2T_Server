@@ -32,15 +32,14 @@ import l2server.util.Rnd;
 
 public class RequestExEnchantItemAttribute extends L2GameClientPacket
 {
-
 	private int objectId;
 	private long count;
 
 	@Override
 	protected void readImpl()
 	{
-		this.objectId = readD();
-		this.count = readQ();
+		objectId = readD();
+		count = readQ();
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class RequestExEnchantItemAttribute extends L2GameClientPacket
 			return;
 		}
 
-		enchantItemAttribute(player, this.objectId, this.count);
+		enchantItemAttribute(player, objectId, count);
 	}
 
 	public static void enchantItemAttribute(L2PcInstance player, int itemObjId, long count)

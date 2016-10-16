@@ -29,16 +29,12 @@ public final class ExRpItemLink extends L2ItemListPacket
 		this.item = item;
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeItem(this.item);
+		writeItem(item);
 	}
 }

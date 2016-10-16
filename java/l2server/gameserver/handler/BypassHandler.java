@@ -26,7 +26,6 @@ import java.util.logging.Level;
  */
 public class BypassHandler
 {
-
 	private TIntObjectHashMap<IBypassHandler> datatable;
 
 	public static BypassHandler getInstance()
@@ -36,7 +35,7 @@ public class BypassHandler
 
 	private BypassHandler()
 	{
-		this.datatable = new TIntObjectHashMap<>();
+		datatable = new TIntObjectHashMap<>();
 	}
 
 	public void registerBypassHandler(IBypassHandler handler)
@@ -48,7 +47,7 @@ public class BypassHandler
 				Log.log(Level.FINE, "Adding handler for command " + element);
 			}
 
-			this.datatable.put(element.toLowerCase().hashCode(), handler);
+			datatable.put(element.toLowerCase().hashCode(), handler);
 		}
 	}
 
@@ -63,15 +62,15 @@ public class BypassHandler
 
 		if (Config.DEBUG)
 		{
-			Log.fine("getting handler for command: " + command + " -> " + (this.datatable.get(command.hashCode()) != null));
+			Log.fine("getting handler for command: " + command + " -> " + (datatable.get(command.hashCode()) != null));
 		}
 
-		return this.datatable.get(command.toLowerCase().hashCode());
+		return datatable.get(command.toLowerCase().hashCode());
 	}
 
 	public int size()
 	{
-		return this.datatable.size();
+		return datatable.size();
 	}
 
 	@SuppressWarnings("synthetic-access")

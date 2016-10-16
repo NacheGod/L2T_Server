@@ -20,7 +20,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExBaseAttributeCancelResult extends L2GameServerPacket
 {
-
 	private int objId;
 	private byte attribute;
 
@@ -34,7 +33,7 @@ public class ExBaseAttributeCancelResult extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeD(1); // result
-		writeD(this.objId);
-		writeD(this.attribute);
+		writeD(objId);
+		writeD(attribute);
 	}
 }

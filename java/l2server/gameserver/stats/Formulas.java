@@ -310,7 +310,7 @@ public final class Formulas
 			if (env.player instanceof L2PcInstance)
 			{
 				/*L2PcInstance p = (L2PcInstance) env.player;
-                if (p.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LFINGER) != null)
+				if (p.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LFINGER) != null)
 					env.value -= 5;
 				if (p.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RFINGER) != null)
 					env.value -= 5;
@@ -2366,7 +2366,7 @@ public final class Formulas
 			attacker = ((L2NpcInstance)attacker).getOwner();
 		else if (attacker instanceof L2GuardInstance && ((L2GuardInstance)attacker).getOwner() != null)
 			attacker = ((L2GuardInstance)attacker).getOwner();
-		 */
+		*/
 
 		double pAtk = attacker.calcStat(Stats.CRITICAL_ATTACK, attacker.getPAtk(target), target, skill);
 		double levelMod = attacker.getLevelMod();
@@ -2567,7 +2567,6 @@ public final class Formulas
 						if (damage > player.getMaxHp() * 0.02)
 							damage *= 0.10;
 					}
-
 
 					break;
 				}
@@ -3030,7 +3029,7 @@ public final class Formulas
 		if (target instanceof L2MonsterInstance)
 		{
 			if (((L2MonsterInstance) target).getTemplate().isLethalImmune ||
-					((L2MonsterInstance) target).getIsLethalInmune())
+					((L2MonsterInstance) target).isLethalImmune())
 			{
 				return false;
 			}
@@ -3780,7 +3779,6 @@ public final class Formulas
 			}
 
 			return !(target.isAffected(L2EffectType.BLOCK_TALISMANS.getMask()) && skill.getName().contains("Talisman"));
-
 		}
 
 		if (target.calcStat(Stats.DEBUFF_IMMUNITY, 0.0, attacker, null) > 0.0)
@@ -4130,9 +4128,8 @@ public final class Formulas
 			}
 			if (target instanceof L2PcInstance && ((L2PcInstance) target).isLandRates())
 			{
-				target.sendMessage(
-						"This " + skill.getName() + " had a " + rate + "% chance to land over you, with a " +
-								skill.getPower() + " base land rate.");
+				target.sendMessage("This " + skill.getName() + " had a " + rate + "% chance to land over you, with a " +
+						skill.getPower() + " base land rate.");
 			}
 		}
 

@@ -32,13 +32,12 @@ import java.util.Collection;
  */
 public final class RequestSurrenderPledgeWarEx extends L2GameClientPacket
 {
-
 	private String pledgeName;
 
 	@Override
 	protected void readImpl()
 	{
-		this.pledgeName = readS();
+		pledgeName = readS();
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public final class RequestSurrenderPledgeWarEx extends L2GameClientPacket
 			return;
 		}
 
-		L2Clan clan = ClanTable.getInstance().getClanByName(this.pledgeName);
+		L2Clan clan = ClanTable.getInstance().getClanByName(pledgeName);
 
 		if (clan == null)
 		{

@@ -56,7 +56,7 @@ public class L2RaidBossInstance extends L2MonsterInstance
 	{
 		super(objectId, template);
 		setInstanceType(InstanceType.L2RaidBossInstance);
-		setIsRaid(true);
+		setRaid(true);
 		BossManager.getInstance().registerBoss(this);
 	}
 
@@ -130,9 +130,8 @@ public class L2RaidBossInstance extends L2MonsterInstance
 			getMinionList().spawnMinions();
 		}
 
-		this.maintenanceTask = ThreadPoolManager.getInstance()
-				.scheduleGeneralAtFixedRate(this::checkAndReturnToSpawn, 60000,
-						getMaintenanceInterval() + Rnd.get(5000));
+		maintenanceTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(this::checkAndReturnToSpawn, 60000,
+				getMaintenanceInterval() + Rnd.get(5000));
 	}
 
 	protected void checkAndReturnToSpawn()
@@ -190,7 +189,7 @@ public class L2RaidBossInstance extends L2MonsterInstance
 
 	public void setUseRaidCurse(boolean val)
 	{
-		this.useRaidCurse = val;
+		useRaidCurse = val;
 	}
 
 	/* (non-Javadoc)
@@ -199,6 +198,6 @@ public class L2RaidBossInstance extends L2MonsterInstance
 	@Override
 	public boolean giveRaidCurse()
 	{
-		return this.useRaidCurse;
+		return useRaidCurse;
 	}
 }

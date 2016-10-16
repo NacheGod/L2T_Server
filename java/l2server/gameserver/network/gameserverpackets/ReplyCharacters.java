@@ -17,7 +17,6 @@ package l2server.gameserver.network.gameserverpackets;
 
 import l2server.util.network.BaseSendablePacket;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,7 +25,6 @@ import java.util.List;
  */
 public class ReplyCharacters extends BaseSendablePacket
 {
-
 	public ReplyCharacters(String account, int chars, List<Long> timeToDel)
 	{
 		writeC(0x08);

@@ -57,7 +57,6 @@ import java.util.logging.Level;
  */
 public final class RequestActionUse extends L2GameClientPacket
 {
-
 	private int actionId;
 	private boolean ctrlPressed;
 	private boolean shiftPressed;
@@ -1119,7 +1118,7 @@ public final class RequestActionUse extends L2GameClientPacket
 				}
 				SystemMessage sm;
 				// can't use friend invite for locating invisible characters
-				if (!target.getActingPlayer().isOnline() || target.getActingPlayer().getAppearance().getInvisible())
+				if (!target.getActingPlayer().isOnline() || target.getActingPlayer().getAppearance().isInvisible())
 				{
 					//Target is not found in the game.
 					activeChar.sendPacket(SystemMessageId.THE_USER_YOU_REQUESTED_IS_NOT_IN_GAME);
@@ -1405,7 +1404,7 @@ public final class RequestActionUse extends L2GameClientPacket
 			if (targetChar instanceof L2PcInstance)
 			{
 				L2PcInstance targetPlayer = (L2PcInstance) targetChar;
-				if (targetPlayer.getAppearance().getInvisible())
+				if (targetPlayer.getAppearance().isInvisible())
 				{
 					return;
 				}
@@ -1424,7 +1423,7 @@ public final class RequestActionUse extends L2GameClientPacket
 		if (targetChar instanceof L2PcInstance)
 		{
 			L2PcInstance targetPlayer = (L2PcInstance) targetChar;
-			if (targetPlayer.getAppearance().getInvisible())
+			if (targetPlayer.getAppearance().isInvisible())
 			{
 				return;
 			}

@@ -15,6 +15,8 @@
 
 package l2server.gameserver.templates;
 
+import lombok.Getter;
+
 /**
  * This class represents a Newbie Helper Buff
  * <p>
@@ -26,22 +28,22 @@ public class L2HelperBuff
 	/**
 	 * Min level that the player must achieve to obtain this buff from Newbie Helper
 	 */
-	private int lowerLevel;
+	@Getter private int lowerLevel;
 
 	/**
 	 * Max level that the player mustn't exceed if it want to obtain this buff from Newbie Helper
 	 */
-	private int upperLevel;
+	@Getter private int upperLevel;
 
 	/**
 	 * Identifier of the skill (buff) that the Newbie Helper must cast
 	 */
-	private int skillID;
+	@Getter private int skillID;
 
 	/**
 	 * Level of the skill (buff) that the Newbie Helper must cast
 	 */
-	private int skillLevel;
+	@Getter private int skillLevel;
 
 	/**
 	 * If True only Magus class will obtain this Buff <BR>
@@ -49,63 +51,23 @@ public class L2HelperBuff
 	 */
 	private boolean isMagicClass;
 
-	private boolean forSummon = false;
+	@Getter private boolean forSummon = false;
 
 	/**
 	 * Constructor of L2HelperBuff.<BR><BR>
 	 */
 	public L2HelperBuff(StatsSet set)
 	{
-		this.lowerLevel = set.getInteger("lowerLevel");
-		this.upperLevel = set.getInteger("upperLevel");
-		this.skillID = set.getInteger("skillID");
-		this.skillLevel = set.getInteger("skillLevel");
+		lowerLevel = set.getInteger("lowerLevel");
+		upperLevel = set.getInteger("upperLevel");
+		skillID = set.getInteger("skillID");
+		skillLevel = set.getInteger("skillLevel");
 		if ("true".equals(set.getString("forSummon")))
 		{
-			this.forSummon = true;
+			forSummon = true;
 		}
 
-		this.isMagicClass = !"false".equals(set.getString("isMagicClass"));
-	}
-
-	/**
-	 * Returns the lower level that the L2PcInstance must achieve in order to obtain this buff
-	 *
-	 * @return int
-	 */
-	public int getLowerLevel()
-	{
-		return this.lowerLevel;
-	}
-
-	/**
-	 * Returns the upper level that the L2PcInstance mustn't exceed in order to obtain this buff
-	 *
-	 * @return int
-	 */
-	public int getUpperLevel()
-	{
-		return this.upperLevel;
-	}
-
-	/**
-	 * Returns the ID of the buff that the L2PcInstance will receive
-	 *
-	 * @return int
-	 */
-	public int getSkillID()
-	{
-		return this.skillID;
-	}
-
-	/**
-	 * Returns the Level of the buff that the L2PcInstance will receive
-	 *
-	 * @return int
-	 */
-	public int getSkillLevel()
-	{
-		return this.skillLevel;
+		isMagicClass = !"false".equals(set.getString("isMagicClass"));
 	}
 
 	/**
@@ -115,11 +77,6 @@ public class L2HelperBuff
 	 */
 	public boolean isMagicClassBuff()
 	{
-		return this.isMagicClass;
-	}
-
-	public boolean isForSummon()
-	{
-		return this.forSummon;
+		return isMagicClass;
 	}
 }

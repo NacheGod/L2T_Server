@@ -27,7 +27,6 @@ import java.util.logging.Level;
  */
 public class DeadLockDetector extends Thread
 {
-
 	private static final int sleepTime = Config.DEADLOCK_CHECK_INTERVAL * 1000;
 
 	private final ThreadMXBean tmx;
@@ -87,7 +86,7 @@ public class DeadLockDetector extends Thread
 						Shutdown.getInstance().startShutdown("DeadLockDetector - Auto Restart", 60, true);
 					}
 				}
-				Thread.sleep(this.sleepTime);
+				Thread.sleep(sleepTime);
 			}
 			catch (Exception e)
 			{

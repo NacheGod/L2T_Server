@@ -17,6 +17,7 @@ package l2server.gameserver.model;
 
 import l2server.gameserver.network.serverpackets.L2ItemListPacket.ItemInstanceInfo;
 import l2server.gameserver.templates.item.L2Item;
+import lombok.Getter;
 
 /**
  * Get all information from L2ItemInstance to generate ItemInfo.<BR><BR>
@@ -26,12 +27,12 @@ public class ItemInfo implements ItemInstanceInfo
 	/**
 	 * Identifier of the L2ItemInstance
 	 */
-	private int objectId;
+	@Getter private int objectId;
 
 	/**
 	 * The L2Item template of the L2ItemInstance
 	 */
-	private L2Item item;
+	@Getter private L2Item item;
 
 	/**
 	 * The level of enchant on the L2ItemInstance
@@ -42,8 +43,8 @@ public class ItemInfo implements ItemInstanceInfo
 	 * The item's ensoul effect data
 	 */
 	private boolean isSoulEnhanced;
-	private int[] ensoulEffectIds;
-	private int[] ensoulSpecialEffectIds;
+	@Getter private int[] ensoulEffectIds;
+	@Getter private int[] ensoulSpecialEffectIds;
 
 	/**
 	 * The augmentation of the item
@@ -53,12 +54,12 @@ public class ItemInfo implements ItemInstanceInfo
 	/**
 	 * The quantity of L2ItemInstance
 	 */
-	private long count;
+	@Getter private long count;
 
 	/**
 	 * The price of the L2ItemInstance
 	 */
-	private long price;
+	@Getter private long price;
 
 	/**
 	 * The custom L2ItemInstance types (used loto, race tickets)
@@ -69,17 +70,17 @@ public class ItemInfo implements ItemInstanceInfo
 	/**
 	 * If True the L2ItemInstance is equipped
 	 */
-	private boolean equipped;
+	@Getter private boolean equipped;
 
 	/**
 	 * The action to do clientside (1=ADD, 2=MODIFY, 3=REMOVE)
 	 */
-	private int change;
+	@Getter private int change;
 
 	/**
 	 * The mana of this item
 	 */
-	private int mana;
+	@Getter private int mana;
 	private int time;
 
 	private int location;
@@ -89,7 +90,7 @@ public class ItemInfo implements ItemInstanceInfo
 	private int elemAtkPower = 0;
 	private int[] elemDefAttr = {0, 0, 0, 0, 0, 0};
 
-	private int appearance;
+	@Getter private int appearance;
 
 	/**
 	 * Get all information from L2ItemInstance to generate ItemInfo.<BR><BR>
@@ -102,80 +103,80 @@ public class ItemInfo implements ItemInstanceInfo
 		}
 
 		// Get the Identifier of the L2ItemInstance
-		this.objectId = item.getObjectId();
+		objectId = item.getObjectId();
 
 		// Get the L2Item of the L2ItemInstance
 		this.item = item.getItem();
 
 		// Get the enchant level of the L2ItemInstance
-		this.enchant = item.getEnchantLevel();
+		enchant = item.getEnchantLevel();
 
 		// Get the ensoul effect of the L2ItemInstance
-		this.isSoulEnhanced = item.isSoulEnhanced();
-		this.ensoulEffectIds = item.getEnsoulEffectIds();
-		this.ensoulSpecialEffectIds = item.getEnsoulSpecialEffectIds();
+		isSoulEnhanced = item.isSoulEnhanced();
+		ensoulEffectIds = item.getEnsoulEffectIds();
+		ensoulSpecialEffectIds = item.getEnsoulSpecialEffectIds();
 
 		// Get the augmentation boni
 		if (item.isAugmented())
 		{
-			this.augmentation = item.getAugmentation().getId();
+			augmentation = item.getAugmentation().getId();
 		}
 		else
 		{
-			this.augmentation = 0;
+			augmentation = 0;
 		}
 
 		// Get the quantity of the L2ItemInstance
-		this.count = item.getCount();
+		count = item.getCount();
 
 		// Get custom item types (used loto, race tickets)
-		this.type1 = item.getCustomType1();
-		this.type2 = item.getCustomType2();
+		type1 = item.getCustomType1();
+		type2 = item.getCustomType2();
 
 		// Verify if the L2ItemInstance is equipped
-		this.equipped = item.isEquipped();
+		equipped = item.isEquipped();
 
 		// Get the action to do clientside
 		switch (item.getLastChange())
 		{
 			case L2ItemInstance.ADDED:
 			{
-				this.change = 1;
+				change = 1;
 				break;
 			}
 			case L2ItemInstance.MODIFIED:
 			{
-				this.change = 2;
+				change = 2;
 				break;
 			}
 			case L2ItemInstance.REMOVED:
 			{
-				this.change = 3;
+				change = 3;
 				break;
 			}
 		}
 
 		// Get shadow item mana
-		this.mana = item.getMana();
-		this.time = item.getRemainingTime();
-		this.location = item.getLocationSlot();
+		mana = item.getMana();
+		time = item.getRemainingTime();
+		location = item.getLocationSlot();
 
-		this.elemAtkType = item.getAttackElementType();
-		this.elemAtkPower = item.getAttackElementPower();
-		if (this.elemAtkPower > 0)
+		elemAtkType = item.getAttackElementType();
+		elemAtkPower = item.getAttackElementPower();
+		if (elemAtkPower > 0)
 		{
-			this.elemEnchanted = true;
+			elemEnchanted = true;
 		}
 		for (byte i = 0; i < 6; i++)
 		{
-			this.elemDefAttr[i] = item.getElementDefAttr(i);
-			if (this.elemDefAttr[i] > 0)
+			elemDefAttr[i] = item.getElementDefAttr(i);
+			if (elemDefAttr[i] > 0)
 			{
-				this.elemEnchanted = true;
+				elemEnchanted = true;
 			}
 		}
 
-		this.appearance = item.getAppearance();
+		appearance = item.getAppearance();
 	}
 
 	public ItemInfo(L2ItemInstance item, int change)
@@ -186,191 +187,133 @@ public class ItemInfo implements ItemInstanceInfo
 		}
 
 		// Get the Identifier of the L2ItemInstance
-		this.objectId = item.getObjectId();
+		objectId = item.getObjectId();
 
 		// Get the L2Item of the L2ItemInstance
 		this.item = item.getItem();
 
 		// Get the enchant level of the L2ItemInstance
-		this.enchant = item.getEnchantLevel();
+		enchant = item.getEnchantLevel();
 
 		// Get the ensoul effect of the L2ItemInstance
-		this.isSoulEnhanced = item.isSoulEnhanced();
-		this.ensoulEffectIds = item.getEnsoulEffectIds();
-		this.ensoulSpecialEffectIds = item.getEnsoulSpecialEffectIds();
+		isSoulEnhanced = item.isSoulEnhanced();
+		ensoulEffectIds = item.getEnsoulEffectIds();
+		ensoulSpecialEffectIds = item.getEnsoulSpecialEffectIds();
 
 		// Get the augmentation boni
 		if (item.isAugmented())
 		{
-			this.augmentation = item.getAugmentation().getId();
+			augmentation = item.getAugmentation().getId();
 		}
 		else
 		{
-			this.augmentation = 0;
+			augmentation = 0;
 		}
 
 		// Get the quantity of the L2ItemInstance
-		this.count = item.getCount();
+		count = item.getCount();
 
 		// Get custom item types (used loto, race tickets)
-		this.type1 = item.getCustomType1();
-		this.type2 = item.getCustomType2();
+		type1 = item.getCustomType1();
+		type2 = item.getCustomType2();
 
 		// Verify if the L2ItemInstance is equipped
-		this.equipped = item.isEquipped();
+		equipped = item.isEquipped();
 
 		// Get the action to do clientside
 		this.change = change;
 
 		// Get shadow item mana
-		this.mana = item.getMana();
-		this.time = item.getRemainingTime();
+		mana = item.getMana();
+		time = item.getRemainingTime();
 
-		this.location = item.getLocationSlot();
+		location = item.getLocationSlot();
 
-		this.elemAtkType = item.getAttackElementType();
-		this.elemAtkPower = item.getAttackElementPower();
-		if (this.elemAtkPower > 0)
+		elemAtkType = item.getAttackElementType();
+		elemAtkPower = item.getAttackElementPower();
+		if (elemAtkPower > 0)
 		{
-			this.elemEnchanted = true;
+			elemEnchanted = true;
 		}
 		for (byte i = 0; i < 6; i++)
 		{
-			this.elemDefAttr[i] = item.getElementDefAttr(i);
-			if (this.elemDefAttr[i] > 0)
+			elemDefAttr[i] = item.getElementDefAttr(i);
+			if (elemDefAttr[i] > 0)
 			{
-				this.elemEnchanted = true;
+				elemEnchanted = true;
 			}
 		}
 
-		this.appearance = item.getAppearance();
-	}
-
-	@Override
-	public int getObjectId()
-	{
-		return this.objectId;
-	}
-
-	@Override
-	public L2Item getItem()
-	{
-		return this.item;
+		appearance = item.getAppearance();
 	}
 
 	@Override
 	public int getEnchantLevel()
 	{
-		return this.enchant;
+		return enchant;
 	}
 
 	@Override
 	public boolean isSoulEnhanced()
 	{
-		return this.isSoulEnhanced;
-	}
-
-	@Override
-	public int[] getEnsoulEffectIds()
-	{
-		return this.ensoulEffectIds;
-	}
-
-	@Override
-	public int[] getEnsoulSpecialEffectIds()
-	{
-		return this.ensoulSpecialEffectIds;
+		return isSoulEnhanced;
 	}
 
 	@Override
 	public boolean isAugmented()
 	{
-		return this.augmentation != 0;
+		return augmentation != 0;
 	}
 
 	@Override
 	public long getAugmentationBonus()
 	{
-		return this.augmentation;
-	}
-
-	@Override
-	public long getCount()
-	{
-		return this.count;
-	}
-
-	public long getPrice()
-	{
-		return this.price;
+		return augmentation;
 	}
 
 	public int getCustomType1()
 	{
-		return this.type1;
+		return type1;
 	}
 
 	public int getCustomType2()
 	{
-		return this.type2;
-	}
-
-	@Override
-	public boolean isEquipped()
-	{
-		return this.equipped;
-	}
-
-	public int getChange()
-	{
-		return this.change;
-	}
-
-	@Override
-	public int getMana()
-	{
-		return this.mana;
+		return type2;
 	}
 
 	@Override
 	public int getRemainingTime()
 	{
-		return this.time;
+		return time;
 	}
 
 	@Override
 	public int getLocationSlot()
 	{
-		return this.location;
+		return location;
 	}
 
 	@Override
 	public boolean isElementEnchanted()
 	{
-		return this.elemEnchanted;
+		return elemEnchanted;
 	}
 
 	@Override
 	public byte getAttackElementType()
 	{
-		return this.elemAtkType;
+		return elemAtkType;
 	}
 
 	@Override
 	public int getAttackElementPower()
 	{
-		return this.elemAtkPower;
+		return elemAtkPower;
 	}
 
 	@Override
 	public int getElementDefAttr(byte i)
 	{
-		return this.elemDefAttr[i];
-	}
-
-	@Override
-	public int getAppearance()
-	{
-		return this.appearance;
+		return elemDefAttr[i];
 	}
 }

@@ -21,13 +21,13 @@ import l2server.gameserver.model.L2WorldRegion;
 import l2server.gameserver.model.actor.L2Character;
 import l2server.log.Log;
 import l2server.util.Point3D;
+import lombok.Getter;
 
 public class ObjectPosition
 {
-
 	// =========================================================
 	// Data Field
-	private L2Object activeObject;
+	@Getter private L2Object activeObject;
 	private int heading = 0;
 	private Point3D worldPosition;
 	private L2WorldRegion worldRegion; // Object localization : Used for items/chars that are seen in the world
@@ -80,7 +80,6 @@ public class ObjectPosition
 	 */
 	protected void badCoords()
 	{
-
 	}
 
 	/**
@@ -147,19 +146,15 @@ public class ObjectPosition
 
 	// =========================================================
 	// Property - Public
-	public L2Object getActiveObject()
-	{
-		return this.activeObject;
-	}
 
 	public final int getHeading()
 	{
-		return this.heading;
+		return heading;
 	}
 
 	public final void setHeading(int value)
 	{
-		this.heading = value;
+		heading = value;
 	}
 
 	/**
@@ -203,11 +198,11 @@ public class ObjectPosition
 
 	public final Point3D getWorldPosition()
 	{
-		if (this.worldPosition == null)
+		if (worldPosition == null)
 		{
-			this.worldPosition = new Point3D(0, 0, 0);
+			worldPosition = new Point3D(0, 0, 0);
 		}
-		return this.worldPosition;
+		return worldPosition;
 	}
 
 	public final void setWorldPosition(int x, int y, int z)
@@ -222,24 +217,24 @@ public class ObjectPosition
 
 	public final L2WorldRegion getWorldRegion()
 	{
-		return this.worldRegion;
+		return worldRegion;
 	}
 
 	public void setWorldRegion(L2WorldRegion value)
 	{
-		if (this.worldRegion != null &&
+		if (worldRegion != null &&
 				getActiveObject() instanceof L2Character) // confirm revalidation of old region's zones
 		{
 			if (value != null)
 			{
-				this.worldRegion.revalidateZones((L2Character) getActiveObject()); // at world region change
+				worldRegion.revalidateZones((L2Character) getActiveObject()); // at world region change
 			}
 			else
 			{
-				this.worldRegion.removeFromZones((L2Character) getActiveObject()); // at world region change
+				worldRegion.removeFromZones((L2Character) getActiveObject()); // at world region change
 			}
 		}
 
-		this.worldRegion = value;
+		worldRegion = value;
 	}
 }

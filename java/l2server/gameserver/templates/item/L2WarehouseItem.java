@@ -17,6 +17,7 @@ package l2server.gameserver.templates.item;
 
 import l2server.gameserver.model.L2ItemInstance;
 import l2server.gameserver.network.serverpackets.L2ItemListPacket.ItemInstanceInfo;
+import lombok.Getter;
 
 /**
  * This class contains L2ItemInstance<BR>
@@ -29,16 +30,16 @@ import l2server.gameserver.network.serverpackets.L2ItemListPacket.ItemInstanceIn
  */
 public class L2WarehouseItem implements ItemInstanceInfo
 {
-	private L2Item item;
-	private int object;
+	@Getter private L2Item item;
+	private int objectId;
 	private long count;
 	private int owner;
 	private int locationSlot;
 	private int enchant;
 	private int grade;
 	private boolean isSoulEnhanced;
-	private int[] ensoulEffectIds;
-	private int[] ensoulSpecialEffectIds;
+	@Getter private int[] ensoulEffectIds;
+	@Getter private int[] ensoulSpecialEffectIds;
 	private boolean isAugmented;
 	private long augmentationId;
 	private int customType1;
@@ -51,59 +52,48 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	private boolean elemEnchanted = false;
 	private int time;
 
-	private int appearance;
+	@Getter private int appearance;
 
 	public L2WarehouseItem(L2ItemInstance item)
 	{
 		this.item = item.getItem();
-		this.object = item.getObjectId();
-		this.count = item.getCount();
-		this.owner = item.getOwnerId();
-		this.locationSlot = item.getLocationSlot();
-		this.enchant = item.getEnchantLevel();
-		this.customType1 = item.getCustomType1();
-		this.customType2 = item.getCustomType2();
-		this.grade = item.getItem().getItemGrade();
-		this.isSoulEnhanced = item.isSoulEnhanced();
-		this.ensoulEffectIds = item.getEnsoulEffectIds();
-		this.ensoulSpecialEffectIds = item.getEnsoulSpecialEffectIds();
+		objectId = item.getObjectId();
+		count = item.getCount();
+		owner = item.getOwnerId();
+		locationSlot = item.getLocationSlot();
+		enchant = item.getEnchantLevel();
+		customType1 = item.getCustomType1();
+		customType2 = item.getCustomType2();
+		grade = item.getItem().getItemGrade();
+		isSoulEnhanced = item.isSoulEnhanced();
+		ensoulEffectIds = item.getEnsoulEffectIds();
+		ensoulSpecialEffectIds = item.getEnsoulSpecialEffectIds();
 		if (item.isAugmented())
 		{
-			this.isAugmented = true;
-			this.augmentationId = item.getAugmentation().getId();
+			isAugmented = true;
+			augmentationId = item.getAugmentation().getId();
 		}
 		else
 		{
-			this.isAugmented = false;
+			isAugmented = false;
 		}
-		this.mana = item.getMana();
-		this.time = item.getRemainingTime();
+		mana = item.getMana();
+		time = item.getRemainingTime();
 
-		if (this.elemAtkPower > 0)
+		if (elemAtkPower > 0)
 		{
-			this.elemEnchanted = true;
+			elemEnchanted = true;
 		}
 		for (byte i = 0; i < 6; i++)
 		{
-			this.elemDefAttr[i] = item.getElementDefAttr(i);
-			if (this.elemDefAttr[i] > 0)
+			elemDefAttr[i] = item.getElementDefAttr(i);
+			if (elemDefAttr[i] > 0)
 			{
-				this.elemEnchanted = true;
+				elemEnchanted = true;
 			}
 		}
 
-		this.appearance = item.getAppearance();
-	}
-
-	/**
-	 * Returns the item.
-	 *
-	 * @return L2Item
-	 */
-	@Override
-	public L2Item getItem()
-	{
-		return this.item;
+		appearance = item.getAppearance();
 	}
 
 	/**
@@ -114,7 +104,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	@Override
 	public final int getObjectId()
 	{
-		return this.object;
+		return objectId;
 	}
 
 	/**
@@ -124,7 +114,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final int getOwnerId()
 	{
-		return this.owner;
+		return owner;
 	}
 
 	/**
@@ -135,7 +125,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	@Override
 	public final int getLocationSlot()
 	{
-		return this.locationSlot;
+		return locationSlot;
 	}
 
 	/**
@@ -146,7 +136,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	@Override
 	public final long getCount()
 	{
-		return this.count;
+		return count;
 	}
 
 	/**
@@ -156,7 +146,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final int getType1()
 	{
-		return this.item.getType1();
+		return item.getType1();
 	}
 
 	/**
@@ -166,7 +156,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final int getType2()
 	{
-		return this.item.getType2();
+		return item.getType2();
 	}
 
 	/**
@@ -176,7 +166,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final L2ItemType getItemType()
 	{
-		return this.item.getItemType();
+		return item.getItemType();
 	}
 
 	/**
@@ -186,7 +176,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final int getItemId()
 	{
-		return this.item.getItemId();
+		return item.getItemId();
 	}
 
 	/**
@@ -196,7 +186,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final int getBodyPart()
 	{
-		return this.item.getBodyPart();
+		return item.getBodyPart();
 	}
 
 	/**
@@ -207,7 +197,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	@Override
 	public final int getEnchantLevel()
 	{
-		return this.enchant;
+		return enchant;
 	}
 
 	/**
@@ -217,7 +207,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final int getItemGrade()
 	{
-		return this.grade;
+		return grade;
 	}
 
 	/**
@@ -227,7 +217,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final boolean isWeapon()
 	{
-		return this.item instanceof L2Weapon;
+		return item instanceof L2Weapon;
 	}
 
 	/**
@@ -237,7 +227,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final boolean isArmor()
 	{
-		return this.item instanceof L2Armor;
+		return item instanceof L2Armor;
 	}
 
 	/**
@@ -247,7 +237,7 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public final boolean isEtcItem()
 	{
-		return this.item instanceof L2EtcItem;
+		return item instanceof L2EtcItem;
 	}
 
 	/**
@@ -257,37 +247,25 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	 */
 	public String getItemName()
 	{
-		return this.item.getName();
+		return item.getName();
 	}
 
 	@Override
 	public boolean isSoulEnhanced()
 	{
-		return this.isSoulEnhanced;
-	}
-
-	@Override
-	public int[] getEnsoulEffectIds()
-	{
-		return this.ensoulEffectIds;
-	}
-
-	@Override
-	public int[] getEnsoulSpecialEffectIds()
-	{
-		return this.ensoulSpecialEffectIds;
+		return isSoulEnhanced;
 	}
 
 	@Override
 	public boolean isAugmented()
 	{
-		return this.isAugmented;
+		return isAugmented;
 	}
 
 	@Override
 	public long getAugmentationBonus()
 	{
-		return this.augmentationId;
+		return augmentationId;
 	}
 
 	/**
@@ -299,53 +277,53 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	@Deprecated
 	public String getName()
 	{
-		return this.item.getName();
+		return item.getName();
 	}
 
 	public final int getCustomType1()
 	{
-		return this.customType1;
+		return customType1;
 	}
 
 	public final int getCustomType2()
 	{
-		return this.customType2;
+		return customType2;
 	}
 
 	@Override
 	public final int getMana()
 	{
-		return this.mana;
+		return mana;
 	}
 
 	@Override
 	public byte getAttackElementType()
 	{
-		return this.elemAtkType;
+		return elemAtkType;
 	}
 
 	@Override
 	public int getAttackElementPower()
 	{
-		return this.elemAtkPower;
+		return elemAtkPower;
 	}
 
 	@Override
 	public int getElementDefAttr(byte i)
 	{
-		return this.elemDefAttr[i];
+		return elemDefAttr[i];
 	}
 
 	@Override
 	public boolean isElementEnchanted()
 	{
-		return this.elemEnchanted;
+		return elemEnchanted;
 	}
 
 	@Override
 	public int getRemainingTime()
 	{
-		return this.time;
+		return time;
 	}
 
 	/**
@@ -356,18 +334,12 @@ public class L2WarehouseItem implements ItemInstanceInfo
 	@Override
 	public String toString()
 	{
-		return this.item.toString();
+		return item.toString();
 	}
 
 	@Override
 	public boolean isEquipped()
 	{
 		return false;
-	}
-
-	@Override
-	public int getAppearance()
-	{
-		return this.appearance;
 	}
 }

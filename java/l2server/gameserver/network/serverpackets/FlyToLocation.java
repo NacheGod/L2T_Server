@@ -36,10 +36,10 @@ public final class FlyToLocation extends L2GameServerPacket
 
 	public FlyToLocation(L2Character cha, int destX, int destY, int destZ, FlyType type)
 	{
-		this.chaObjId = cha.getObjectId();
-		this.chaX = cha.getX();
-		this.chaY = cha.getY();
-		this.chaZ = cha.getZ();
+		chaObjId = cha.getObjectId();
+		chaX = cha.getX();
+		chaY = cha.getY();
+		chaZ = cha.getZ();
 		this.destX = destX;
 		this.destY = destY;
 		this.destZ = destZ;
@@ -51,24 +51,20 @@ public final class FlyToLocation extends L2GameServerPacket
 		this(cha, dest.getX(), dest.getY(), dest.getZ(), type);
 	}
 
-    /*
-	  @see l2server.gameserver.network.serverpackets.L2GameServerPacket#getType()
-     */
-
 	/**
 	 * @see l2server.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()
 	 */
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.chaObjId);
-		writeD(this.destX);
-		writeD(this.destY);
-		writeD(this.destZ);
-		writeD(this.chaX);
-		writeD(this.chaY);
-		writeD(this.chaZ);
-		writeD(this.type.ordinal());
+		writeD(chaObjId);
+		writeD(destX);
+		writeD(destY);
+		writeD(destZ);
+		writeD(chaX);
+		writeD(chaY);
+		writeD(chaZ);
+		writeD(type.ordinal());
 		writeD(0x00); // flySpeed?
 		writeD(0x00); // flyDelay?
 		writeD(333); // animationSpeed?

@@ -25,14 +25,13 @@ import l2server.Config;
  */
 public class RequestEx2ndPasswordVerify extends L2GameClientPacket
 {
-
 	//
 	String password;
 
 	@Override
 	protected void readImpl()
 	{
-		this.password = readS();
+		password = readS();
 	}
 
 	@Override
@@ -43,6 +42,6 @@ public class RequestEx2ndPasswordVerify extends L2GameClientPacket
 			return;
 		}
 
-		getClient().getSecondaryAuth().checkPassword(this.password, false);
+		getClient().getSecondaryAuth().checkPassword(password, false);
 	}
 }

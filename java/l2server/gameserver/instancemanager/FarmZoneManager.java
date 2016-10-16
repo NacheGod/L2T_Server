@@ -27,6 +27,7 @@ import l2server.gameserver.templates.item.L2Item;
 import l2server.log.Log;
 import l2server.util.xml.XmlDocument;
 import l2server.util.xml.XmlNode;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.*;
@@ -38,8 +39,8 @@ public class FarmZoneManager
 {
 	public class FarmZone
 	{
-		private String name;
-		private Set<L2NpcTemplate> mobs = new HashSet<>();
+		@Getter private String name;
+		@Getter private Set<L2NpcTemplate> mobs = new HashSet<>();
 
 		public FarmZone(String name)
 		{
@@ -48,17 +49,7 @@ public class FarmZoneManager
 
 		public void addMob(L2NpcTemplate mob)
 		{
-			this.mobs.add(mob);
-		}
-
-		public String getName()
-		{
-			return this.name;
-		}
-
-		public Set<L2NpcTemplate> getMobs()
-		{
-			return this.mobs;
+			mobs.add(mob);
 		}
 	}
 
@@ -132,12 +123,12 @@ public class FarmZoneManager
 							}
 						}
 
-						this.farmZones.put(name, farmZone);
+						farmZones.put(name, farmZone);
 					}
 				}
 			}
 		}
-		Log.info("Farm Zone Manager: loaded " + this.farmZones.size() + " farm zone definitions.");
+		Log.info("Farm Zone Manager: loaded " + farmZones.size() + " farm zone definitions.");
 
 		file = new File(Config.DATAPACK_ROOT, "data_" + Config.SERVER_NAME + "/customFarm.xml");
 		doc = new XmlDocument(file);
@@ -196,7 +187,7 @@ public class FarmZoneManager
 						if (farmNode.hasAttribute("farmZone"))
 						{
 							String name = farmNode.getString("farmZone");
-							FarmZone farmZone = this.farmZones.get(name);
+							FarmZone farmZone = farmZones.get(name);
 							for (L2NpcTemplate mob : farmZone.getMobs())
 							{
 								mobs.add(mob);

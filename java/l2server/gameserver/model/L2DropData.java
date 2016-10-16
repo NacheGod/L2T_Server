@@ -15,6 +15,9 @@
 
 package l2server.gameserver.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Arrays;
 
 /**
@@ -29,70 +32,20 @@ public class L2DropData
 {
 	public static final int MAX_CHANCE = 100;
 
-	private int itemId;
-	private int minDrop;
-	private int maxDrop;
-	private float chance;
-	private String questID = null;
+	@Getter @Setter private int itemId;
+	@Getter private int minDrop;
+	@Getter private int maxDrop;
+	@Getter private float chance;
+	@Getter @Setter private String questID = null;
 	private String[] stateID = null;
-	private boolean custom = false;
+	@Getter private boolean custom = false;
 
 	public L2DropData(int itemId, int min, int max, float chance)
 	{
 		this.itemId = itemId;
-		this.minDrop = min;
-		this.maxDrop = max;
+		minDrop = min;
+		maxDrop = max;
 		this.chance = chance;
-	}
-
-	/**
-	 * Returns the ID of the item dropped
-	 *
-	 * @return int
-	 */
-	public int getItemId()
-	{
-		return this.itemId;
-	}
-
-	/**
-	 * Sets the ID of the item dropped
-	 *
-	 * @param itemId : int designating the ID of the item
-	 */
-	public void setItemId(int itemId)
-	{
-		this.itemId = itemId;
-	}
-
-	/**
-	 * Returns the minimum quantity of items dropped
-	 *
-	 * @return int
-	 */
-	public int getMinDrop()
-	{
-		return this.minDrop;
-	}
-
-	/**
-	 * Returns the maximum quantity of items dropped
-	 *
-	 * @return int
-	 */
-	public int getMaxDrop()
-	{
-		return this.maxDrop;
-	}
-
-	/**
-	 * Returns the chance of having a drop
-	 *
-	 * @return float
-	 */
-	public float getChance()
-	{
-		return this.chance;
 	}
 
 	/**
@@ -102,17 +55,17 @@ public class L2DropData
 	 */
 	public void setMinDrop(int mindrop)
 	{
-		this.minDrop = mindrop;
+		minDrop = mindrop;
 	}
 
 	/**
 	 * Sets the value for maximal quantity of dopped items
 	 *
-	 * @param maxdrop : int designating the quantity of dropped items
+	 * @param maxDrop : int designating the quantity of dropped items
 	 */
-	public void setMaxDrop(int maxdrop)
+	public void setMaxDrop(int maxDrop)
 	{
-		this.maxDrop = maxdrop;
+		this.maxDrop = maxDrop;
 	}
 
 	/**
@@ -132,7 +85,7 @@ public class L2DropData
 	 */
 	public String[] getStateIDs()
 	{
-		return this.stateID;
+		return stateID;
 	}
 
 	/**
@@ -142,25 +95,7 @@ public class L2DropData
 	 */
 	public void addStates(String[] list)
 	{
-		this.stateID = list;
-	}
-
-	/**
-	 * Returns the questID.
-	 *
-	 * @return String designating the ID of the quest
-	 */
-	public String getQuestID()
-	{
-		return this.questID;
-	}
-
-	/**
-	 * Sets the questID
-	 */
-	public void setQuestID(String questID)
-	{
-		this.questID = questID;
+		stateID = list;
 	}
 
 	/**
@@ -170,17 +105,12 @@ public class L2DropData
 	 */
 	public boolean isQuestDrop()
 	{
-		return this.questID != null && this.stateID != null;
+		return questID != null && stateID != null;
 	}
 
 	public void setCustom()
 	{
-		this.custom = true;
-	}
-
-	public boolean isCustom()
-	{
-		return this.custom;
+		custom = true;
 	}
 
 	/**
@@ -209,7 +139,7 @@ public class L2DropData
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + this.itemId;
+		result = prime * result + itemId;
 		return result;
 	}
 
@@ -232,6 +162,6 @@ public class L2DropData
 			return false;
 		}
 		final L2DropData other = (L2DropData) obj;
-		return this.itemId == other.itemId;
+		return itemId == other.itemId;
 	}
 }

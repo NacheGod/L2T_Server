@@ -16,6 +16,7 @@
 package l2server.gsregistering;
 
 import l2server.loginserver.GameServerTable;
+import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -34,8 +35,7 @@ public class RegisterDialog extends JDialog implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	private ResourceBundle bundle;
-	@SuppressWarnings("rawtypes")
-	private final JComboBox combo;
+	@SuppressWarnings("rawtypes") private final JComboBox combo;
 	private final GUserInterface owner;
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
@@ -44,8 +44,8 @@ public class RegisterDialog extends JDialog implements ActionListener
 		super(owner.getFrame(), true);
 		this.owner = owner;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		this.bundle = owner.getBundle();
-		setTitle(this.bundle.getString("registerGS"));
+		bundle = owner.getBundle();
+		setTitle(bundle.getString("registerGS"));
 		setResizable(false);
 		setLayout(new GridBagLayout());
 		GridBagConstraints cons = new GridBagConstraints();
@@ -55,82 +55,65 @@ public class RegisterDialog extends JDialog implements ActionListener
 		cons.gridy = 0;
 		cons.fill = GridBagConstraints.BOTH;
 
-		final JLabel label = new JLabel(this.bundle.getString("serverName"));
-		this.add(label, cons);
+		final JLabel label = new JLabel(bundle.getString("serverName"));
+		add(label, cons);
 
-		this.combo = new JComboBox();
-		this.combo.setEditable(false);
+		combo = new JComboBox();
+		combo.setEditable(false);
 		for (Map.Entry<Integer, String> entry : GameServerTable.getInstance().getServerNames().entrySet())
 		{
 			if (!GameServerTable.getInstance().hasRegisteredGameServerOnId(entry.getKey()))
 			{
-				this.combo.addItem(new ComboServer(entry.getKey(), entry.getValue()));
+				combo.addItem(new ComboServer(entry.getKey(), entry.getValue()));
 			}
 		}
 		cons.gridx = 1;
 		cons.gridy = 0;
-		this.add(this.combo, cons);
+		add(combo, cons);
 
 		cons.gridx = 0;
 		cons.gridy = 1;
 		cons.gridwidth = 2;
 		JTextPane textPane = new JTextPane();
-		textPane.setText(this.bundle.getString("saveHexId"));
+		textPane.setText(bundle.getString("saveHexId"));
 		textPane.setEditable(false);
 		textPane.setBackground(label.getBackground());
-		this.add(textPane, cons);
+		add(textPane, cons);
 		cons.gridwidth = 1;
 
-		JButton btnSave = new JButton(this.bundle.getString("save"));
+		JButton btnSave = new JButton(bundle.getString("save"));
 		btnSave.setActionCommand("save");
 		btnSave.addActionListener(this);
 		cons.gridx = 0;
 		cons.gridy = 2;
-		this.add(btnSave, cons);
+		add(btnSave, cons);
 
-		JButton btnCancel = new JButton(this.bundle.getString("cancel"));
+		JButton btnCancel = new JButton(bundle.getString("cancel"));
 		btnCancel.setActionCommand("cancel");
 		btnCancel.addActionListener(this);
 		cons.gridx = 1;
 		cons.gridy = 2;
-		this.add(btnCancel, cons);
+		add(btnCancel, cons);
 
 		final double leftSize = Math.max(label.getPreferredSize().getWidth(), btnSave.getPreferredSize().getWidth());
-		final double rightSize =
-				Math.max(this.combo.getPreferredSize().getWidth(), btnCancel.getPreferredSize().getWidth());
+		final double rightSize = Math.max(combo.getPreferredSize().getWidth(), btnCancel.getPreferredSize().getWidth());
 
-		final double height = this.combo.getPreferredSize().getHeight() + 4 * textPane.getPreferredSize().getHeight() +
+		final double height = combo.getPreferredSize().getHeight() + 4 * textPane.getPreferredSize().getHeight() +
 				btnSave.getPreferredSize().getHeight();
-		this.setSize((int) (leftSize + rightSize + 30), (int) (height + 20));
+		setSize((int) (leftSize + rightSize + 30), (int) (height + 20));
 
 		setLocationRelativeTo(owner.getFrame());
 	}
 
 	class ComboServer
 	{
-		private final int id;
-		private final String name;
+		@Getter private final int id;
+		@Getter private final String name;
 
 		public ComboServer(int id, String name)
 		{
 			this.id = id;
 			this.name = name;
-		}
-
-		/**
-		 * @return Returns the id.
-		 */
-		public int getId()
-		{
-			return this.id;
-		}
-
-		/**
-		 * @return Returns the name.
-		 */
-		public String getName()
-		{
-			return this.name;
 		}
 
 		@Override
@@ -150,16 +133,15 @@ public class RegisterDialog extends JDialog implements ActionListener
 
 		if (cmd.equals("save"))
 		{
-			ComboServer server = (ComboServer) this.combo.getSelectedItem();
+			ComboServer server = (ComboServer) combo.getSelectedItem();
 			int gsId = server.getId();
 
 			JFileChooser fc = new JFileChooser();
 			//fc.setS
-			fc.setDialogTitle(this.bundle.getString("hexidDest"));
+			fc.setDialogTitle(bundle.getString("hexidDest"));
 			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			fc.setFileFilter(new FileFilter()
 			{
-
 				@Override
 				public boolean accept(File f)
 				{
@@ -177,12 +159,12 @@ public class RegisterDialog extends JDialog implements ActionListener
 			try
 			{
 				GUserInterface.registerGameServer(gsId, fc.getSelectedFile().getAbsolutePath());
-				this.owner.refreshAsync();
+				owner.refreshAsync();
 				setVisible(false);
 			}
 			catch (IOException e1)
 			{
-				this.owner.showError(this.bundle.getString("ioErrorRegister"), e1);
+				owner.showError(bundle.getString("ioErrorRegister"), e1);
 			}
 		}
 		else if (cmd.equals("cancel"))

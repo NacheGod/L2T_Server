@@ -20,7 +20,6 @@ package l2server.gameserver.network.serverpackets;
  */
 public class ExChangePostState extends L2GameServerPacket
 {
-
 	private boolean receivedBoard;
 	private int[] changedMsgIds;
 	private int changeId;
@@ -35,7 +34,7 @@ public class ExChangePostState extends L2GameServerPacket
 	public ExChangePostState(boolean receivedBoard, int changedMsgId, int changeId)
 	{
 		this.receivedBoard = receivedBoard;
-		this.changedMsgIds = new int[]{changedMsgId};
+		changedMsgIds = new int[]{changedMsgId};
 		this.changeId = changeId;
 	}
 
@@ -45,12 +44,12 @@ public class ExChangePostState extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		writeD(this.receivedBoard ? 1 : 0);
-		writeD(this.changedMsgIds.length);
-		for (int postId : this.changedMsgIds)
+		writeD(receivedBoard ? 1 : 0);
+		writeD(changedMsgIds.length);
+		for (int postId : changedMsgIds)
 		{
 			writeD(postId); // postId
-			writeD(this.changeId); // state
+			writeD(changeId); // state
 		}
 	}
 }

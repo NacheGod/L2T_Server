@@ -16,10 +16,10 @@
 package l2server.gameserver.network.loginserverpackets;
 
 import l2server.util.network.BaseRecievePacket;
+import lombok.Getter;
 
 public class LoginServerFail extends BaseRecievePacket
 {
-
 	private static final String[] REASONS = {
 			"None",
 			"Reason: ip banned",
@@ -30,7 +30,7 @@ public class LoginServerFail extends BaseRecievePacket
 			"Not authed",
 			"Reason: already logged in"
 	};
-	private int reason;
+	@Getter private int reason;
 
 	/**
 	 * @param decrypt
@@ -38,16 +38,11 @@ public class LoginServerFail extends BaseRecievePacket
 	public LoginServerFail(byte[] decrypt)
 	{
 		super(decrypt);
-		this.reason = readC();
+		reason = readC();
 	}
 
 	public String getReasonString()
 	{
-		return REASONS[this.reason];
-	}
-
-	public int getReason()
-	{
-		return this.reason;
+		return REASONS[reason];
 	}
 }

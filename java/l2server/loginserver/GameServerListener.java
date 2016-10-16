@@ -28,7 +28,6 @@ import java.util.List;
  */
 public class GameServerListener extends FloodProtectedListener
 {
-
 	private static List<GameServerThread> gameServers = new ArrayList<>();
 
 	public GameServerListener() throws IOException
@@ -48,11 +47,11 @@ public class GameServerListener extends FloodProtectedListener
 			Log.info("Received gameserver connection from: " + s.getInetAddress().getHostAddress());
 		}
 		GameServerThread gst = new GameServerThread(s);
-		this.gameServers.add(gst);
+		gameServers.add(gst);
 	}
 
 	public void removeGameServer(GameServerThread gst)
 	{
-		this.gameServers.remove(gst);
+		gameServers.remove(gst);
 	}
 }

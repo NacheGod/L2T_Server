@@ -24,7 +24,6 @@ import l2server.gameserver.model.actor.instance.L2PcInstance;
  */
 public final class RequestChangePartyLeader extends L2GameClientPacket
 {
-
 	//
 
 	private String name;
@@ -32,7 +31,7 @@ public final class RequestChangePartyLeader extends L2GameClientPacket
 	@Override
 	protected void readImpl()
 	{
-		this.name = readS();
+		name = readS();
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public final class RequestChangePartyLeader extends L2GameClientPacket
 
 		if (activeChar.isInParty() && activeChar.getParty().isLeader(activeChar))
 		{
-			activeChar.getParty().changePartyLeader(this.name);
+			activeChar.getParty().changePartyLeader(name);
 		}
 	}
 }

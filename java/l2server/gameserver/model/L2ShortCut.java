@@ -22,68 +22,68 @@ package l2server.gameserver.model;
  */
 public class L2ShortCut
 {
-	public final static int TYPE_ITEM = 1;
-	public final static int TYPE_SKILL = 2;
-	public final static int TYPE_ACTION = 3;
-	public final static int TYPE_MACRO = 4;
-	public final static int TYPE_RECIPE = 5;
-	public final static int TYPE_TPBOOKMARK = 6;
+	public static final int TYPE_ITEM = 1;
+	public static final int TYPE_SKILL = 2;
+	public static final int TYPE_ACTION = 3;
+	public static final int TYPE_MACRO = 4;
+	public static final int TYPE_RECIPE = 5;
+	public static final int TYPE_TPBOOKMARK = 6;
 
-	private final int _slot;
-	private final int _page;
-	private final int _type;
-	private final int _id;
-	private final int _level;
-	private final int _characterType;
-	private int _sharedReuseGroup = -1;
+	private final int slot;
+	private final int page;
+	private final int type;
+	private final int id;
+	private final int level;
+	private final int characterType;
+	private int sharedReuseGroup = -1;
 
 	public L2ShortCut(int slotId, int pageId, int shortcutType, int shortcutId, int shortcutLevel, int characterType)
 	{
-		_slot = slotId;
-		_page = pageId;
-		_type = shortcutType;
-		_id = shortcutId;
-		_level = shortcutLevel;
-		_characterType = characterType;
+		this.slot = slotId;
+		this.page = pageId;
+		this.type = shortcutType;
+		this.id = shortcutId;
+		this.level = shortcutLevel;
+		this.characterType = characterType;
 	}
 
 	public int getId()
 	{
-		return _id;
+		return this.id;
 	}
 
 	public int getLevel()
 	{
-		return _level;
+		return this.level;
 	}
 
 	public int getPage()
 	{
-		return _page;
+		return this.page;
 	}
 
 	public int getSlot()
 	{
-		return _slot;
+		return this.slot;
 	}
 
 	public int getType()
 	{
-		return _type;
+		return this.type;
 	}
 
 	public int getCharacterType()
 	{
-		return _characterType;
+		return this.characterType;
 	}
 
 	public int getSharedReuseGroup()
 	{
-		return _sharedReuseGroup;
+		return this.sharedReuseGroup;
 	}
 
 	public void setSharedReuseGroup(int g)
 	{
-		_sharedReuseGroup = g;
+		this.sharedReuseGroup = g;
 	}
 }

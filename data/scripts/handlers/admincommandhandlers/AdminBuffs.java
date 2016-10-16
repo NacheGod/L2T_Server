@@ -1,5 +1,7 @@
 package handlers.admincommandhandlers;
 
+import java.util.StringTokenizer;
+
 import l2server.Config;
 import l2server.gameserver.handler.IAdminCommandHandler;
 import l2server.gameserver.model.L2Abnormal;
@@ -11,11 +13,9 @@ import l2server.gameserver.network.serverpackets.NpcHtmlMessage;
 import l2server.gameserver.util.GMAudit;
 import l2server.util.StringUtil;
 
-import java.util.StringTokenizer;
-
 public class AdminBuffs implements IAdminCommandHandler
 {
-	private final static int PAGE_LIMIT = 20;
+	private static final int PAGE_LIMIT = 20;
 
 	private static final String[] ADMIN_COMMANDS =
 			{"admin_getbuffs", "admin_stopbuff", "admin_stopallbuffs", "admin_areacancel", "admin_removereuse"};

@@ -32,16 +32,16 @@ import l2server.gameserver.stats.Env;
 public final class ConditionSiegeZone extends Condition
 {
 	//	conditional values
-	public final static int COND_NOT_ZONE = 0x0001;
-	public final static int COND_CAST_ATTACK = 0x0002;
-	public final static int COND_CAST_DEFEND = 0x0004;
-	public final static int COND_CAST_NEUTRAL = 0x0008;
-	public final static int COND_FORT_ATTACK = 0x0010;
-	public final static int COND_FORT_DEFEND = 0x0020;
-	public final static int COND_FORT_NEUTRAL = 0x0040;
+	public static final int COND_NOT_ZONE = 0x0001;
+	public static final int COND_CAST_ATTACK = 0x0002;
+	public static final int COND_CAST_DEFEND = 0x0004;
+	public static final int COND_CAST_NEUTRAL = 0x0008;
+	public static final int COND_FORT_ATTACK = 0x0010;
+	public static final int COND_FORT_DEFEND = 0x0020;
+	public static final int COND_FORT_NEUTRAL = 0x0040;
 
-	private final int _value;
-	private final boolean _self;
+	private final int value;
+	private final boolean self;
 
 	/**
 	 * Instantiates a new condition siege zone.
@@ -52,8 +52,8 @@ public final class ConditionSiegeZone extends Condition
 
 	public ConditionSiegeZone(int value, boolean self)
 	{
-		_value = value;
-		_self = self;
+		this.value = value;
+		this.self = self;
 	}
 
 	/* (non-Javadoc)
@@ -62,21 +62,21 @@ public final class ConditionSiegeZone extends Condition
 	@Override
 	public boolean testImpl(Env env)
 	{
-		L2Character target = _self ? env.player : env.target;
+		L2Character target = this.self ? env.player : env.target;
 		Castle castle = CastleManager.getInstance().getCastle(target);
 		Fort fort = FortManager.getInstance().getFort(target);
 
 		if (castle == null && fort == null)
 		{
-			return (_value & COND_NOT_ZONE) != 0;
+			return (this.value & COND_NOT_ZONE) != 0;
 		}
 		if (castle != null)
 		{
-			return checkIfOk(target, castle, _value);
+			return checkIfOk(target, castle, this.value);
 		}
 		else
 		{
-			return checkIfOk(target, fort, _value);
+			return checkIfOk(target, fort, this.value);
 		}
 	}
 
